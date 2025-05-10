@@ -1,0 +1,32 @@
+class PreferencesEnum {
+  static const String firstName = 'firstName';
+  static const String lastName = 'lastName';
+  static const String userType = 'userType';
+  static const String gender = 'gender';
+  static const String userId = 'userId';
+  static const String birthDate = 'birthDate';
+  static const String email = 'email';
+  static const String registerAt = 'registerAt';
+  static const String image = 'image';
+  static const String roomVolume = 'roomVolume';
+  static const String breathingVolume = 'breathingVolume';
+  static const String instructionVolume = 'instructionVolume';
+  static const String deviceVolume = 'deviceVolume';
+  static const String bluetoothDeviceId = 'bluetoothDeviceId';
+  static const String bluetoothDeviceDbId = 'bluetoothDeviceDbId';
+  static const String bluetoothDeviceName = 'bluetoothDeviceName';
+  static const String bluetoothDeviceSerial = 'bluetoothDeviceSerial';
+  static const String camera = 'camera';
+  static const String location = 'location';
+  static const String notification = 'notification';
+  static const String bluetoothScan = 'bluetoothScan';
+  static const String photos = 'photos';
+  static const String appVersion = 'appVersion';
+  static const String bluetoothIntervalSpeed = 'bluetoothIntervalSpeed';
+  static const String advancedMaxYLength = 'advancedMaxYLength';
+  static const String advancedMinYLength = 'advancedMinYLength';
+  static const String deviceIsCalibrated = 'deviceIsCalibrated';
+  static const String averageWindow = 'averageWindow';
+  static const String inhaleAmplitude = 'inhaleAmplitude';
+  static const String exhaleAmplitude = 'exhaleAmplitude';
+}

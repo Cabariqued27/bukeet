@@ -47,7 +47,7 @@ class ValidateAuthPage extends StatelessWidget {
         child: Stack(
           children: [
             AssetImageWidget(
-              pathImage: AppImages.started,
+              pathImage: AppImages.splash,
               width: AppSize.width(),
               height: AppSize.height(),
             ),

@@ -12,6 +12,7 @@ class ArenaProvider {
     try {
       final resp = await _supabase.from(Tables.arena).insert(
         {
+          'ownerId':arena.ownerId,
           'name': arena.name,
           'city': arena.city,
           'address': arena.address,
@@ -111,12 +112,12 @@ class ArenaProvider {
 
   Future<bool> uploadarenaImagesList({
     required int id,
-    required List<String> imageUrls,
+    required String imageUrls,
   }) async {
     try {
       await _supabase.from(Tables.arena).update(
         {
-          'images': imageUrls,
+          'imageUrl': imageUrls,
         },
       ).eq('id', id);
       return true;

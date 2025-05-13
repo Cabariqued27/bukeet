@@ -36,6 +36,33 @@ class ImagesBucketProvider {
     }
   }
 
+  Future<String?> setArenasImage(File file) async {
+    try {
+      var userId = _preferences.getUserId();
+      var time = DateTime.now().microsecond;
+
+      var nameImage = 'arenasImages-$userId-$time.png';
+
+      var publicUrl = getPublicUrl(nameImage, Buckets.arenaImages);
+
+      if (!kIsWeb) {
+        await _supabase.storage
+            .from(Buckets.arenaImages)
+            .upload(nameImage, file);
+        return publicUrl;
+      }
+
+      await _supabase.storage
+          .from(Buckets.arenaImages)
+          .uploadBinary(nameImage, file.readAsBytesSync());
+
+      return publicUrl;
+    } catch (exception, stackTrace) {
+      LogError.capture(exception, stackTrace, 'setArenasImage');
+      return null;
+    }
+  }
+
   Future<String?> setSupportImage(File file) async {
     try {
       var userId = _preferences.getUserId();

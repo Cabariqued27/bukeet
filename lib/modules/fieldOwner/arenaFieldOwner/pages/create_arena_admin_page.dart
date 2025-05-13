@@ -1,8 +1,9 @@
 import 'package:bukeet/assets/app_assets.dart';
-import 'package:bukeet/modules/fieldOwner/arenaFieldOwner/controllers/create_field_admin_controller.dart';
+import 'package:bukeet/modules/fieldOwner/arenaFieldOwner/controllers/create_arena_admin_controller.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
 import 'package:bukeet/widgets/buttons/icons_solid_button_widget.dart';
+import 'package:bukeet/widgets/inputs/single_input_widget.dart';
 import 'package:bukeet/widgets/responsive/responsive_widget.dart';
 import 'package:bukeet/widgets/responsive/web_frame_widget.dart';
 import 'package:bukeet/widgets/text/text_widget.dart';
@@ -38,11 +39,7 @@ class CreateArenaAdminPage extends StatelessWidget {
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _titleWidget(),
-            
-                _updateAvailabilityButton()
-              ],
+              children: [_titleWidget(), _inputsArenaWidget(),_updateAvailabilityButton()],
             ),
           ),
         ),
@@ -52,46 +49,47 @@ class CreateArenaAdminPage extends StatelessWidget {
 
   Widget _titleWidget() {
     return TextWidget(
-      'create Arena',
+      'create_arena'.tr,
       fontFamily: AppFontFamily.leagueSpartan,
       fontWeight: TextWidgetWeight.bold,
     );
   }
 
-  
-
-  TextWidget _dropDownHint() {
-    return TextWidget(
-      'select_field_capacity'.tr,
-      fontFamily: AppFontFamily.workSans,
-      fontStyle: FontStyle.italic,
-      textAlign: TextAlign.center,
-      dsize: RelSize(size: TextWidgetSizes.small),
-      color: controller.theme.onText.value,
+  Widget _inputsArenaWidget() {
+    return Column(
+      children: [
+        _arenaInputWidgetLogin(
+            'arena_name','arena_city', controller.arenaNameInputController),
+        _arenaInputWidgetLogin(
+            'arena_address','arena_city', controller.arenaAddressInputController),
+        _arenaInputWidgetLogin(
+            'arena_city','arena_city', controller.arenaCityInputController),
+      ],
     );
   }
 
-  DropdownMenuItem<int> _dropDownItem(int value) {
-    return DropdownMenuItem<int>(
-      value: value,
-      child: TextWidget(
-        '$value vs $value',
-        fontFamily: AppFontFamily.workSans,
-        textAlign: TextAlign.center,
-        dsize: RelSize(size: TextWidgetSizes.small),
-        color: controller.theme.gray.value,
-      ),
-    );
-  }
-
-  Widget _textLabel(String textKey) {
-    return TextWidget(
-      textKey.tr,
-      fontFamily: AppFontFamily.workSans,
-      textAlign: TextAlign.center,
-      fontWeight: TextWidgetWeight.medium,
-      dsize: RelSize(size: TextWidgetSizes.xsmall),
-      color: controller.theme.black.value,
+  Widget _arenaInputWidgetLogin(
+      String title,String hintText, TextEditingController controllerText) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextWidget(
+          title.tr,
+          fontFamily: AppFontFamily.workSans,
+          textAlign: TextAlign.center,
+          fontWeight: TextWidgetWeight.medium,
+          dsize: RelSize(size: TextWidgetSizes.xsmall),
+          color: controller.theme.black.value,
+        ),
+        SingleInputWidget(
+          isActive: true,
+          mandatory: false,
+          hintText: hintText.tr,
+          textInputType: TextInputType.emailAddress,
+          controller: controllerText,
+          onChanged: (value) => controller.onChangedLoginForm(),
+        ),
+      ],
     );
   }
 
@@ -104,12 +102,12 @@ class CreateArenaAdminPage extends StatelessWidget {
       onPressed: () {
         controller.createField();
       },
-      isActive: controller.capacitySelected.value!=0,
+      isActive: controller.activateNext.value,
       height: 55.0,
       width: AppSize.width() * 0.15,
       iconRigth: AppIcons.rightArrowPopUp,
       iconSize: 20,
-      iconColor: controller.theme.gradientPair.value,
+      iconColor: controller.theme.greenMin.value,
     );
   }
 }

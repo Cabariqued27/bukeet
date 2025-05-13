@@ -10,7 +10,7 @@ const Map<String, String> enUs = {
   "password": "Password",
   "forgot": "Forgot your password?",
   "yourname@": "yourname@gmail.com",
-  "login_w_email": "Log in",
+  "login_w_email": "Login",
   "dont": "Don't have an account?",
   "register": "Sign up now!",
   "welcome": "Welcome",
@@ -73,5 +73,6 @@ const Map<String, String> enUs = {
   "friday": "Friday",
   "saturday": "Saturday",
   "sunday": "Sunday",
-  "update_schedule":"Update Schedule"
+  "update_schedule":"Update Schedule",
+  "create_arena":"Create Arena",
 };

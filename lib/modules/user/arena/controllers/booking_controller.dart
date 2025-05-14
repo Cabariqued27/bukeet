@@ -12,6 +12,7 @@ import 'package:bukeet/utils/global/log_error_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+//import 'package:payu_checkoutpro_flutter/payu_checkoutpro_flutter.dart';
 
 class BookingController extends GetxController {
   final VoidCallback onNext;
@@ -27,6 +28,8 @@ class BookingController extends GetxController {
     this.fieldInformation,
     this.arenaInformation,
   });
+
+  //late PayUCheckoutProFlutter checkoutPro;
 
   final reservations = <Reservation>[].obs;
   final listAvailableTimes = <String>[].obs;
@@ -48,6 +51,7 @@ class BookingController extends GetxController {
   final _preferences = UserPreferences();
 
   Future<void> startController() async {
+    //checkoutPro = PayUCheckoutProFlutter();
     final selectedDate = _getOnlyDate(today.value);
     reservations.value = await _fieldsProvider.getReservedTimes(
       fieldId: fieldInformation?.id ?? 0,
@@ -147,6 +151,8 @@ class BookingController extends GetxController {
       onPressed: () => Get.back(),
     );
   }
+
+
 
   void confirmReservation() {
     AlertUtils.showComnfirmReservationAlert(

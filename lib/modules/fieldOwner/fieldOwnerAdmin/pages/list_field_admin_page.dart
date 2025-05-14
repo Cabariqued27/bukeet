@@ -136,11 +136,6 @@ class ListFieldAdminPage extends StatelessWidget {
                   color: controller.theme.black.value,
                 ),
                 TextWidget(
-                  '${item.price}',
-                  fontFamily: AppFontFamily.leagueSpartan,
-                  color: controller.theme.black.value,
-                ),
-                TextWidget(
                   '${item.players} vs ${item.players}',
                   fontFamily: AppFontFamily.leagueSpartan,
                   color: controller.theme.black.value,

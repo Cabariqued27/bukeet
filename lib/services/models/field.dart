@@ -4,7 +4,6 @@ class Field {
   int? id;
   int? players;
   List<dynamic>? images;
-  int? price;
   int? order;
   int? arenaId;
 
@@ -14,7 +13,6 @@ class Field {
     this.images,
     this.order,
     this.arenaId,
-    this.price
   });
 
   factory Field.fromRawJson(String str) => Field.fromJson(json.decode(str));
@@ -27,7 +25,6 @@ class Field {
         images: json["images"],
         order: json["order"],
         arenaId: json["arenaId"],
-        price: json["price"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -36,6 +33,5 @@ class Field {
         "images": images,
         "order": order,
         "arenaId": arenaId,
-        "price": price,
       };
 }

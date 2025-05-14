@@ -30,7 +30,9 @@ class BookingController extends GetxController {
 
   final reservations = <Reservation>[].obs;
   final listAvailableTimes = <String>[].obs;
+  final listPriceAvailableTimes = <int>[].obs;
   final selectedHour = ''.obs;
+  final selectedHourPrice = 0.obs;
   final isLoadData = false.obs;
   final activateNext = false.obs;
   final isLoadDataReservations = false.obs;
@@ -82,6 +84,7 @@ class BookingController extends GetxController {
 
   List<String> getAvailableTimes() {
     listAvailableTimes.clear();
+    listPriceAvailableTimes.clear();
 
     final isToday = _isSameDay(today.value, todayDynamic.value);
     final dayOfWeek =
@@ -104,8 +107,10 @@ class BookingController extends GetxController {
 
       if (!isReserved && isAvailable && (!isToday || today.value.hour < hour)) {
         listAvailableTimes.add(timeSlot);
+        listPriceAvailableTimes.add(availability?.arrayPrice?[hour]);
       }
     }
+    update();
 
     updateLoadDataReservations(true);
     return List<String>.from(listAvailableTimes);
@@ -113,6 +118,11 @@ class BookingController extends GetxController {
 
   void setSelectedHour(String value) {
     selectedHour.value = value;
+    onChangeForm();
+  }
+
+  void setSelectedPrice(int value) {
+    selectedHourPrice.value = value;
     onChangeForm();
   }
 
@@ -124,8 +134,7 @@ class BookingController extends GetxController {
       timeSlot: selectedHour.value,
       updateAt: today.value,
       status: false,
-      //totalPrice: fieldInformation?.price ?? 0,
-      //TODO: obtener precio en base a la hora seleccionada
+      totalPrice: selectedHourPrice.value,
     );
 
     final data =
@@ -143,9 +152,8 @@ class BookingController extends GetxController {
     AlertUtils.showComnfirmReservationAlert(
       date: DateFormat('yyyy-MM-dd').format(todayDynamic.value),
       hour: selectedHour.split(':').sublist(0, 2).join(':'),
-      location: arenaInformation?.city ?? '',
-      price: '\$${NumberFormat('#,###', 'es_CO').format(100)}',
-      //TODO: obtener precio en base a la hora seleccionada
+      fieldInformation: arenaInformation?.address ?? '',
+      price: '\$${selectedHourPrice.value}',
       positiveAction: createReservation,
       negativeAction: () => Get.back(),
       barrierDismissible: false,

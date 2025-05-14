@@ -77,4 +77,5 @@ const Map<String, String> enSp = {
   "sunday": "Domingo",
   "update_schedule":"Actualizar horarios",
   "create_arena":"Ingresa la información de tu arena",
+   "field_information":"Dirección y numero de cancha: ",
 };

@@ -204,6 +204,9 @@ class BookingPage extends StatelessWidget {
             onChanged: (String? newGender) {
               if (newGender != null) {
                 controller.setSelectedHour(newGender);
+                var index = controller.listAvailableTimes.indexOf(newGender);
+                controller.setSelectedPrice(
+                    controller.listPriceAvailableTimes[index]);
               }
             },
           ),

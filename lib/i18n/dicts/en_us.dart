@@ -75,4 +75,5 @@ const Map<String, String> enUs = {
   "sunday": "Sunday",
   "update_schedule":"Update Schedule",
   "create_arena":"Create Arena",
+  "field_information":"Adress and fieldNumber: ",
 };

@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 class ConfirmReservationAlertWidget extends StatelessWidget {
   final String date;
   final String hour;
-  final String location;
+  final String fieldInformation;
   final String price;
 
   final VoidCallback positiveAction;
@@ -20,7 +20,7 @@ class ConfirmReservationAlertWidget extends StatelessWidget {
     super.key,
     required this.date,
     required this.hour,
-    required this.location,
+    required this.fieldInformation,
     required this.price,
     required this.positiveAction,
     required this.negativeAction,
@@ -47,7 +47,7 @@ class ConfirmReservationAlertWidget extends StatelessWidget {
           _buildText('reservation_data'),
           _buildRow('date'.tr, date),
           _buildRow('hour'.tr, hour),
-          _buildRow('location'.tr, location),
+          _buildRow('field_information'.tr, fieldInformation),
           _buildRow('price'.tr, price),
           SizedBox(height: AppSize.height() * 0.02),
           Row(

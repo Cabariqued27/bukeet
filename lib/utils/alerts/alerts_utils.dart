@@ -62,7 +62,7 @@ class AlertUtils {
   static void showComnfirmReservationAlert({
     required String date,
     required String hour,
-    required String location,
+    required String fieldInformation,
     required String price,
     required VoidCallback positiveAction,
     required VoidCallback negativeAction,
@@ -78,7 +78,7 @@ class AlertUtils {
         content: ConfirmReservationAlertWidget(
           date: date,
           hour: hour,
-          location: location,
+          fieldInformation: fieldInformation,
           price: price,
           positiveAction: positiveAction,
           negativeAction: negativeAction,

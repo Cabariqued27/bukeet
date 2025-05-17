@@ -43,5 +43,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Evitar subir google-services.json (contiene claves privadas)
+android/app/google-services.json
+
+
 # FVM Version Cache
 .fvm/

@@ -52,7 +52,6 @@ flutter:
     - assets/fonts/
     - assets/icons/
     - assets/images/
-    - assets/backgrounds/
 
   fonts:
     - family: WorkSans

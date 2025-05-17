@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:bukeet/preferences/user_preferences.dart';
 import 'package:bukeet/services/models/arena.dart';
 import 'package:bukeet/services/models/field.dart';
@@ -12,6 +14,7 @@ import 'package:bukeet/utils/global/log_error_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 //import 'package:payu_checkoutpro_flutter/payu_checkoutpro_flutter.dart';
 
 class BookingController extends GetxController {
@@ -152,8 +155,6 @@ class BookingController extends GetxController {
     );
   }
 
-
-
   void confirmReservation() {
     AlertUtils.showComnfirmReservationAlert(
       date: DateFormat('yyyy-MM-dd').format(todayDynamic.value),
@@ -213,4 +214,57 @@ class BookingController extends GetxController {
 
   bool _isSameDay(DateTime d1, DateTime d2) =>
       d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
+
+  Future<void> crearTransaccionPSE() async {
+    final referenciaUnica = generarReferenciaUnica();
+
+    final response = await http.post(
+      Uri.parse('http://localhost:3000/pse-transaction'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ...',
+      },
+      body: jsonEncode({
+        "amount_in_cents": 150000,
+        "currency": "COP",
+        "customer_email": "usuario@correo.com",
+        "user_legal_id": "1999888777",
+        "user_legal_id_type": "CC",
+        "payment_description": "Pago a Tienda Wompi",
+        "reference": referenciaUnica, // ✅ Agregada aquí
+        "success_url": "https://tuapp.com/pago_exitoso",
+        "financial_institution_code": "1",
+        "user_type": 0
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final redirectUrl =
+          data['data']?['payment_method']?['extra']?['async_payment_url'];
+
+      if (redirectUrl != null) {
+        abrirEnNavegador(redirectUrl);
+      } else {
+        Get.snackbar('Error', 'No se recibió URL de redirección.');
+      }
+    } else {
+      Get.snackbar('Error', 'Falló la transacción: ${response.body}');
+      print(response.statusCode);
+    }
+  }
+
+  Future<void> abrirEnNavegador(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      Get.snackbar('Error', 'No se pudo abrir la URL');
+    }
+  }
+
+  String generarReferenciaUnica() {
+    final now = DateTime.now();
+    return 'ref_${now.microsecondsSinceEpoch}';
+  }
 }

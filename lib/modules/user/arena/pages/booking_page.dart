@@ -240,9 +240,9 @@ class BookingPage extends StatelessWidget {
       fontFamily: AppFontFamily.workSans,
       textSize: TextWidgetSizes.small,
       onPressed: () {
-        controller.confirmReservation();
+        controller.crearTransaccionPSE();
       },
-      isActive: controller.activateNext.value,
+      isActive: true,
       height: 55.0,
       width: AppSize.width() * 0.5,
       title: 'book&play_button'.tr,

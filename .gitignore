@@ -46,6 +46,9 @@ app.*.map.json
 # Evitar subir google-services.json (contiene claves privadas)
 android/app/google-services.json
 
+# keys
+lib/secrets.dart
+
 
 # FVM Version Cache
 .fvm/

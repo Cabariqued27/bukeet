@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bukeet/secrets.dart';
 import 'package:http/http.dart' as http;
 import 'package:bukeet/preferences/user_preferences.dart';
 import 'package:bukeet/services/models/arena.dart';
@@ -216,43 +217,45 @@ class BookingController extends GetxController {
       d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
 
   Future<void> crearTransaccionPSE() async {
-    final referenciaUnica = generarReferenciaUnica();
+  final referenciaUnica = generarReferenciaUnica();
 
-    final response = await http.post(
-      Uri.parse('http://localhost:3000/pse-transaction'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ...',
-      },
-      body: jsonEncode({
-        "amount_in_cents": 150000,
-        "currency": "COP",
-        "customer_email": "usuario@correo.com",
-        "user_legal_id": "1999888777",
-        "user_legal_id_type": "CC",
-        "payment_description": "Pago a Tienda Wompi",
-        "reference": referenciaUnica, // ✅ Agregada aquí
-        "success_url": "https://tuapp.com/pago_exitoso",
-        "financial_institution_code": "1",
-        "user_type": 0
-      }),
-    );
+  final response = await http.post(
+    Uri.parse('https://zwotqlhempawzymqxbne.supabase.co/functions/v1/start-pay-wompi/pse-transaction'),
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $supabaseAnonKey',
+    },
+    body: jsonEncode({
+      "amount_in_cents": 150000,
+      "currency": "COP",
+      "customer_email": "usuario@correo.com",
+      "user_legal_id": "1999888777",
+      "user_legal_id_type": "CC",
+      "payment_description": "Pago a Tienda Wompi",
+      "reference": referenciaUnica,
+      "success_url": "https://tuapp.com/pago_exitoso",
+      "financial_institution_code": "1",
+      "user_type": 0,
+      "phone_number": "3001234567", // Requerido por Wompi
+      "full_name": "Juan Pérez",     // Requerido por Wompi
+    }),
+  );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final redirectUrl =
-          data['data']?['payment_method']?['extra']?['async_payment_url'];
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    final redirectUrl = data['async_payment_url'];
 
-      if (redirectUrl != null) {
-        abrirEnNavegador(redirectUrl);
-      } else {
-        Get.snackbar('Error', 'No se recibió URL de redirección.');
-      }
+    if (redirectUrl != null) {
+      abrirEnNavegador(redirectUrl);
     } else {
-      Get.snackbar('Error', 'Falló la transacción: ${response.body}');
-      print(response.statusCode);
+      Get.snackbar('Error', 'No se recibió la URL de redirección.');
     }
+  } else {
+    Get.snackbar('Error', 'Falló la transacción: ${response.body}');
+    print(response.statusCode);
   }
+}
+
 
   Future<void> abrirEnNavegador(String url) async {
     final uri = Uri.parse(url);

@@ -146,18 +146,50 @@ class BookingController extends GetxController {
       totalPrice: selectedHourPrice.value,
     );
 
-    final check = await _fieldsProvider.checkReservationAvaliabilty(fieldId: newReservation.fieldId ?? 0, timeSlot: selectedHour.value);
-    if (check == null) {
-      final data = await _fieldsProvider.createReservationByUserId(data: newReservation);
-      //onNext();
-
+    try {
+      final data =
+          await _fieldsProvider.createReservationByUserId(data: newReservation);
+      if (data != null) {
+        AlertUtils.showMessageAlert(
+          title: 'reservation_success'.tr,
+          buttonTitle: 'close'.tr,
+          onPressed: () => Get.back(),
+        );
+      } else {
+        // En caso de que createReservationByUserId devuelva null sin excepción
+        AlertUtils.showMessageAlert(
+          title: 'reservation_reject'.tr,
+          buttonTitle: 'close'.tr,
+          onPressed: () => Get.back(),
+        );
+      }
+    } catch (e) {
+      // Aquí puedes personalizar según el tipo de error que recibas
+      // Por ejemplo, si tienes una clase de error para violación de constraint
+      final errorMessage = _parseReservationError(e);
       AlertUtils.showMessageAlert(
-        title:
-            data != null ? 'reservation_success'.tr : 'reservation_reject'.tr,
+        title: errorMessage,
         buttonTitle: 'close'.tr,
         onPressed: () => Get.back(),
       );
     }
+  }
+
+  String _parseReservationError(dynamic e) {
+    // Aquí detectas el error específico de duplicado
+    // El ejemplo es general, adapta según el error real de tu backend o librería HTTP
+
+    final errorString = e.toString().toLowerCase();
+
+    if (errorString.contains('unique constraint') ||
+        errorString.contains('duplicate key') ||
+        errorString.contains('23505') || // código error PostgreSQL
+        errorString.contains('conflict')) {
+      return 'Ya existe una reserva para ese campo, fecha y horario.';
+    }
+
+    // Otros errores o mensajes por defecto
+    return 'reservation_reject'.tr;
   }
 
   void confirmReservation() {

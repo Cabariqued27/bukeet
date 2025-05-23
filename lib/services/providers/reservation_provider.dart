@@ -56,30 +56,7 @@ class ReservationProvider {
     return null;
   }
 
-  Future<app.Reservation?> checkReservationAvaliabilty({
-    required int fieldId,
-    required int timeSlot,
-    //required int fieldId,
-  }) async {
-    try {
-      var resp = await _supabase
-          .from(Tables.reservations)
-          .select()
-          .eq('fieldId', fieldId)
-          .eq('timeSlot', timeSlot)
-          //.eq('date', data.date!.toIso8601String())
-          ;
-
-      if (resp.isNotEmpty) {
-        var data = app.Reservation.fromJson(resp.first);
-        return data;
-      }
-    } catch (exception, stackTrace) {
-      LogError.capture(exception, stackTrace, 'checkReservationAvaliabilty');
-    }
-
-    return null;
-  }
+  
 
   Future<List<app.Reservation>> getReservationsById({
     required int userId,

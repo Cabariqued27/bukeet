@@ -6,7 +6,7 @@ class Reservation {
   int? userId;
   int? fieldId;
   DateTime? date;
-  String? timeSlot;
+  int? timeSlot;
   DateTime? updateAt;
   bool? status;
   int? totalPrice;

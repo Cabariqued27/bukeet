@@ -170,7 +170,7 @@ class BookingPage extends StatelessWidget {
               width: 1.0,
             ),
           ),
-          child: DropdownButton<String>(
+          child: DropdownButton<int>(
             isExpanded: true,
             underline: const SizedBox(),
             focusColor: controller.theme.backgroundDeviceSetting.value,
@@ -184,14 +184,15 @@ class BookingPage extends StatelessWidget {
               ),
               color: controller.theme.onText.value,
             ),
-            value: controller.selectedHour.value.isEmpty
-                ? null
-                : controller.selectedHour.value,
-            items: controller.listAvailableTimes.map((String gender) {
-              return DropdownMenuItem<String>(
+            value: controller.listAvailableTimes
+                    .contains(controller.selectedHour.value)
+                ? controller.selectedHour.value
+                : null,
+            items: controller.listAvailableTimes.map((int gender) {
+              return DropdownMenuItem<int>(
                 value: gender,
                 child: TextWidget(
-                  gender,
+                  controller.formatHour(gender),
                   fontFamily: AppFontFamily.workSans,
                   textAlign: TextAlign.center,
                   dsize: RelSize(
@@ -201,7 +202,7 @@ class BookingPage extends StatelessWidget {
                 ),
               );
             }).toList(),
-            onChanged: (String? newGender) {
+            onChanged: (int? newGender) {
               if (newGender != null) {
                 controller.setSelectedHour(newGender);
                 var index = controller.listAvailableTimes.indexOf(newGender);
@@ -240,7 +241,7 @@ class BookingPage extends StatelessWidget {
       fontFamily: AppFontFamily.workSans,
       textSize: TextWidgetSizes.small,
       onPressed: () {
-        controller.crearTransaccionPSE();
+        controller.confirmReservation();
       },
       isActive: true,
       height: 55.0,

@@ -61,7 +61,7 @@ class AlertUtils {
 
   static void showComnfirmReservationAlert({
     required String date,
-    required String hour,
+    required int hour,
     required String fieldInformation,
     required String price,
     required VoidCallback positiveAction,

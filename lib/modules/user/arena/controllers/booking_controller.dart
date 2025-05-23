@@ -35,19 +35,19 @@ class BookingController extends GetxController {
 
   //late PayUCheckoutProFlutter checkoutPro;
 
-  final reservations = <Reservation>[].obs;
-  final listAvailableTimes = <String>[].obs;
-  final listPriceAvailableTimes = <int>[].obs;
-  final selectedHour = ''.obs;
-  final selectedHourPrice = 0.obs;
-  final isLoadData = false.obs;
-  final activateNext = false.obs;
-  final isLoadDataReservations = false.obs;
-  final hourAvailability = <String, HourAvailability>{}.obs;
+  var reservations = <Reservation>[].obs;
+  var listAvailableTimes = <int>[].obs;
+  var listPriceAvailableTimes = <int>[].obs;
+  var selectedHour = 100.obs;
+  var selectedHourPrice = 0.obs;
+  var isLoadData = false.obs;
+  var activateNext = false.obs;
+  var isLoadDataReservations = false.obs;
+  var hourAvailability = <String, HourAvailability>{}.obs;
 
   int reservationDuration = 1;
-  final today = DateTime.now().obs;
-  final todayDynamic = DateTime.now().obs;
+  var today = DateTime.now().obs;
+  var todayDynamic = DateTime.now().obs;
   final dateController = TextEditingController();
 
   final _fieldsProvider = ReservationProvider();
@@ -78,7 +78,7 @@ class BookingController extends GetxController {
   }
 
   void onChangeForm() {
-    if (selectedHour.isNotEmpty) {
+    if (selectedHour.value != 100) {
       updateActivateNext(true);
     }
   }
@@ -90,7 +90,7 @@ class BookingController extends GetxController {
   void updateLoadDataReservations(bool value) =>
       isLoadDataReservations.value = value;
 
-  List<String> getAvailableTimes() {
+  List<int> getAvailableTimes() {
     listAvailableTimes.clear();
     listPriceAvailableTimes.clear();
 
@@ -100,7 +100,7 @@ class BookingController extends GetxController {
     final availability = hourAvailability[dayOfWeek];
 
     for (int hour = 0; hour < 24; hour++) {
-      final timeSlot = '${hour.toString().padLeft(2, '0')}:00:00';
+      final timeSlot = hour;
 
       final isReserved = reservations.any((res) {
         try {
@@ -121,11 +121,12 @@ class BookingController extends GetxController {
     update();
 
     updateLoadDataReservations(true);
-    return List<String>.from(listAvailableTimes);
+    return List<int>.from(listAvailableTimes);
   }
 
-  void setSelectedHour(String value) {
+  void setSelectedHour(int value) {
     selectedHour.value = value;
+
     onChangeForm();
   }
 
@@ -145,21 +146,24 @@ class BookingController extends GetxController {
       totalPrice: selectedHourPrice.value,
     );
 
-    final data =
-        await _fieldsProvider.createReservationByUserId(data: newReservation);
-    onNext();
+    final check = await _fieldsProvider.checkReservationAvaliabilty(fieldId: newReservation.fieldId ?? 0, timeSlot: selectedHour.value);
+    if (check == null) {
+      final data = await _fieldsProvider.createReservationByUserId(data: newReservation);
+      //onNext();
 
-    AlertUtils.showMessageAlert(
-      title: data != null ? 'reservation_success'.tr : 'reservation_reject'.tr,
-      buttonTitle: 'close'.tr,
-      onPressed: () => Get.back(),
-    );
+      AlertUtils.showMessageAlert(
+        title:
+            data != null ? 'reservation_success'.tr : 'reservation_reject'.tr,
+        buttonTitle: 'close'.tr,
+        onPressed: () => Get.back(),
+      );
+    }
   }
 
   void confirmReservation() {
     AlertUtils.showComnfirmReservationAlert(
       date: DateFormat('yyyy-MM-dd').format(todayDynamic.value),
-      hour: selectedHour.split(':').sublist(0, 2).join(':'),
+      hour: selectedHour.value,
       fieldInformation: arenaInformation?.address ?? '',
       price: '\$${selectedHourPrice.value}',
       positiveAction: createReservation,
@@ -217,45 +221,44 @@ class BookingController extends GetxController {
       d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
 
   Future<void> crearTransaccionPSE() async {
-  final referenciaUnica = generarReferenciaUnica();
+    final referenciaUnica = generarReferenciaUnica();
 
-  final response = await http.post(
-    Uri.parse('https://zwotqlhempawzymqxbne.supabase.co/functions/v1/start-pay-wompi/pse-transaction'),
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer $supabaseAnonKey',
-    },
-    body: jsonEncode({
-      "amount_in_cents": 150000,
-      "currency": "COP",
-      "customer_email": "usuario@correo.com",
-      "user_legal_id": "1999888777",
-      "user_legal_id_type": "CC",
-      "payment_description": "Pago a Tienda Wompi",
-      "reference": referenciaUnica,
-      "success_url": "https://tuapp.com/pago_exitoso",
-      "financial_institution_code": "1",
-      "user_type": 0,
-      "phone_number": "3001234567", // Requerido por Wompi
-      "full_name": "Juan Pérez",     // Requerido por Wompi
-    }),
-  );
+    final response = await http.post(
+      Uri.parse(
+          'https://zwotqlhempawzymqxbne.supabase.co/functions/v1/start-pay-wompi/pse-transaction'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $supabaseAnonKey',
+      },
+      body: jsonEncode({
+        "amount_in_cents": 150000,
+        "currency": "COP",
+        "customer_email": "usuario@correo.com",
+        "user_legal_id": "1999888777",
+        "user_legal_id_type": "CC",
+        "payment_description": "Pago a Tienda Wompi",
+        "reference": referenciaUnica,
+        "success_url": "https://tuapp.com/pago_exitoso",
+        "financial_institution_code": "1",
+        "user_type": 0,
+        "phone_number": "3001234567", // Requerido por Wompi
+        "full_name": "Juan Pérez", // Requerido por Wompi
+      }),
+    );
 
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body);
-    final redirectUrl = data['async_payment_url'];
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final redirectUrl = data['async_payment_url'];
 
-    if (redirectUrl != null) {
-      abrirEnNavegador(redirectUrl);
+      if (redirectUrl != null) {
+        abrirEnNavegador(redirectUrl);
+      } else {
+        Get.snackbar('Error', 'No se recibió la URL de redirección.');
+      }
     } else {
-      Get.snackbar('Error', 'No se recibió la URL de redirección.');
+      Get.snackbar('Error', 'Falló la transacción: ${response.body}');
     }
-  } else {
-    Get.snackbar('Error', 'Falló la transacción: ${response.body}');
-    print(response.statusCode);
   }
-}
-
 
   Future<void> abrirEnNavegador(String url) async {
     final uri = Uri.parse(url);
@@ -269,5 +272,11 @@ class BookingController extends GetxController {
   String generarReferenciaUnica() {
     final now = DateTime.now();
     return 'ref_${now.microsecondsSinceEpoch}';
+  }
+
+  String formatHour(int hour24) {
+    final int hour12 = hour24 % 12 == 0 ? 12 : hour24 % 12;
+    final String period = hour24 < 12 ? 'AM' : 'PM';
+    return '$hour12:00 $period';
   }
 }

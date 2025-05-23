@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 class ConfirmReservationAlertWidget extends StatelessWidget {
   final String date;
-  final String hour;
+  final int hour;
   final String fieldInformation;
   final String price;
 
@@ -46,7 +46,7 @@ class ConfirmReservationAlertWidget extends StatelessWidget {
         children: [
           _buildText('reservation_data'),
           _buildRow('date'.tr, date),
-          _buildRow('hour'.tr, hour),
+          _buildRow('hour'.tr, '$hour'),
           _buildRow('field_information'.tr, fieldInformation),
           _buildRow('price'.tr, price),
           SizedBox(height: AppSize.height() * 0.02),

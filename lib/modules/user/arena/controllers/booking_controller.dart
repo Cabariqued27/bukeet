@@ -132,7 +132,6 @@ class BookingController extends GetxController {
 
   void setSelectedHour(int value) {
     selectedHour.value = value;
-
     onChangeForm();
   }
 
@@ -274,7 +273,7 @@ class BookingController extends GetxController {
         'Authorization': 'Bearer $supabaseAnonKey',
       },
       body: jsonEncode({
-        "amount_in_cents": 150000,
+        "amount_in_cents": selectedHourPrice.value * 100,
         "currency": "COP",
         "customer_email": "davidcabariqueduran@gmail.com",
         "user_legal_id": "1002035334",

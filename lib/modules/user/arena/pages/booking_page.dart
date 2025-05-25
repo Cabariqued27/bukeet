@@ -57,7 +57,7 @@ class BookingPage extends StatelessWidget {
               horizontal: AppMargin.horizontal(),
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 const SizedBox(),
                 _nameWidget(),
@@ -69,9 +69,9 @@ class BookingPage extends StatelessWidget {
                         children: [
                           _dateInputWidget(),
                           _availableTimesDropdownWidget(),
+                          _institutionsDropdownWidget(),
                           SizedBox(height: AppSize.height() * 0.05),
                           _sendReservationButton(),
-                          _institutionsDropdownWidget()
                         ],
                       )
                     : LoadingDataWidget(),

@@ -265,16 +265,16 @@ class BookingController extends GetxController {
       body: jsonEncode({
         "amount_in_cents": 150000,
         "currency": "COP",
-        "customer_email": "usuario@correo.com",
-        "user_legal_id": "1999888777",
+        "customer_email": "davidcabariqueduran@gmail.com",
+        "user_legal_id": "1002035334",
         "user_legal_id_type": "CC",
         "payment_description": "Pago a Tienda Wompi",
         "reference": referenciaUnica,
         "success_url": "https://tuapp.com/pago_exitoso",
-        "financial_institution_code": "1",
+        "financial_institution_code": "1051",//tonto ingresa el codigo del banco correcto
         "user_type": 0,
-        "phone_number": "3001234567", // Requerido por Wompi
-        "full_name": "Juan Pérez", // Requerido por Wompi
+        "phone_number": "3005075795", // Requerido por Wompi
+        "full_name": "David Cabarique", // Requerido por Wompi
       }),
     );
 

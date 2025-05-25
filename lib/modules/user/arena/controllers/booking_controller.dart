@@ -257,7 +257,7 @@ class BookingController extends GetxController {
 
     final response = await http.post(
       Uri.parse(
-          'https://zwotqlhempawzymqxbne.supabase.co/functions/v1/start-pay-wompi/pse-transaction'),
+          '$supabaseUrl/functions/v1/start-pay-wompi/pse-transaction'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $supabaseAnonKey',

@@ -249,7 +249,7 @@ class BookingPage extends StatelessWidget {
               ),
               color: controller.theme.onText.value,
             ),
-            value: controller.selectedInstitution.value,
+            value: controller.selectedInstitution,
             items: controller.listInstitutions.map((Institution institution) {
               return DropdownMenuItem<Institution>(
                 value: institution,

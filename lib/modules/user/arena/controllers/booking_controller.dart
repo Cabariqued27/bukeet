@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-//import 'package:payu_checkoutpro_flutter/payu_checkoutpro_flutter.dart';
 
 class BookingController extends GetxController {
   final VoidCallback onNext;
@@ -48,7 +47,8 @@ class BookingController extends GetxController {
   var activateNext = false.obs;
   var isLoadDataReservations = false.obs;
   var hourAvailability = <String, HourAvailability>{}.obs;
-  var selectedInstitution = Rxn<Institution>();
+
+  Institution? selectedInstitution;
 
   int reservationDuration = 1;
   var today = DateTime.now().obs;
@@ -137,8 +137,7 @@ class BookingController extends GetxController {
   }
 
   void setSelectedInstitution(Institution value) {
-    selectedInstitution.value = value;
-    print(selectedInstitution.value?.codigo);
+    selectedInstitution = value;
     onChangeForm();
   }
 
@@ -340,7 +339,6 @@ class BookingController extends GetxController {
             .toList(),
       );
     }
-    print(listInstitutions.length);
   }
 
   String formatHour(int hour24) {

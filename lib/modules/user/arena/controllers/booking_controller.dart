@@ -48,7 +48,7 @@ class BookingController extends GetxController {
   var isLoadDataReservations = false.obs;
   var hourAvailability = <String, HourAvailability>{}.obs;
 
-  Institution? selectedInstitution;
+  var selectedInstitution = Rxn<Institution>();
 
   int reservationDuration = 1;
   var today = DateTime.now().obs;
@@ -137,8 +137,9 @@ class BookingController extends GetxController {
   }
 
   void setSelectedInstitution(Institution value) {
-    selectedInstitution = value;
-    onChangeForm();
+    selectedInstitution.value = value;
+    update();
+    //onChangeForm();
   }
 
   void setSelectedPrice(int value) {
@@ -282,7 +283,7 @@ class BookingController extends GetxController {
         "reference": referenciaUnica,
         "success_url": "https://tuapp.com/pago_exitoso",
         "financial_institution_code":
-            "1051", //tonto ingresa el codigo del banco correcto
+            "${selectedInstitution.value?.codigo}", //tonto ingresa el codigo del banco correcto
         "user_type": 0,
         "phone_number": "3005075795", // Requerido por Wompi
         "full_name": "David Cabarique", // Requerido por Wompi

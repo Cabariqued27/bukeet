@@ -249,7 +249,7 @@ class BookingPage extends StatelessWidget {
               ),
               color: controller.theme.onText.value,
             ),
-            value: controller.selectedInstitution,
+            value: controller.selectedInstitution.value,
             items: controller.listInstitutions.map((Institution institution) {
               return DropdownMenuItem<Institution>(
                 value: institution,
@@ -300,7 +300,7 @@ class BookingPage extends StatelessWidget {
       fontFamily: AppFontFamily.workSans,
       textSize: TextWidgetSizes.small,
       onPressed: () {
-        controller.cargarInstituciones();
+        controller.crearTransaccionPSE();
       },
       isActive: true,
       height: 55.0,

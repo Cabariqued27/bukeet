@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bukeet/secrets.dart';
+import 'package:bukeet/services/models/institution.dart';
 import 'package:http/http.dart' as http;
 import 'package:bukeet/preferences/user_preferences.dart';
 import 'package:bukeet/services/models/arena.dart';
@@ -38,12 +39,16 @@ class BookingController extends GetxController {
   var reservations = <Reservation>[].obs;
   var listAvailableTimes = <int>[].obs;
   var listPriceAvailableTimes = <int>[].obs;
+  var listInstitutions = <Institution>[].obs;
   var selectedHour = 100.obs;
+  var selectedInstitutionsName = ''.obs;
+  var selectedInstitutionsCode = 0.obs;
   var selectedHourPrice = 0.obs;
   var isLoadData = false.obs;
   var activateNext = false.obs;
   var isLoadDataReservations = false.obs;
   var hourAvailability = <String, HourAvailability>{}.obs;
+  var selectedInstitution = Rxn<Institution>();
 
   int reservationDuration = 1;
   var today = DateTime.now().obs;
@@ -56,6 +61,7 @@ class BookingController extends GetxController {
 
   Future<void> startController() async {
     //checkoutPro = PayUCheckoutProFlutter();
+    await cargarInstituciones();
     final selectedDate = _getOnlyDate(today.value);
     reservations.value = await _fieldsProvider.getReservedTimes(
       fieldId: fieldInformation?.id ?? 0,
@@ -127,6 +133,12 @@ class BookingController extends GetxController {
   void setSelectedHour(int value) {
     selectedHour.value = value;
 
+    onChangeForm();
+  }
+
+  void setSelectedInstitution(Institution value) {
+    selectedInstitution.value = value;
+    print(selectedInstitution.value?.codigo);
     onChangeForm();
   }
 
@@ -256,8 +268,7 @@ class BookingController extends GetxController {
     final referenciaUnica = generarReferenciaUnica();
 
     final response = await http.post(
-      Uri.parse(
-          '$supabaseUrl/functions/v1/start-pay-wompi/pse-transaction'),
+      Uri.parse('$supabaseUrl/functions/v1/start-pay-wompi/pse-transaction'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $supabaseAnonKey',
@@ -271,7 +282,8 @@ class BookingController extends GetxController {
         "payment_description": "Pago a Tienda Wompi",
         "reference": referenciaUnica,
         "success_url": "https://tuapp.com/pago_exitoso",
-        "financial_institution_code": "1051",//tonto ingresa el codigo del banco correcto
+        "financial_institution_code":
+            "1051", //tonto ingresa el codigo del banco correcto
         "user_type": 0,
         "phone_number": "3005075795", // Requerido por Wompi
         "full_name": "David Cabarique", // Requerido por Wompi
@@ -304,6 +316,31 @@ class BookingController extends GetxController {
   String generarReferenciaUnica() {
     final now = DateTime.now();
     return 'ref_${now.microsecondsSinceEpoch}';
+  }
+
+  Future<void> cargarInstituciones() async {
+    final response = await http.get(
+      Uri.parse('https://production.wompi.co/v1/pse/financial_institutions'),
+      headers: {
+        'Authorization': 'Bearer $wompiKey',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+      final List institucionesData = jsonData['data'];
+
+      listInstitutions.assignAll(
+        institucionesData
+            .map<Institution>((institucion) => Institution(
+                  nombre: institucion['financial_institution_name'],
+                  codigo: institucion['financial_institution_code'].toString(),
+                ))
+            .toList(),
+      );
+    }
+    print(listInstitutions.length);
   }
 
   String formatHour(int hour24) {

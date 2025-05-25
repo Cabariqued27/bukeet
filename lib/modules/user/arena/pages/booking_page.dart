@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:bukeet/modules/user/arena/controllers/booking_controller.dart';
+import 'package:bukeet/services/models/institution.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
@@ -70,6 +71,7 @@ class BookingPage extends StatelessWidget {
                           _availableTimesDropdownWidget(),
                           SizedBox(height: AppSize.height() * 0.05),
                           _sendReservationButton(),
+                          _institutionsDropdownWidget()
                         ],
                       )
                     : LoadingDataWidget(),
@@ -216,6 +218,63 @@ class BookingPage extends StatelessWidget {
     );
   }
 
+  Widget _institutionsDropdownWidget() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _textInputWidget('institutions', controller.theme.black.value),
+        Container(
+          width: AppSize.width() * 0.9,
+          height: AppSize.height() * 0.06,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            color: controller.theme.white.value,
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(
+              color: controller.theme.grayAccent.value,
+              width: 1.0,
+            ),
+          ),
+          child: DropdownButton<Institution>(
+            isExpanded: true,
+            underline: const SizedBox(),
+            focusColor: controller.theme.backgroundDeviceSetting.value,
+            hint: TextWidget(
+              fontStyle: FontStyle.italic,
+              'choose_institution'.tr,
+              fontFamily: AppFontFamily.workSans,
+              textAlign: TextAlign.center,
+              dsize: RelSize(
+                size: TextWidgetSizes.small,
+              ),
+              color: controller.theme.onText.value,
+            ),
+            value: controller.selectedInstitution.value,
+            items: controller.listInstitutions.map((Institution institution) {
+              return DropdownMenuItem<Institution>(
+                value: institution,
+                child: TextWidget(
+                  institution.nombre,
+                  fontFamily: AppFontFamily.workSans,
+                  textAlign: TextAlign.center,
+                  dsize: RelSize(
+                    size: TextWidgetSizes.small,
+                  ),
+                  color: controller.theme.gray.value,
+                ),
+              );
+            }).toList(),
+            onChanged: (Institution? newInstitution) {
+              if (newInstitution != null) {
+                controller.setSelectedInstitution(newInstitution);
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _dateInputWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,7 +300,7 @@ class BookingPage extends StatelessWidget {
       fontFamily: AppFontFamily.workSans,
       textSize: TextWidgetSizes.small,
       onPressed: () {
-        controller.crearTransaccionPSE();
+        controller.cargarInstituciones();
       },
       isActive: true,
       height: 55.0,

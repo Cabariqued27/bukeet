@@ -41,6 +41,11 @@ class BookingController extends GetxController {
   var listInstitutions = <Institution>[].obs;
   var selectedHour = 100.obs;
   var selectedInstitutionsName = ''.obs;
+  var customerEmail = ''.obs;
+  var fullName = ''.obs;
+  var phoneNumber = 0.obs;
+  var userLegalId = 0.obs;
+  var userLegalIdType = ''.obs;
   var selectedInstitutionsCode = 0.obs;
   var selectedHourPrice = 0.obs;
   var isLoadData = false.obs;
@@ -61,6 +66,7 @@ class BookingController extends GetxController {
 
   Future<void> startController() async {
     //checkoutPro = PayUCheckoutProFlutter();
+    loadDefaultUserInformation();
     await cargarInstituciones();
     final selectedDate = _getOnlyDate(today.value);
     reservations.value = await _fieldsProvider.getReservedTimes(
@@ -83,18 +89,34 @@ class BookingController extends GetxController {
     getAvailableTimes();
   }
 
+  void loadDefaultUserInformation() {
+    customerEmail.value = "davidcabariqueduran@gmail.com";
+    phoneNumber.value = 3005075795;
+    userLegalId.value = 1002035334;
+    userLegalIdType.value = 'CC';
+    update();
+  }
+
   void onChangeForm() {
     if (selectedHour.value != 100) {
       updateActivateNext(true);
     }
   }
 
-  void updateActivateNext(bool value) => activateNext.value = value;
+  void updateActivateNext(bool value) {
+    activateNext.value = value;
+    update();
+  }
 
-  void updateLoadData(bool value) => isLoadData.value = value;
+  void updateLoadData(bool value) {
+    isLoadData.value = value;
+    update();
+  }
 
-  void updateLoadDataReservations(bool value) =>
-      isLoadDataReservations.value = value;
+  void updateLoadDataReservations(bool value) {
+    isLoadDataReservations.value = value;
+    update();
+  }
 
   List<int> getAvailableTimes() {
     listAvailableTimes.clear();
@@ -275,16 +297,16 @@ class BookingController extends GetxController {
       body: jsonEncode({
         "amount_in_cents": selectedHourPrice.value * 100,
         "currency": "COP",
-        "customer_email": "davidcabariqueduran@gmail.com",
-        "user_legal_id": "1002035334",
-        "user_legal_id_type": "CC",
+        "customer_email": "$customerEmail",
+        "user_legal_id": "$userLegalId",
+        "user_legal_id_type": "$userLegalIdType",
         "payment_description": "Pago a Tienda Wompi",
         "reference": referenciaUnica,
         "success_url": "https://tuapp.com/pago_exitoso",
         "financial_institution_code":
             "${selectedInstitution.value?.codigo}", //tonto ingresa el codigo del banco correcto
         "user_type": 0,
-        "phone_number": "3005075795", // Requerido por Wompi
+        "phone_number": "$phoneNumber", // Requerido por Wompi
         "full_name": "David Cabarique", // Requerido por Wompi
       }),
     );

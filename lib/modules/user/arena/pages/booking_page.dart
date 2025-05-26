@@ -6,6 +6,7 @@ import 'package:bukeet/utils/app/app_size.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
 import 'package:bukeet/widgets/images/network_image_widget.dart';
 import 'package:bukeet/widgets/inputs/date_input_default_widget.dart';
+import 'package:bukeet/widgets/inputs/single_input_widget.dart';
 import 'package:bukeet/widgets/loading/loading_data_widget.dart';
 import 'package:bukeet/widgets/responsive/responsive_widget.dart';
 import 'package:bukeet/widgets/responsive/web_frame_widget.dart';
@@ -56,31 +57,42 @@ class BookingPage extends StatelessWidget {
               vertical: AppMargin.vertical(),
               horizontal: AppMargin.horizontal(),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const SizedBox(),
-                _nameWidget(),
-                _imagesWidget(),
-                const SizedBox(),
-                (controller.isLoadDataReservations.value)
-                    ? Column(
+            child: (controller.isLoadDataReservations.value)
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      const SizedBox(),
+                      _nameWidget(),
+                      //_imagesWidget(),
+                      const SizedBox(),
+                      Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _dateInputWidget(),
                           _availableTimesDropdownWidget(),
                           _institutionsDropdownWidget(),
-                          SizedBox(height: AppSize.height() * 0.05),
+                          _genderDropDownWidget(),
+                          _inputWidget(
+                              'put_name',
+                              controller.fullNameInputController,
+                              'full_name',
+                              TextInputType.text),
+                          _inputWidget(
+                              'put_email',
+                              controller.customerEmailInputController,
+                              'email_address',
+                              TextInputType.emailAddress),
+                          _inputWidget(
+                              'ccnumero',
+                              controller.userLegalIdInputController,
+                              'ccnumero',
+                              TextInputType.number),
                           _sendReservationButton(),
                         ],
                       )
-                    : LoadingDataWidget(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-              ],
-            ),
+                    ],
+                  )
+                : LoadingDataWidget(),
           ),
         ],
       ),
@@ -155,132 +167,11 @@ class BookingPage extends StatelessWidget {
     );
   }
 
-  Widget _availableTimesDropdownWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _textInputWidget('avaliable_hours', controller.theme.black.value),
-        Container(
-          width: AppSize.width() * 0.9,
-          height: AppSize.height() * 0.06,
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-          decoration: BoxDecoration(
-            color: controller.theme.white.value,
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(
-              color: controller.theme.grayAccent.value,
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton<int>(
-            isExpanded: true,
-            underline: const SizedBox(),
-            focusColor: controller.theme.backgroundDeviceSetting.value,
-            hint: TextWidget(
-              fontStyle: FontStyle.italic,
-              'choose_hour'.tr,
-              fontFamily: AppFontFamily.workSans,
-              textAlign: TextAlign.center,
-              dsize: RelSize(
-                size: TextWidgetSizes.small,
-              ),
-              color: controller.theme.onText.value,
-            ),
-            value: controller.listAvailableTimes
-                    .contains(controller.selectedHour.value)
-                ? controller.selectedHour.value
-                : null,
-            items: controller.listAvailableTimes.map((int gender) {
-              return DropdownMenuItem<int>(
-                value: gender,
-                child: TextWidget(
-                  controller.formatHour(gender),
-                  fontFamily: AppFontFamily.workSans,
-                  textAlign: TextAlign.center,
-                  dsize: RelSize(
-                    size: TextWidgetSizes.small,
-                  ),
-                  color: controller.theme.gray.value,
-                ),
-              );
-            }).toList(),
-            onChanged: (int? newGender) {
-              if (newGender != null) {
-                controller.setSelectedHour(newGender);
-                var index = controller.listAvailableTimes.indexOf(newGender);
-                controller.setSelectedPrice(
-                    controller.listPriceAvailableTimes[index]);
-              }
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _institutionsDropdownWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _textInputWidget('institutions', controller.theme.black.value),
-        Container(
-          width: AppSize.width() * 0.9,
-          height: AppSize.height() * 0.06,
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-          decoration: BoxDecoration(
-            color: controller.theme.white.value,
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(
-              color: controller.theme.grayAccent.value,
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton<Institution>(
-            isExpanded: true,
-            underline: const SizedBox(),
-            focusColor: controller.theme.backgroundDeviceSetting.value,
-            hint: TextWidget(
-              fontStyle: FontStyle.italic,
-              'choose_institution'.tr,
-              fontFamily: AppFontFamily.workSans,
-              textAlign: TextAlign.center,
-              dsize: RelSize(
-                size: TextWidgetSizes.small,
-              ),
-              color: controller.theme.onText.value,
-            ),
-            value: controller.selectedInstitution.value,
-            items: controller.listInstitutions.map((Institution institution) {
-              return DropdownMenuItem<Institution>(
-                value: institution,
-                child: TextWidget(
-                  institution.nombre,
-                  fontFamily: AppFontFamily.workSans,
-                  textAlign: TextAlign.center,
-                  dsize: RelSize(
-                    size: TextWidgetSizes.small,
-                  ),
-                  color: controller.theme.gray.value,
-                ),
-              );
-            }).toList(),
-            onChanged: (Institution? newInstitution) {
-              if (newInstitution != null) {
-                controller.setSelectedInstitution(newInstitution);
-              }
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _dateInputWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _textInputWidget(
-            'choose_reservation_date', controller.theme.black.value),
+        _titleWidget('choose_reservation_date', controller.theme.black.value),
         GestureDetector(
           onTap: () => controller.chooseDate(),
           child: DateInputDefaultWidget(
@@ -311,7 +202,7 @@ class BookingPage extends StatelessWidget {
     );
   }
 
-  Widget _textInputWidget(String text, Color color) {
+  Widget _titleWidget(String text, Color color) {
     return TextWidget(
       text.tr,
       fontFamily: AppFontFamily.workSans,
@@ -321,6 +212,148 @@ class BookingPage extends StatelessWidget {
         size: TextWidgetSizes.xsmall,
       ),
       color: color,
+    );
+  }
+
+  Widget _inputWidget(String hintText, TextEditingController controllerText,
+      String title, TextInputType textInputType) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _titleWidget(title, controller.theme.black.value),
+        SingleInputWidget(
+          maxLength: 15,
+          mandatory: true,
+          hintText: hintText.tr,
+          textInputType: textInputType,
+          controller: controllerText,
+          onChanged: (value) {},
+          onEditingComplete: () => //controller.onChangedFirstName
+              (),
+          isActive: true,
+        ),
+        /*TextWidget(
+          'name_check'.tr,
+          fontFamily: AppFontFamily.workSans,
+          color: (controller.firstNameWarning.value)
+              ? controller.theme.primary.value
+              : Colors.transparent,
+          textAlign: TextAlign.start,
+          dsize: RelSize(
+            size: TextWidgetSizes.xsmall,
+          ),
+          textOverflow: TextOverflow.clip,
+        ),*/
+      ],
+    );
+  }
+
+  Widget _availableTimesDropdownWidget() {
+    return _customDropdownWidget<int>(
+      titleKey: 'avaliable_hours',
+      selectedValue:
+          controller.listAvailableTimes.contains(controller.selectedHour.value)
+              ? controller.selectedHour.value
+              : null,
+      items: controller.listAvailableTimes,
+      hintTextKey: 'choose_hour',
+      onChanged: (int? newHour) {
+        if (newHour != null) {
+          controller.setSelectedHour(newHour);
+          var index = controller.listAvailableTimes.indexOf(newHour);
+          controller
+              .setSelectedPrice(controller.listPriceAvailableTimes[index]);
+        }
+      },
+      itemLabel: (hour) => controller.formatHour(hour),
+    );
+  }
+
+  Widget _institutionsDropdownWidget() {
+    return _customDropdownWidget<Institution>(
+      titleKey: 'institutions',
+      selectedValue: controller.selectedInstitution.value,
+      items: controller.listInstitutions,
+      hintTextKey: 'choose_institution',
+      onChanged: (Institution? institution) {
+        if (institution != null) {
+          controller.setSelectedInstitution(institution);
+        }
+      },
+      itemLabel: (institution) => institution.nombre,
+    );
+  }
+
+  Widget _genderDropDownWidget() {
+    return _customDropdownWidget<String>(
+      titleKey: 'gender',
+      selectedValue: controller.selectedGender.value.isEmpty
+          ? null
+          : controller.selectedGender.value,
+      items: controller.genders,
+      hintTextKey: 'select_gender',
+      onChanged: (String? newGender) {
+        if (newGender != null) {
+          controller.setSelectedGender(newGender);
+        }
+      },
+      itemLabel: (gender) => gender,
+    );
+  }
+
+  Widget _customDropdownWidget<T>({
+    required String titleKey,
+    required T? selectedValue,
+    required List<T> items,
+    required String hintTextKey,
+    required void Function(T?) onChanged,
+    required String Function(T) itemLabel,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _titleWidget(titleKey, controller.theme.black.value),
+        Container(
+          width: AppSize.width() * 0.9,
+          height: AppSize.height() * 0.06,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            color: controller.theme.white.value,
+            borderRadius: BorderRadius.circular(10.0),
+            border: Border.all(
+              color: controller.theme.grayAccent.value,
+              width: 1.0,
+            ),
+          ),
+          child: DropdownButton<T>(
+            isExpanded: true,
+            underline: const SizedBox(),
+            focusColor: controller.theme.backgroundDeviceSetting.value,
+            hint: TextWidget(
+              fontStyle: FontStyle.italic,
+              hintTextKey.tr,
+              fontFamily: AppFontFamily.workSans,
+              textAlign: TextAlign.center,
+              dsize: RelSize(size: TextWidgetSizes.small),
+              color: controller.theme.onText.value,
+            ),
+            value: selectedValue,
+            items: items.map((T item) {
+              return DropdownMenuItem<T>(
+                value: item,
+                child: TextWidget(
+                  itemLabel(item),
+                  fontFamily: AppFontFamily.workSans,
+                  textAlign: TextAlign.center,
+                  dsize: RelSize(size: TextWidgetSizes.small),
+                  color: controller.theme.gray.value,
+                ),
+              );
+            }).toList(),
+            onChanged: onChanged,
+          ),
+        ),
+      ],
     );
   }
 }

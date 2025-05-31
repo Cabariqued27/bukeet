@@ -1,3 +1,4 @@
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/svg/svg_asset_widget.dart';
 import 'package:bukeet/widgets/text/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class FinalGradientToggleColorButtonWidget extends StatelessWidget {
       boxShadow: (index == globalIndex)
           ? [
               BoxShadow(
-                  color: Colors.grey.withOpacity(0.4),
+                  color:applyOpacity(Colors.grey, 0.4),
                   spreadRadius: 0.2,
                   blurRadius: 5,
                 ),

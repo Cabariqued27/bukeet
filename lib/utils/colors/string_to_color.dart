@@ -1,3 +1,4 @@
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/utils/global/log_error_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -41,9 +42,9 @@ LinearGradient listStringToGradient(List<dynamic>? data) {
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
     colors: [
-      Colors.black.withOpacity(1.0),
-      Colors.black.withOpacity(0.6),
-      Colors.black.withOpacity(0.3),
+      applyOpacity(Colors.black, 1.0),
+      applyOpacity(Colors.black, 0.6),
+      applyOpacity(Colors.black, 0.3),
     ],
   );
 }
@@ -59,10 +60,7 @@ LinearGradient listStringToGradientExplore(List<dynamic>? data) {
       }
 
       var gradient = LinearGradient(
-        stops: const [
-          0.2,
-          0.8,
-        ],
+        stops: const [0.2, 0.8],
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: gradientColors,
@@ -75,16 +73,13 @@ LinearGradient listStringToGradientExplore(List<dynamic>? data) {
   }
 
   return LinearGradient(
-    stops: const [
-      0.2,
-      0.8,
-    ],
+    stops: const [0.2, 0.8],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
     colors: [
-      Colors.black.withOpacity(1.0),
-      Colors.black.withOpacity(0.6),
-      Colors.black.withOpacity(0.3),
+      applyOpacity(Colors.black, 1.0),
+      applyOpacity(Colors.black, 0.6),
+      applyOpacity(Colors.black, 0.3),
     ],
   );
 }

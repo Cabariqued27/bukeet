@@ -1,3 +1,4 @@
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,32 +17,22 @@ class AppTheme extends GetxController {
   var datePickerIconColor = const Color(0xffA0A0A0).obs;
   var mustHaveColorText = const Color(0xff959595).obs;
   var text = const Color(0xff3C4247).obs;
-  var textStarted = const Color(0xff090909).withOpacity(0.51).obs;
+  var textStarted = applyOpacity(const Color(0xff090909), 0.51).obs;
   var whiteText = const Color(0xffFFFFFF).obs;
   var onText = const Color(0xffD7D7DB).obs;
   var black = const Color(0xff000000).obs;
   var disable = const Color(0xffFAFAFA).obs;
   var gray = const Color(0xff7A7A7A).obs;
-  var lineGraphProfile = const Color(0xffDFDFE1).withOpacity(0.4).obs;
   var secondGray = const Color(0xff5E5E5E).obs;
   var grayAccent = const Color(0xffEAEAEA).obs;
   var streakDay = const Color(0xffD6849C).obs;
   var pinkAccent = const Color(0xffFFEDF6).obs;
   var surface = const Color(0xffF2F2F2).obs;
   var dotMockSlider = const Color(0xffC2B8D2).obs;
-  var tYellow = const Color(0xffF9EEC6).withOpacity(0.01).obs;
-  var tGreen = const Color(0xffAEDAC2).withOpacity(0.01).obs;
-  var tPink = const Color(0xffFFA9D3).withOpacity(0.01).obs;
   var white = const Color.fromARGB(255, 255, 255, 255).obs;
   var transparent = const Color.fromARGB(0, 122, 122, 122).obs;
   var numberDayColor = const Color(0xffF982BC).obs;
   var itemBorder = const Color(0xffE6E6E6).obs;
-  var weekDayColor = const Color(0xff3C3C43).withOpacity(0.3).obs;
-  var profileColorTitles = const Color(0xff000000).withOpacity(0.3).obs;
-  var congratulationDisableGraph =
-      const Color(0xff000000).withOpacity(0.62).obs;
-  var valueBattery = const Color(0xff3C3C43).withOpacity(0.6).obs;
-  var weekendDayColor = const Color(0xff3C3C43).withOpacity(0.1).obs;
   var deviceItemTextColor = const Color(0xff565656).obs;
   var refreshColor = const Color(0xff4E856C).obs;
   var refreshBackground = const Color(0xffCFE7D8).obs;

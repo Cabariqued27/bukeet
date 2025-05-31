@@ -1,4 +1,5 @@
 import 'package:bukeet/utils/app/app_size.dart';
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/images/controllers/slider_network_image_controller.dart';
 import 'package:bukeet/widgets/images/network_image_widget.dart';
 import 'package:bukeet/widgets/loading/loading_data_widget.dart';
@@ -107,7 +108,7 @@ Widget _dotsWidget(SliderNetworkImageController controller) {
                     shape: BoxShape.circle,
                     color: controller.theme.background.value,
                     border: Border.all(
-                      color: controller.theme.gray.value.withOpacity(0.5),
+                      color: applyOpacity(controller.theme.gray.value, 0.5),
                     ),
                   ),
           ),

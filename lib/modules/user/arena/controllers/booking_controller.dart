@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:bukeet/secrets.dart';
 import 'package:bukeet/services/models/institution.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:bukeet/preferences/user_preferences.dart';
 import 'package:bukeet/services/models/arena.dart';

@@ -1,4 +1,5 @@
 import 'package:bukeet/utils/colors/gradient_opacity_utils.dart';
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/text/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/current_remaining_time.dart';
@@ -80,7 +81,7 @@ class TimerGradientButtonWidget extends StatelessWidget {
 
   Widget _titleTextWidget() {
     var enableTextColor = textColor;
-    var disableTextColor = textColor.withOpacity(0.5);
+    var disableTextColor = applyOpacity(textColor, 0.5);
 
     return TextWidget(
       title,
@@ -96,7 +97,7 @@ class TimerGradientButtonWidget extends StatelessWidget {
 
   Widget _counterTextWidget() {
     var enableTextColor = textColor;
-    var disableTextColor = textColor.withOpacity(0.5);
+    var disableTextColor = applyOpacity(textColor, 0.5);
 
     return CountdownTimer(
       endTime: endTime,

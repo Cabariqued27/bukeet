@@ -1,3 +1,4 @@
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/svg/svg_network_widget.dart';
 import 'package:bukeet/widgets/text/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -45,8 +46,8 @@ class SvgNetworkButtonWidget extends StatelessWidget {
     return (!isMoodSelected)
         ? _initialStateWidget()
         : (id != selectedMoodId)
-            ? _noSelectedWidget()
-            : _selectedWidget();
+        ? _noSelectedWidget()
+        : _selectedWidget();
   }
 
   Widget _initialStateWidget() {
@@ -119,7 +120,7 @@ class SvgNetworkButtonWidget extends StatelessWidget {
                 width: size,
                 height: size,
                 fit: BoxFit.contain,
-                color: iconColor?.withOpacity(0.4),
+                color: applyOpacity(iconColor!, 0.4),
               ),
             ),
           ),
@@ -127,7 +128,7 @@ class SvgNetworkButtonWidget extends StatelessWidget {
         TextWidget(
           title,
           fontFamily: fontFamily,
-          color: titleColor.withOpacity(0.4),
+          color: applyOpacity(titleColor, 0.4),
           fontWeight: TextWidgetWeight.medium,
           dsize: RelSize(size: TextWidgetSizes.xsmall),
         ),

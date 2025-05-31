@@ -1,4 +1,5 @@
 import 'package:bukeet/utils/app/app_size.dart';
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/svg/svg_asset_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +49,10 @@ class DisableBlockButtonWidget extends StatelessWidget {
                         width: size,
                         height: size,
                         alignment: Alignment.center,
-                        color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.2),
+                        color: applyOpacity(
+                          const Color.fromARGB(255, 255, 255, 255),
+                          0.2,
+                        ),
                       ),
                     ),
                   ),

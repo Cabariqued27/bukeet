@@ -1,5 +1,6 @@
 import 'package:bukeet/theme/theme.dart';
 import 'package:bukeet/utils/app/app_size.dart';
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -42,7 +43,7 @@ class WebFrameWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0),
         boxShadow: [
           BoxShadow(
-            color: theme.gray.value.withOpacity(0.4),
+            color: applyOpacity(theme.gray.value, 0.4),
             spreadRadius: 4.0,
             blurRadius: 9.0,
             offset: const Offset(0, 0.5),

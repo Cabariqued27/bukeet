@@ -1,3 +1,4 @@
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/utils/global/log_error_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ LinearGradient copyGradientWithOpacity(
 ) {
   try {
     var colors =
-        original.colors.map((color) => color.withOpacity(opacity)).toList();
+        original.colors.map((color) => applyOpacity(color, opacity)).toList();
 
     return LinearGradient(
       colors: colors,

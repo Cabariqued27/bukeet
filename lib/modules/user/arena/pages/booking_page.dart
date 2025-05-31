@@ -4,7 +4,6 @@ import 'package:bukeet/services/models/institution.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
-import 'package:bukeet/widgets/images/network_image_widget.dart';
 import 'package:bukeet/widgets/inputs/date_input_default_widget.dart';
 import 'package:bukeet/widgets/inputs/single_input_widget.dart';
 import 'package:bukeet/widgets/loading/loading_data_widget.dart';
@@ -113,7 +112,7 @@ class BookingPage extends StatelessWidget {
     );
   }
 
-  Widget _imagesWidget() {
+  /*Widget _imagesWidget() {
     return FadeIn(
       duration: const Duration(milliseconds: 1000),
       child: Column(
@@ -131,9 +130,9 @@ class BookingPage extends StatelessWidget {
         ],
       ),
     );
-  }
+  }*/
 
-  Widget _informationWidget() {
+  /*Widget _informationWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -165,7 +164,7 @@ class BookingPage extends StatelessWidget {
         ),
       ],
     );
-  }
+  }*/
 
   Widget _dateInputWidget() {
     return Column(

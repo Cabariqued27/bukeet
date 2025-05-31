@@ -294,34 +294,29 @@ class BookingController extends GetxController {
   Future<void> crearTransaccionPSE() async {
     final referenciaUnica = generarReferenciaUnica();
 
-    final jsonBody = {
-      "amount_in_cents": selectedHourPrice.value * 100,
-      "currency": "COP",
-      "customer_email": customerEmailInputController.text,
-      "user_legal_id": userLegalIdInputController.text,
-      "user_legal_id_type": "$userLegalIdType",
-      "payment_description": "Pago a Tienda Wompi",
-      "reference": referenciaUnica,
-      "success_url": "https://tuapp.com/pago_exitoso",
-      "financial_institution_code": "${selectedInstitution.value?.codigo}",
-      "user_type": 0,
-      "phone_number": "$phoneNumber",
-      "full_name": "$fullNameInputController",
-    };
-
-    // 🔍 Imprime el JSON en consola
-    if (kDebugMode) {
-      print('➡️ Enviando JSON a Wompi:\n${jsonEncode(jsonBody)}');
-    }
-
     final response = await http.post(
       Uri.parse('$supabaseUrl/functions/v1/start-pay-wompi/pse-transaction'),
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $supabaseAnonKey',
       },
-      body: jsonEncode(jsonBody),
+      body: jsonEncode({
+        "amount_in_cents": 150000,
+        "currency": "COP",
+        "customer_email": "davidcabariqueduran@gmail.com",
+        "user_legal_id": "1002035334",
+        "user_legal_id_type": "CC",
+        "payment_description": "Pago a Tienda Wompi",
+        "reference": referenciaUnica,
+        "success_url": "https://tuapp.com/pago_exitoso",
+        "financial_institution_code":
+            "1", //tonto ingresa el codigo del banco correcto
+        "user_type": 0,
+        "phone_number": "3005075795", // Requerido por Wompi
+        "full_name": "David Cabarique", // Requerido por Wompi
+      }),
     );
+
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

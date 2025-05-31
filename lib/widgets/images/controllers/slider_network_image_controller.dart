@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 class SliderNetworkImageController extends GetxController {
   final List<dynamic> images;
 
-  var sliderController = CarouselController();
+  var sliderController = CarouselSliderController();
   var current = 1.obs;
   var isLoadData = false.obs;
 

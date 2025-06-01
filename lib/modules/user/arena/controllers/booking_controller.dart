@@ -128,8 +128,9 @@ class BookingController extends GetxController {
     listPriceAvailableTimes.clear();
 
     final isToday = _isSameDay(today.value, todayDynamic.value);
-    final dayOfWeek =
-        DateFormat('EEEE').format(todayDynamic.value).toLowerCase();
+    final dayOfWeek = DateFormat(
+      'EEEE',
+    ).format(todayDynamic.value).toLowerCase();
     final availability = hourAvailability[dayOfWeek];
 
     for (int hour = 0; hour < 24; hour++) {
@@ -174,6 +175,7 @@ class BookingController extends GetxController {
   }
 
   Future<void> createReservation() async {
+    Get.back();
     final newReservation = Reservation(
       userId: _preferences.getUserId(),
       fieldId: fieldInformation?.id ?? 0,
@@ -185,14 +187,11 @@ class BookingController extends GetxController {
     );
 
     try {
-      final data =
-          await _fieldsProvider.createReservationByUserId(data: newReservation);
+      final data = await _fieldsProvider.createReservationByUserId(
+        data: newReservation,
+      );
       if (data != null) {
-        AlertUtils.showMessageAlert(
-          title: 'reservation_success'.tr,
-          buttonTitle: 'close'.tr,
-          onPressed: () => Get.back(),
-        );
+        crearTransaccionPSE();
       } else {
         // En caso de que createReservationByUserId devuelva null sin excepción
         AlertUtils.showMessageAlert(
@@ -276,11 +275,11 @@ class BookingController extends GetxController {
   }
 
   Future<void> initializeAvailabilityIfNeeded(int fieldId) async {
-    final fetchedAvailability =
-        await _hourAvailabilityProvider.fetchAvailability(fieldId);
+    final fetchedAvailability = await _hourAvailabilityProvider
+        .fetchAvailability(fieldId);
     hourAvailability.value = {
       for (var item in fetchedAvailability)
-        if (item.day != null) item.day!: item
+        if (item.day != null) item.day!: item,
     };
   }
 
@@ -315,7 +314,6 @@ class BookingController extends GetxController {
         "full_name": "David Cabarique", // Requerido por Wompi
       }),
     );
-
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -360,10 +358,12 @@ class BookingController extends GetxController {
 
       listInstitutions.assignAll(
         institucionesData
-            .map<Institution>((institucion) => Institution(
-                  nombre: institucion['financial_institution_name'],
-                  codigo: institucion['financial_institution_code'].toString(),
-                ))
+            .map<Institution>(
+              (institucion) => Institution(
+                nombre: institucion['financial_institution_name'],
+                codigo: institucion['financial_institution_code'].toString(),
+              ),
+            )
             .toList(),
       );
     }

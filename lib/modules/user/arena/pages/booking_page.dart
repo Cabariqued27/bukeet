@@ -4,6 +4,7 @@ import 'package:bukeet/services/models/institution.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
+import 'package:bukeet/widgets/images/network_image_widget.dart';
 import 'package:bukeet/widgets/inputs/date_input_default_widget.dart';
 import 'package:bukeet/widgets/inputs/single_input_widget.dart';
 import 'package:bukeet/widgets/loading/loading_data_widget.dart';
@@ -16,20 +17,13 @@ import 'package:get/get.dart';
 class BookingPage extends StatelessWidget {
   final BookingController controller;
 
-  const BookingPage({
-    super.key,
-    required this.controller,
-  });
+  const BookingPage({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      desktop: WebFrameWidget(
-        child: _mobileContent(),
-      ),
-      tablet: WebFrameWidget(
-        child: _mobileContent(),
-      ),
+      desktop: WebFrameWidget(child: _mobileContent()),
+      tablet: WebFrameWidget(child: _mobileContent()),
       mobile: _mobileContent(),
     );
   }
@@ -57,39 +51,44 @@ class BookingPage extends StatelessWidget {
               horizontal: AppMargin.horizontal(),
             ),
             child: (controller.isLoadDataReservations.value)
-                ? Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      const SizedBox(),
-                      _nameWidget(),
-                      //_imagesWidget(),
-                      const SizedBox(),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          _dateInputWidget(),
-                          _availableTimesDropdownWidget(),
-                          _institutionsDropdownWidget(),
-                          _genderDropDownWidget(),
-                          _inputWidget(
+                ? SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const SizedBox(),
+                        _nameWidget(),
+                        _imagesWidget(),
+                        const SizedBox(),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _dateInputWidget(),
+                            _availableTimesDropdownWidget(),
+                            _institutionsDropdownWidget(),
+                            _genderDropDownWidget(),
+                            _inputWidget(
                               'put_name',
                               controller.fullNameInputController,
                               'full_name',
-                              TextInputType.text),
-                          _inputWidget(
+                              TextInputType.text,
+                            ),
+                            _inputWidget(
                               'put_email',
                               controller.customerEmailInputController,
                               'email_address',
-                              TextInputType.emailAddress),
-                          _inputWidget(
+                              TextInputType.emailAddress,
+                            ),
+                            _inputWidget(
                               'ccnumero',
                               controller.userLegalIdInputController,
                               'ccnumero',
-                              TextInputType.number),
-                          _sendReservationButton(),
-                        ],
-                      )
-                    ],
+                              TextInputType.number,
+                            ),
+                            _sendReservationButton(),
+                          ],
+                        ),
+                      ],
+                    ),
                   )
                 : LoadingDataWidget(),
           ),
@@ -112,7 +111,7 @@ class BookingPage extends StatelessWidget {
     );
   }
 
-  /*Widget _imagesWidget() {
+  Widget _imagesWidget() {
     return FadeIn(
       duration: const Duration(milliseconds: 1000),
       child: Column(
@@ -126,13 +125,13 @@ class BookingPage extends StatelessWidget {
               height: AppSize.width() * 0.6,
             ),
           ),
-          _informationWidget()
+          _informationWidget(),
         ],
       ),
     );
-  }*/
+  }
 
-  /*Widget _informationWidget() {
+  Widget _informationWidget() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -157,14 +156,12 @@ class BookingPage extends StatelessWidget {
           fontFamily: AppFontFamily.leagueSpartan,
           fontWeight: FontWeight.w600,
           textAlign: TextAlign.center,
-          dsize: RelSize(
-            size: TextWidgetSizes.normal,
-          ),
+          dsize: RelSize(size: TextWidgetSizes.normal),
           color: controller.theme.black.value,
         ),
       ],
     );
-  }*/
+  }
 
   Widget _dateInputWidget() {
     return Column(
@@ -207,15 +204,17 @@ class BookingPage extends StatelessWidget {
       fontFamily: AppFontFamily.workSans,
       textAlign: TextAlign.center,
       fontWeight: TextWidgetWeight.medium,
-      dsize: RelSize(
-        size: TextWidgetSizes.xsmall,
-      ),
+      dsize: RelSize(size: TextWidgetSizes.xsmall),
       color: color,
     );
   }
 
-  Widget _inputWidget(String hintText, TextEditingController controllerText,
-      String title, TextInputType textInputType) {
+  Widget _inputWidget(
+    String hintText,
+    TextEditingController controllerText,
+    String title,
+    TextInputType textInputType,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -227,8 +226,9 @@ class BookingPage extends StatelessWidget {
           textInputType: textInputType,
           controller: controllerText,
           onChanged: (value) {},
-          onEditingComplete: () => //controller.onChangedFirstName
-              (),
+          onEditingComplete:
+              () => //controller.onChangedFirstName
+                  (),
           isActive: true,
         ),
         /*TextWidget(
@@ -252,16 +252,17 @@ class BookingPage extends StatelessWidget {
       titleKey: 'avaliable_hours',
       selectedValue:
           controller.listAvailableTimes.contains(controller.selectedHour.value)
-              ? controller.selectedHour.value
-              : null,
+          ? controller.selectedHour.value
+          : null,
       items: controller.listAvailableTimes,
       hintTextKey: 'choose_hour',
       onChanged: (int? newHour) {
         if (newHour != null) {
           controller.setSelectedHour(newHour);
           var index = controller.listAvailableTimes.indexOf(newHour);
-          controller
-              .setSelectedPrice(controller.listPriceAvailableTimes[index]);
+          controller.setSelectedPrice(
+            controller.listPriceAvailableTimes[index],
+          );
         }
       },
       itemLabel: (hour) => controller.formatHour(hour),

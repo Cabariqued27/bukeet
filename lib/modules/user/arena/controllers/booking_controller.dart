@@ -43,7 +43,6 @@ class BookingController extends GetxController {
   var selectedHour = 100.obs;
   var selectedInstitutionsName = ''.obs;
   var selectedGender = ''.obs;
- 
 
   var userLegalIdType = '0'.obs;
   var selectedInstitutionsCode = 0.obs;
@@ -95,7 +94,8 @@ class BookingController extends GetxController {
   }
 
   void loadDefaultUserInformation() {
-    fullNameInputController.text = _preferences.getFirstName();
+    fullNameInputController.text =
+        "${_preferences.getFirstName()} ${_preferences.getLastName()}";
     customerEmailInputController.text = _preferences.getEmail();
     phoneNumberInputController.text = "${_preferences.getPhoneNumber()}";
     userLegalIdInputController.text = "${_preferences.getDocumentId()}";
@@ -312,7 +312,7 @@ class BookingController extends GetxController {
             "1", //tonto ingresa el codigo del banco correcto
         "user_type": 0,
         "phone_number": phoneNumberInputController.text, // Requerido por Wompi
-        "full_name": fullNameInputController.text // Requerido por Wompi
+        "full_name": fullNameInputController.text, // Requerido por Wompi
       }),
     );
 

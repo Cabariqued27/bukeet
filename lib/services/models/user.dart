@@ -10,7 +10,8 @@ class User {
   String phoneType;
   String? imageUrl;
   String? registerAt;
-  String? phoneNumber;
+  int? phoneNumber;
+  int? documentId;
   String? state;
   String? country;
   DateTime? birthDate;
@@ -31,6 +32,7 @@ class User {
     this.imageUrl,
     this.registerAt,
     this.phoneNumber,
+    this.documentId,
     this.state,
     this.country,
     this.birthDate,
@@ -55,6 +57,7 @@ class User {
         registerAt: json["registerAt"],
         phoneType: json["phoneType"],
         phoneNumber: json["phoneNumber"],
+        documentId: json["documentId"],
         state: json["state"],
         country: json["country"],
         birthDate: json["birthDate"] == null
@@ -77,6 +80,7 @@ class User {
         "registerAt": registerAt,
         "phoneType": phoneType,
         "phoneNumber": phoneNumber,
+        "documentId": documentId,
         "state": state,
         "country": country,
         "birthDate": birthDate?.toIso8601String(),

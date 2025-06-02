@@ -73,8 +73,9 @@ class AuthenticationController extends GetxController {
 
   void onChangedLoginForm() {
     var validEmail = ValidationUtils.validateEmail(emailLoginController.text);
-    var validPassword =
-        ValidationUtils.validatePassword(passwordLoginController.text);
+    var validPassword = ValidationUtils.validatePassword(
+      passwordLoginController.text,
+    );
 
     if (validEmail && validPassword) {
       updateActiveNextLogin(true);
@@ -89,9 +90,7 @@ class AuthenticationController extends GetxController {
     var validName = ValidationUtils.validateFullName(
       firstNameInputController.text,
     );
-    var validEmail = ValidationUtils.validateEmail(
-      emailSignUpController.text,
-    );
+    var validEmail = ValidationUtils.validateEmail(emailSignUpController.text);
     var validUserType = selectedUserType.value.isNotEmpty;
     var validGender = selectedGender.value.isNotEmpty;
     var validDate = dateController.text.isNotEmpty;
@@ -108,7 +107,7 @@ class AuthenticationController extends GetxController {
       updateWarningEmail(false);
     }
 
-    if (validGender && validDate && validEmail && validName&& validUserType) {
+    if (validGender && validDate && validEmail && validName && validUserType) {
       updateActiveNextfull(true);
       return;
     }
@@ -171,6 +170,7 @@ class AuthenticationController extends GetxController {
     selectedGender.value = gender;
     update();
   }
+
   void setSelectedUserType(String gender) {
     selectedUserType.value = gender;
     update();
@@ -268,6 +268,8 @@ class AuthenticationController extends GetxController {
             _preferences.setGender = user.gender ?? '';
             _preferences.setImage = user.imageUrl ?? '';
             _preferences.setBirthDate = user.birthDate.toString();
+            _preferences.setPhoneNumber = user.phoneNumber ?? 0;
+            _preferences.setDocumentId = user.documentId ?? 0;
           }
 
           updateActiveNextPassword(false);
@@ -332,9 +334,7 @@ class AuthenticationController extends GetxController {
             ),
           );
 
-          _authProvider.requestOtp(
-            email: emailSignUpController.text,
-          );
+          _authProvider.requestOtp(email: emailSignUpController.text);
 
           updateState(GetStartedLoginSignUpState.validateOtp);
           updateReSendOtpTime(getOtpTime());
@@ -389,9 +389,7 @@ class AuthenticationController extends GetxController {
   Future<void> onReSendOtpCode() async {
     updateReSendOtpTime(getOtpTime());
     updateRequestOtp(false);
-    await _authProvider.requestOtp(
-      email: emailSignUpController.text,
-    );
+    await _authProvider.requestOtp(email: emailSignUpController.text);
   }
 
   int getOtpTime() {
@@ -428,8 +426,9 @@ class AuthenticationController extends GetxController {
   Future<void> onSignIn() async {
     updateActiveNextLogin(false);
     var validEmail = ValidationUtils.validateEmail(emailLoginController.text);
-    var validPassword =
-        ValidationUtils.validatePassword(passwordLoginController.text);
+    var validPassword = ValidationUtils.validatePassword(
+      passwordLoginController.text,
+    );
 
     if (validEmail && validPassword) {
       var canLogin = await _authProvider.canlogin(
@@ -456,6 +455,8 @@ class AuthenticationController extends GetxController {
             _preferences.setGender = user.gender ?? '';
             _preferences.setImage = user.imageUrl ?? '';
             _preferences.setBirthDate = user.birthDate.toString();
+            _preferences.setPhoneNumber = user.phoneNumber ?? 0;
+            _preferences.setDocumentId = user.documentId ?? 0;
           }
 
           if (_preferences.getUserType() == 'admin') {

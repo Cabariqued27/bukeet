@@ -43,7 +43,7 @@ class BookingController extends GetxController {
   var selectedHour = 100.obs;
   var selectedInstitutionsName = ''.obs;
   var selectedGender = ''.obs;
-  var phoneNumber = 0.obs;
+ 
 
   var userLegalIdType = '0'.obs;
   var selectedInstitutionsCode = 0.obs;
@@ -56,6 +56,7 @@ class BookingController extends GetxController {
   final fullNameInputController = TextEditingController();
   final customerEmailInputController = TextEditingController();
   final userLegalIdInputController = TextEditingController();
+  final phoneNumberInputController = TextEditingController();
 
   var selectedInstitution = Rxn<Institution>();
 
@@ -95,9 +96,9 @@ class BookingController extends GetxController {
 
   void loadDefaultUserInformation() {
     fullNameInputController.text = _preferences.getFirstName();
-    customerEmailInputController.text = "davidcabariqueduran@gmail.com";
-    phoneNumber.value = 3005075795;
-    userLegalIdInputController.text = 1002035334.toString();
+    customerEmailInputController.text = _preferences.getEmail();
+    phoneNumberInputController.text = "${_preferences.getPhoneNumber()}";
+    userLegalIdInputController.text = "${_preferences.getDocumentId()}";
     userLegalIdType.value = 'CC';
     update();
   }
@@ -301,8 +302,8 @@ class BookingController extends GetxController {
       body: jsonEncode({
         "amount_in_cents": 150000,
         "currency": "COP",
-        "customer_email": "davidcabariqueduran@gmail.com",
-        "user_legal_id": "1002035334",
+        "customer_email": customerEmailInputController.text,
+        "user_legal_id": userLegalIdInputController.text,
         "user_legal_id_type": "CC",
         "payment_description": "Pago a Tienda Wompi",
         "reference": referenciaUnica,
@@ -310,8 +311,8 @@ class BookingController extends GetxController {
         "financial_institution_code":
             "1", //tonto ingresa el codigo del banco correcto
         "user_type": 0,
-        "phone_number": "3005075795", // Requerido por Wompi
-        "full_name": "David Cabarique", // Requerido por Wompi
+        "phone_number": phoneNumberInputController.text, // Requerido por Wompi
+        "full_name": fullNameInputController.text // Requerido por Wompi
       }),
     );
 

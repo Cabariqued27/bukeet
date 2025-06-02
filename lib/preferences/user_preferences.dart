@@ -33,6 +33,18 @@ class UserPreferences {
   set setLastName(String value) =>
       _prefs.setString(PreferencesEnum.lastName, value);
 
+  //PHONE NUMBER
+
+  int getPhoneNumber() => _prefs.getInt(PreferencesEnum.phoneNumber) ?? 0;
+  set setPhoneNumber(int value) =>
+      _prefs.setInt(PreferencesEnum.phoneNumber, value);
+
+      //DOCUMENT NUMBER
+
+  int getDocumentId() => _prefs.getInt(PreferencesEnum.documentId) ?? 0;
+  set setDocumentId(int value) =>
+      _prefs.setInt(PreferencesEnum.documentId, value);
+
   //USER TYPE
 
   String getUserType() => _prefs.getString(PreferencesEnum.userType) ?? '';
@@ -59,12 +71,6 @@ class UserPreferences {
 
   String getImage() => _prefs.getString(PreferencesEnum.image) ?? '';
   set setImage(String value) => _prefs.setString(PreferencesEnum.image, value);
-
-  //ROOM VOLUME
-
-  int getRoomVolume() => _prefs.getInt(PreferencesEnum.roomVolume) ?? 0;
-  set setRoomVolume(int value) =>
-      _prefs.setInt(PreferencesEnum.roomVolume, value);
 
   //CAMERA PERMISSION
 
@@ -104,6 +110,5 @@ class UserPreferences {
     _prefs.setString(PreferencesEnum.email, '');
     _prefs.setString(PreferencesEnum.image, '');
     _prefs.setInt(PreferencesEnum.userId, 0);
-    _prefs.setInt(PreferencesEnum.roomVolume, 0);
   }
 }

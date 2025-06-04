@@ -57,7 +57,7 @@ class BookingPage extends StatelessWidget {
                     maxChildSize: 0.85,
                     builder: (context, scrollController) {
                       return Container(
-                        decoration:  BoxDecoration(
+                        decoration: BoxDecoration(
                           color: controller.theme.background.value,
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(24),
@@ -157,30 +157,28 @@ class BookingPage extends StatelessWidget {
   }
 
   Widget _appBarWidget() {
-  return Positioned(
-    top: AppSize.width() * 0.2,
-    left: AppSize.width() * 0.03,
-    child: Container(
-      width: AppSize.width() * 0.1, 
-      height: AppSize.width() * 0.1,
-      decoration: BoxDecoration(
-        color: controller.theme.backgroundProfile.value,
-        shape: BoxShape.circle,
+    return Positioned(
+      top: AppSize.height() * 0.05,
+      left: AppSize.width() * 0.03,
+      child: Container(
+        width: AppSize.width() * 0.1,
+        height: AppSize.width() * 0.1,
+        decoration: BoxDecoration(
+          color: controller.theme.backgroundProfile.value,
+          shape: BoxShape.circle,
+        ),
+        padding: const EdgeInsets.all(8),
+        child: SvgIconButtonWidget(
+          size: AppSize.width() * 0.05,
+          icon: AppIcons.leftArrowSettings,
+          onPressed: () {
+            Get.back();
+          },
+          color: controller.theme.black.value,
+        ),
       ),
-      padding: const EdgeInsets.all(8),
-      child: SvgIconButtonWidget(
-        size: AppSize.width() * 0.05,
-        icon: AppIcons.leftArrowSettings,
-        onPressed: () {
-          Get.back();
-        },
-        color: controller.theme.black.value,
-      ),
-    ),
-  );
-}
-
-
+    );
+  }
 
   Widget _informationWidget() {
     return Column(

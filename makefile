@@ -12,8 +12,10 @@ buildAppSplash:
 buildDevAndroid:
 	fvm flutter pub get
 	fvm flutter pub global run rename setAppName --targets android,ios,web --value "Bukeet"
-	fvm flutter pub global run rename setBundleId --targets android --value com.bukeetsas.bukeet
+	# fvm flutter pub global run rename setBundleId --targets android --value com.bukeetsas.bukeet
 	fvm flutter pub global run rename setBundleId --targets ios --value com.bukeetsas.bukeet
+	sed -i '' 's/namespace = ".*"/namespace = "com.bukeetsas.bukeet"/' android/app/build.gradle.kts
+	sed -i '' 's/^package .*/package com.bukeetsas.bukeet/' android/app/src/main/kotlin/com/example/bukeet/MainActivity.kt
 	fvm flutter build apk --debug --dart-define=ENV=DEV --obfuscate --split-debug-info=build/app/outputs/symbols
 
 

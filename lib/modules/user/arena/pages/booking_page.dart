@@ -1,9 +1,12 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:bukeet/assets/app_assets.dart';
 import 'package:bukeet/modules/user/arena/controllers/booking_controller.dart';
 import 'package:bukeet/services/models/institution.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
+import 'package:bukeet/widgets/buttons/svg_icon_button_widget.dart';
 import 'package:bukeet/widgets/images/network_image_widget.dart';
 import 'package:bukeet/widgets/inputs/date_input_default_widget.dart';
 import 'package:bukeet/widgets/inputs/single_input_widget.dart';
@@ -41,27 +44,42 @@ class BookingPage extends StatelessWidget {
     return SizedBox(
       width: AppSize.width(),
       height: AppSize.height(),
-      child: Stack(
-        children: [
-          Container(
-            width: AppSize.width(),
-            height: AppSize.height(),
-            margin: EdgeInsets.symmetric(
-              vertical: AppMargin.vertical(),
-              horizontal: AppMargin.horizontal(),
-            ),
-            child: (controller.isLoadDataReservations.value)
-                ? SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const SizedBox(),
-                        _nameWidget(),
-                        _imagesWidget(),
-                        const SizedBox(),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: (controller.isLoadData.value)
+          ? FadeIn(
+              duration: const Duration(milliseconds: 1000),
+              child: Stack(
+                children: [
+                  _imagesWidget(),
+                  DraggableScrollableSheet(
+                    controller: controller.draggableController,
+                    initialChildSize: controller.draggableSize.value,
+                    minChildSize: 0.7,
+                    maxChildSize: 0.85,
+                    builder: (context, scrollController) {
+                      return Container(
+                        decoration:  BoxDecoration(
+                          color: controller.theme.background.value,
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(24),
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 10,
+                              offset: Offset(0, -4),
+                            ),
+                          ],
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppMargin.horizontal(),
+                        ),
+                        child: ListView(
+                          padding: EdgeInsets.symmetric(
+                            vertical: AppMargin.vertical(),
+                          ),
+                          controller: scrollController,
                           children: [
+                            _informationWidget(),
                             _dateInputWidget(),
                             _availableTimesDropdownWidget(),
                             _institutionsDropdownWidget(),
@@ -87,17 +105,17 @@ class BookingPage extends StatelessWidget {
                             _sendReservationButton(),
                           ],
                         ),
-                      ],
-                    ),
-                  )
-                : LoadingDataWidget(),
-          ),
-        ],
-      ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            )
+          : LoadingDataWidget(),
     );
   }
 
-  Widget _nameWidget() {
+  /*Widget _nameWidget() {
     return FadeIn(
       duration: const Duration(milliseconds: 1000),
       child: TextWidget(
@@ -109,27 +127,60 @@ class BookingPage extends StatelessWidget {
         textAlign: TextAlign.center,
       ),
     );
-  }
+  }*/
 
   Widget _imagesWidget() {
-    return FadeIn(
-      duration: const Duration(milliseconds: 1000),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10.0),
-            child: NetworkImageWidget(
-              imageUrl: controller.fieldInformation?.images?[0] ?? '',
-              width: AppSize.width() * 0.9,
-              height: AppSize.width() * 0.6,
-            ),
+    final double t = ((controller.draggableSize.value - 0.7) / (0.85 - 0.7))
+        .clamp(0.0, 1.0);
+
+    return Stack(
+      children: [
+        ColorFiltered(
+          colorFilter: ColorFilter.mode(
+            applyOpacity(Colors.white, t),
+            BlendMode.srcOver,
           ),
-          _informationWidget(),
-        ],
-      ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              NetworkImageWidget(
+                imageUrl: controller.fieldInformation?.images?[0] ?? '',
+                width: AppSize.width(),
+                height: AppSize.width() * 0.7,
+              ),
+            ],
+          ),
+        ),
+        _appBarWidget(),
+      ],
     );
   }
+
+  Widget _appBarWidget() {
+  return Positioned(
+    top: AppSize.width() * 0.2,
+    left: AppSize.width() * 0.03,
+    child: Container(
+      width: AppSize.width() * 0.1, 
+      height: AppSize.width() * 0.1,
+      decoration: BoxDecoration(
+        color: controller.theme.backgroundProfile.value,
+        shape: BoxShape.circle,
+      ),
+      padding: const EdgeInsets.all(8),
+      child: SvgIconButtonWidget(
+        size: AppSize.width() * 0.05,
+        icon: AppIcons.leftArrowSettings,
+        onPressed: () {
+          Get.back();
+        },
+        color: controller.theme.black.value,
+      ),
+    ),
+  );
+}
+
+
 
   Widget _informationWidget() {
     return Column(
@@ -189,7 +240,7 @@ class BookingPage extends StatelessWidget {
       onPressed: () {
         controller.crearTransaccionPSE();
       },
-      isActive: true,
+      isActive: controller.activateNext.value,
       height: 55.0,
       width: AppSize.width() * 0.5,
       title: 'book&play_button'.tr,
@@ -225,10 +276,7 @@ class BookingPage extends StatelessWidget {
           hintText: hintText.tr,
           textInputType: textInputType,
           controller: controllerText,
-          onChanged: (value) {},
-          onEditingComplete:
-              () => //controller.onChangedFirstName
-                  (),
+          onChanged: (value) => controller.onChangeForm(),
           isActive: true,
         ),
         /*TextWidget(

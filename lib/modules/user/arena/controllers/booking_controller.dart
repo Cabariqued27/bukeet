@@ -41,11 +41,9 @@ class BookingController extends GetxController {
   var listInstitutions = <Institution>[].obs;
   final List<String> genders = ['Persona Natural', 'Persona Jurídica'];
   var selectedHour = 100.obs;
-  var selectedInstitutionsName = ''.obs;
   var selectedGender = ''.obs;
 
   var userLegalIdType = '0'.obs;
-  var selectedInstitutionsCode = 0.obs;
   var selectedHourPrice = 0.obs;
   var isLoadData = false.obs;
   var activateNext = false.obs;
@@ -56,8 +54,12 @@ class BookingController extends GetxController {
   final customerEmailInputController = TextEditingController();
   final userLegalIdInputController = TextEditingController();
   final phoneNumberInputController = TextEditingController();
+  final DraggableScrollableController draggableController = DraggableScrollableController();
+  final RxBool hasReachedMax = false.obs;
 
   var selectedInstitution = Rxn<Institution>();
+  var selectedInstitutionName = ''.obs;
+  var selectedInstitutionCode = ''.obs;
 
   int reservationDuration = 1;
   var today = DateTime.now().obs;
@@ -80,6 +82,7 @@ class BookingController extends GetxController {
     await initializeAvailabilityIfNeeded(fieldInformation?.id ?? 0);
     updateLoadData(true);
     getAvailableTimes();
+    draggableController.addListener(onDraggableScroll);
   }
 
   Future<void> getAvaliablesTimes() async {
@@ -104,8 +107,15 @@ class BookingController extends GetxController {
   }
 
   void onChangeForm() {
-    if (selectedHour.value != 100) {
+    if (selectedHour.value != 100 &&
+        customerEmailInputController.text.isNotEmpty &&
+        fullNameInputController.text.isNotEmpty &&
+        phoneNumberInputController.text.isNum &&
+        userLegalIdInputController.text.isNum &&
+        selectedInstitutionCode.value.isNotEmpty) {
       updateActivateNext(true);
+    } else {
+      updateActivateNext(false);
     }
   }
 
@@ -166,8 +176,10 @@ class BookingController extends GetxController {
 
   void setSelectedInstitution(Institution value) {
     selectedInstitution.value = value;
+    selectedInstitutionName.value = value.nombre;
+    selectedInstitutionCode.value = value.codigo;
     update();
-    //onChangeForm();
+    onChangeForm();
   }
 
   void setSelectedPrice(int value) {
@@ -379,5 +391,22 @@ class BookingController extends GetxController {
   void setSelectedGender(String gender) {
     selectedGender.value = gender;
     update();
+    onChangeForm();
   }
+
+  
+
+  final RxDouble draggableSize = 0.7.obs; // valor inicial
+
+void onDraggableScroll() {
+  draggableSize.value = draggableController.size;
+
+  if (draggableController.size >= 0.85 && !hasReachedMax.value) {
+    hasReachedMax.value = true;
+  } else if (draggableController.size < 0.85) {
+    hasReachedMax.value = false;
+  }
+}
+
+ 
 }

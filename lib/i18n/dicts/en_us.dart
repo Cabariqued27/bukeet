@@ -51,7 +51,7 @@ const Map<String, String> enUs = {
   "insert_valid_date": "You must be of legal age to register in our app",
   "incorrect_email_or_password": "Incorrect email or password",
   "where_you_want_play": "Where do you want to play?",
-  "book&play_button": "Book & Play!",
+  "book_it": "Book it!",
   "logout": "Logout",
   "choose_reservation_date": "Choose reservation date",
   "date": "Date: ",
@@ -76,4 +76,8 @@ const Map<String, String> enUs = {
   "update_schedule":"Update Schedule",
   "create_arena":"Create Arena",
   "field_information":"Adress and fieldNumber: ",
+  "people_kind":"People Kind",
+  "select_people_kind":"Select your People Kind",
+  "banks":"Banks",
+  "choose_your_bank":"Choose your Banks",
 };

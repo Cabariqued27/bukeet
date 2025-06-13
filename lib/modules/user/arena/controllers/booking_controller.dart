@@ -45,6 +45,7 @@ class BookingController extends GetxController {
 
   var userLegalIdType = '0'.obs;
   var selectedHourPrice = 0.obs;
+  var draggableSize = 0.7.obs;
   var isLoadData = false.obs;
   var activateNext = false.obs;
   var isLoadDataReservations = false.obs;
@@ -54,7 +55,8 @@ class BookingController extends GetxController {
   final customerEmailInputController = TextEditingController();
   final userLegalIdInputController = TextEditingController();
   final phoneNumberInputController = TextEditingController();
-  final DraggableScrollableController draggableController = DraggableScrollableController();
+  final DraggableScrollableController draggableController =
+      DraggableScrollableController();
   final RxBool hasReachedMax = false.obs;
 
   var selectedInstitution = Rxn<Institution>();
@@ -164,13 +166,14 @@ class BookingController extends GetxController {
       }
     }
     update();
-
+    update(['dropdown_updated']);
     updateLoadDataReservations(true);
     return List<int>.from(listAvailableTimes);
   }
 
   void setSelectedHour(int value) {
     selectedHour.value = value;
+    update(['dropdown_updated']);
     onChangeForm();
   }
 
@@ -178,7 +181,7 @@ class BookingController extends GetxController {
     selectedInstitution.value = value;
     selectedInstitutionName.value = value.nombre;
     selectedInstitutionCode.value = value.codigo;
-    update();
+    update(['dropdown_updated']);
     onChangeForm();
   }
 
@@ -189,14 +192,16 @@ class BookingController extends GetxController {
 
   Future<void> createReservation() async {
     Get.back();
+    var referenceGenerated = generarReferenciaUnica();
     final newReservation = Reservation(
       userId: _preferences.getUserId(),
       fieldId: fieldInformation?.id ?? 0,
       date: todayDynamic.value,
       timeSlot: selectedHour.value,
       updateAt: today.value,
-      status: false,
+      paymentStatus: "PENDING",
       totalPrice: selectedHourPrice.value,
+      reference: referenceGenerated,
     );
 
     try {
@@ -204,9 +209,8 @@ class BookingController extends GetxController {
         data: newReservation,
       );
       if (data != null) {
-        crearTransaccionPSE();
+        crearTransaccionPSE(referenceGenerated);
       } else {
-        // En caso de que createReservationByUserId devuelva null sin excepción
         AlertUtils.showMessageAlert(
           title: 'reservation_reject'.tr,
           buttonTitle: 'close'.tr,
@@ -214,8 +218,6 @@ class BookingController extends GetxController {
         );
       }
     } catch (e) {
-      // Aquí puedes personalizar según el tipo de error que recibas
-      // Por ejemplo, si tienes una clase de error para violación de constraint
       final errorMessage = _parseReservationError(e);
       AlertUtils.showMessageAlert(
         title: errorMessage,
@@ -226,19 +228,15 @@ class BookingController extends GetxController {
   }
 
   String _parseReservationError(dynamic e) {
-    // Aquí detectas el error específico de duplicado
-    // El ejemplo es general, adapta según el error real de tu backend o librería HTTP
-
     final errorString = e.toString().toLowerCase();
 
     if (errorString.contains('unique constraint') ||
         errorString.contains('duplicate key') ||
-        errorString.contains('23505') || // código error PostgreSQL
+        errorString.contains('23505') ||
         errorString.contains('conflict')) {
       return 'Ya existe una reserva para ese campo, fecha y horario.';
     }
 
-    // Otros errores o mensajes por defecto
     return 'reservation_reject'.tr;
   }
 
@@ -302,9 +300,7 @@ class BookingController extends GetxController {
   bool _isSameDay(DateTime d1, DateTime d2) =>
       d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
 
-  Future<void> crearTransaccionPSE() async {
-    final referenciaUnica = generarReferenciaUnica();
-
+  Future<void> crearTransaccionPSE(String referenciaUnica) async {
     final response = await http.post(
       Uri.parse('$supabaseUrl/functions/v1/start-pay-wompi/pse-transaction'),
       headers: {
@@ -391,22 +387,17 @@ class BookingController extends GetxController {
   void setSelectedGender(String gender) {
     selectedGender.value = gender;
     update();
+    update(['dropdown_updated']);
     onChangeForm();
   }
 
-  
+  void onDraggableScroll() {
+    draggableSize.value = draggableController.size;
 
-  final RxDouble draggableSize = 0.7.obs; // valor inicial
-
-void onDraggableScroll() {
-  draggableSize.value = draggableController.size;
-
-  if (draggableController.size >= 0.85 && !hasReachedMax.value) {
-    hasReachedMax.value = true;
-  } else if (draggableController.size < 0.85) {
-    hasReachedMax.value = false;
+    if (draggableController.size >= 0.85 && !hasReachedMax.value) {
+      hasReachedMax.value = true;
+    } else if (draggableController.size < 0.85) {
+      hasReachedMax.value = false;
+    }
   }
-}
-
- 
 }

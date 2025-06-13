@@ -47,10 +47,10 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
   }
 
   Future<void> updateReservationStatus(Reservation reservation) async {
-    var updateReservation = UpdateReservation(
-        id: reservation.id ?? 0, status: !(reservation.status ?? false));
-    await _reservationsProvider.updateReservationStatus(
-        updateReservation: updateReservation);
+    //var updateReservation = UpdateReservation(
+      //  id: reservation.id ?? 0, status: !(reservation.status ?? false));
+    //await _reservationsProvider.updateReservationStatus(
+      //  updateReservation: updateReservation);
     startController();
   }
 

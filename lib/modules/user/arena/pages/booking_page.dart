@@ -4,7 +4,6 @@ import 'package:bukeet/modules/user/arena/controllers/booking_controller.dart';
 import 'package:bukeet/services/models/institution.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
-import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
 import 'package:bukeet/widgets/buttons/svg_icon_button_widget.dart';
 import 'package:bukeet/widgets/images/network_image_widget.dart';
@@ -56,55 +55,63 @@ class BookingPage extends StatelessWidget {
                     minChildSize: 0.7,
                     maxChildSize: 0.85,
                     builder: (context, scrollController) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: controller.theme.background.value,
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 10,
-                              offset: Offset(0, -4),
+                      return GetBuilder<BookingController>(
+                        id: 'dropdown_updated',
+                        init: controller,
+                        assignId: true,
+                        builder: (_) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: controller.theme.background.value,
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(24),
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black26,
+                                  blurRadius: 10,
+                                  offset: Offset(0, -4),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppMargin.horizontal(),
-                        ),
-                        child: ListView(
-                          padding: EdgeInsets.symmetric(
-                            vertical: AppMargin.vertical(),
-                          ),
-                          controller: scrollController,
-                          children: [
-                            _informationWidget(),
-                            _dateInputWidget(),
-                            _availableTimesDropdownWidget(),
-                            _institutionsDropdownWidget(),
-                            _genderDropDownWidget(),
-                            _inputWidget(
-                              'put_name',
-                              controller.fullNameInputController,
-                              'full_name',
-                              TextInputType.text,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppMargin.horizontal(),
                             ),
-                            _inputWidget(
-                              'put_email',
-                              controller.customerEmailInputController,
-                              'email_address',
-                              TextInputType.emailAddress,
+                            child: ListView(
+                              padding: EdgeInsets.symmetric(
+                                vertical: AppMargin.vertical(),
+                              ),
+                              controller: scrollController,
+                              children: [
+                                _informationWidget(),
+                                _dateInputWidget(),
+                                _availableTimesDropdownWidget(),
+                                _institutionsDropdownWidget(), 
+                                _peopleKindDropDownWidget(),
+                                _inputWidget(
+                                  'put_name',
+                                  controller.fullNameInputController,
+                                  'full_name',
+                                  TextInputType.text,
+                                ),
+                                _inputWidget(
+                                  'put_email',
+                                  controller.customerEmailInputController,
+                                  'email_address',
+                                  TextInputType.emailAddress,
+                                ),
+                                _inputWidget(
+                                  'ccnumero',
+                                  controller.userLegalIdInputController,
+                                  'ccnumero',
+                                  TextInputType.number,
+                                ),
+                                SizedBox(height: AppSize.width()*0.05),
+                                _sendReservationButton(),
+                              ],
                             ),
-                            _inputWidget(
-                              'ccnumero',
-                              controller.userLegalIdInputController,
-                              'ccnumero',
-                              TextInputType.number,
-                            ),
-                            _sendReservationButton(),
-                          ],
-                        ),
+                          );
+                        },
                       );
                     },
                   ),
@@ -130,26 +137,17 @@ class BookingPage extends StatelessWidget {
   }*/
 
   Widget _imagesWidget() {
-    final double t = ((controller.draggableSize.value - 0.7) / (0.85 - 0.7))
-        .clamp(0.0, 1.0);
-
     return Stack(
       children: [
-        ColorFiltered(
-          colorFilter: ColorFilter.mode(
-            applyOpacity(Colors.white, t),
-            BlendMode.srcOver,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              NetworkImageWidget(
-                imageUrl: controller.fieldInformation?.images?[0] ?? '',
-                width: AppSize.width(),
-                height: AppSize.width() * 0.7,
-              ),
-            ],
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            NetworkImageWidget(
+              imageUrl: controller.fieldInformation?.images?[0] ?? '',
+              width: AppSize.width(),
+              height: AppSize.width() * 0.7,
+            ),
+          ],
         ),
         _appBarWidget(),
       ],
@@ -236,12 +234,12 @@ class BookingPage extends StatelessWidget {
       fontFamily: AppFontFamily.workSans,
       textSize: TextWidgetSizes.small,
       onPressed: () {
-        controller.crearTransaccionPSE();
+        controller.confirmReservation();
       },
       isActive: controller.activateNext.value,
       height: 55.0,
       width: AppSize.width() * 0.5,
-      title: 'book&play_button'.tr,
+      title: 'book_it'.tr,
       backgroundColor: controller.theme.exploreRefresh.value,
       textColor: controller.theme.black.value,
     );
@@ -317,10 +315,10 @@ class BookingPage extends StatelessWidget {
 
   Widget _institutionsDropdownWidget() {
     return _customDropdownWidget<Institution>(
-      titleKey: 'institutions',
+      titleKey: 'banks',
       selectedValue: controller.selectedInstitution.value,
       items: controller.listInstitutions,
-      hintTextKey: 'choose_institution',
+      hintTextKey: 'choose_your_bank',
       onChanged: (Institution? institution) {
         if (institution != null) {
           controller.setSelectedInstitution(institution);
@@ -330,14 +328,14 @@ class BookingPage extends StatelessWidget {
     );
   }
 
-  Widget _genderDropDownWidget() {
+  Widget _peopleKindDropDownWidget() {
     return _customDropdownWidget<String>(
-      titleKey: 'gender',
+      titleKey: 'people_kind',
       selectedValue: controller.selectedGender.value.isEmpty
           ? null
           : controller.selectedGender.value,
       items: controller.genders,
-      hintTextKey: 'select_gender',
+      hintTextKey: 'select_people_kind',
       onChanged: (String? newGender) {
         if (newGender != null) {
           controller.setSelectedGender(newGender);

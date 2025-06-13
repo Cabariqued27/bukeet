@@ -33,17 +33,16 @@ class ReservationProvider {
     required app.Reservation data,
   }) async {
     try {
-      var resp = await _supabase.from(Tables.reservations).insert(
-        {
-          'userId': data.userId,
-          'fieldId': data.fieldId,
-          'date': data.date?.toIso8601String(),
-          'timeSlot': data.timeSlot,
-          'updated_at': data.updateAt?.toIso8601String(),
-          'status': data.status,
-          'totalPrice': data.totalPrice,
-        },
-      ).select();
+      var resp = await _supabase.from(Tables.reservations).insert({
+        'userId': data.userId,
+        'fieldId': data.fieldId,
+        'date': data.date?.toIso8601String(),
+        'timeSlot': data.timeSlot,
+        'updated_at': data.updateAt?.toIso8601String(),
+        'paymentStatus': data.paymentStatus,
+        'totalPrice': data.totalPrice,
+        'reference': data.reference,
+      }).select();
 
       if (resp.isNotEmpty) {
         var data = app.Reservation.fromJson(resp.first);
@@ -55,8 +54,6 @@ class ReservationProvider {
 
     return null;
   }
-
-  
 
   Future<List<app.Reservation>> getReservationsById({
     required int userId,
@@ -105,11 +102,10 @@ class ReservationProvider {
     required app.UpdateReservation updateReservation,
   }) async {
     try {
-      await _supabase.from(Tables.reservations).update(
-        {
-          'status': updateReservation.status,
-        },
-      ).eq('id', updateReservation.id);
+      await _supabase
+          .from(Tables.reservations)
+          .update({'status': updateReservation.status})
+          .eq('id', updateReservation.id);
       return true;
     } catch (exception, stackTrace) {
       LogError.capture(exception, stackTrace, 'updateUserDataByEmail');

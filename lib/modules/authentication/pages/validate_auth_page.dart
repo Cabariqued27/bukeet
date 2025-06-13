@@ -33,7 +33,7 @@ class ValidateAuthPage extends StatelessWidget {
     return Obx(
       () => Scaffold(
         body: _pageWidget(),
-        backgroundColor: controller.theme.redSolid.value,
+        backgroundColor: controller.theme.background.value,
       ),
     );
   }

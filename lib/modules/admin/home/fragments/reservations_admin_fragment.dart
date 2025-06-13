@@ -139,7 +139,7 @@ class ReservationsAdminFragment extends StatelessWidget {
                       fontWeight: TextWidgetWeight.bold,
                     ),
                     TextWidget(
-                      item.status.toString(),
+                      item.paymentStatus??'',
                       fontFamily: AppFontFamily.leagueSpartan,
                     ),
                   ],

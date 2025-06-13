@@ -14,20 +14,13 @@ import 'package:intl/intl.dart';
 class ReservationsFieldOwnerFragment extends StatelessWidget {
   final ReservationsFieldOwnerFragmentController controller;
 
-  const ReservationsFieldOwnerFragment({
-    super.key,
-    required this.controller,
-  });
+  const ReservationsFieldOwnerFragment({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      desktop: WebFrameWidget(
-        child: _mobileContent(),
-      ),
-      tablet: WebFrameWidget(
-        child: _mobileContent(),
-      ),
+      desktop: WebFrameWidget(child: _mobileContent()),
+      tablet: WebFrameWidget(child: _mobileContent()),
       mobile: _mobileContent(),
     );
   }
@@ -61,7 +54,7 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
                 fieldTabsWidget(),
                 (controller.isLoadData.value)
                     ? _fieldsListWidget()
-                    : LoadingDataWidget()
+                    : LoadingDataWidget(),
               ],
             ),
           ),
@@ -85,10 +78,11 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
               children: [
                 SizedBox(height: AppSize.width() * 0.05),
                 InkWell(
-                    onTap: () {
-                      controller.updateReservationStatus(item);
-                    },
-                    child: _fieldItemWidget(item)),
+                  onTap: () {
+                    controller.updateReservationStatus(item);
+                  },
+                  child: _fieldItemWidget(item),
+                ),
               ],
             );
           },
@@ -100,10 +94,11 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
   Widget _fieldItemWidget(Reservation item) {
     return Container(
       decoration: BoxDecoration(
-          color: (item.status!)
-              ? controller.theme.exploreRefresh.value
-              : controller.theme.exploreFocus.value,
-          borderRadius: const BorderRadius.all(Radius.circular(10))),
+        color: (item.paymentStatus == "APPROVED")
+            ? controller.theme.exploreRefresh.value
+            : controller.theme.exploreFocus.value,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
       width: AppSize.width() * 0.9,
       padding: EdgeInsets.only(left: AppMargin.horizontal() * 0.5),
       child: Column(
@@ -170,7 +165,7 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
                           fontWeight: TextWidgetWeight.bold,
                         ),
                         TextWidget(
-                          item.status.toString(),
+                          item.paymentStatus??'',
                           fontFamily: AppFontFamily.leagueSpartan,
                         ),
                       ],

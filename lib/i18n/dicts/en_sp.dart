@@ -53,7 +53,7 @@ const Map<String, String> enSp = {
       "Debes ser mayor de edad para registrarte en nuestra app",
   "incorrect_email_or_password": "Correo o contraseña incorrecta",
   "where_you_want_play": "¿Donde quieres jugar?",
-  "book&play_button": "¡Book & Play!",
+  "book_it": "Reserva",
   "logout": "Logout",
   "choose_reservation_date": "Escoge una fecha para tu reserva",
   "date": "Fecha: ",
@@ -78,4 +78,8 @@ const Map<String, String> enSp = {
   "update_schedule":"Actualizar horarios",
   "create_arena":"Ingresa la información de tu arena",
    "field_information":"Dirección y numero de cancha: ",
+   "people_kind":"Tipo de persona",
+  "select_people_kind":"Selecciona el tipon de persona",
+  "banks":"Bancos",
+  "choose_your_bank":"Selecciona tu banco",
 };

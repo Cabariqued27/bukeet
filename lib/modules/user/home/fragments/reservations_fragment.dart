@@ -14,20 +14,13 @@ import 'package:intl/intl.dart';
 class ReservationsUserFragment extends StatelessWidget {
   final ReservationsUserFragmentController controller;
 
-  const ReservationsUserFragment({
-    super.key,
-    required this.controller,
-  });
+  const ReservationsUserFragment({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      desktop: WebFrameWidget(
-        child: _mobileContent(),
-      ),
-      tablet: WebFrameWidget(
-        child: _mobileContent(),
-      ),
+      desktop: WebFrameWidget(child: _mobileContent()),
+      tablet: WebFrameWidget(child: _mobileContent()),
       mobile: _mobileContent(),
     );
   }
@@ -61,7 +54,7 @@ class ReservationsUserFragment extends StatelessWidget {
                 _titleWidget(),
                 (controller.isLoadData.value)
                     ? _fieldsListWidget()
-                    : LoadingDataWidget()
+                    : LoadingDataWidget(),
               ],
             ),
           ),
@@ -113,10 +106,11 @@ class ReservationsUserFragment extends StatelessWidget {
   Widget _fieldItemWidget(Reservation item) {
     return Container(
       decoration: BoxDecoration(
-          color: (item.status!)
-              ? controller.theme.exploreRefresh.value
-              : controller.theme.exploreFocus.value,
-          borderRadius: const BorderRadius.all(Radius.circular(10))),
+        color: (item.paymentStatus == "PENDING")
+            ? controller.theme.exploreRefresh.value
+            : controller.theme.exploreFocus.value,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
       width: AppSize.width() * 0.8,
       padding: EdgeInsets.only(left: AppMargin.horizontal() * 0.5),
       child: Column(
@@ -125,25 +119,28 @@ class ReservationsUserFragment extends StatelessWidget {
           Column(
             children: [
               SizedBox(
-                  width: AppSize.width() * 0.9,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: AppSize.width() * 0.9,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            _infoText(
-                                'Día: ${DateFormat('dd MMM yyyy').format(item.date!)}'),
-                            _infoText('Hora: ${item.timeSlot}'),
-                            _infoText('Cancha: ${item.fieldId}'),
-                            _infoText(
-                                'Estado: ${item.status! ? 'Confirmada' : 'Pendiente'}'),
-                          ],
-                        ),
+                width: AppSize.width() * 0.9,
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: AppSize.width() * 0.9,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          _infoText(
+                            'Día: ${DateFormat('dd MMM yyyy').format(item.date!)}',
+                          ),
+                          _infoText('Hora: ${item.timeSlot}'),
+                          _infoText('Cancha: ${item.fieldId}'),
+                          _infoText(
+                            'Estado: ${item.paymentStatus == "APPROVED" ? 'Confirmada' : 'Pendiente'}',
+                          ),
+                        ],
                       ),
-                    ],
-                  )),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ],

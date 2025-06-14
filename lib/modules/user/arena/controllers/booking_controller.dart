@@ -190,43 +190,6 @@ class BookingController extends GetxController {
     onChangeForm();
   }
 
-  Future<void> createReservation() async {
-    Get.back();
-    var referenceGenerated = generarReferenciaUnica();
-    final newReservation = Reservation(
-      userId: _preferences.getUserId(),
-      fieldId: fieldInformation?.id ?? 0,
-      date: todayDynamic.value,
-      timeSlot: selectedHour.value,
-      updateAt: today.value,
-      paymentStatus: "PENDING",
-      totalPrice: selectedHourPrice.value,
-      reference: referenceGenerated,
-    );
-
-    try {
-      final data = await _fieldsProvider.createReservationByUserId(
-        data: newReservation,
-      );
-      if (data != null) {
-        crearTransaccionPSE(referenceGenerated);
-      } else {
-        AlertUtils.showMessageAlert(
-          title: 'reservation_reject'.tr,
-          buttonTitle: 'close'.tr,
-          onPressed: () => Get.back(),
-        );
-      }
-    } catch (e) {
-      final errorMessage = _parseReservationError(e);
-      AlertUtils.showMessageAlert(
-        title: errorMessage,
-        buttonTitle: 'close'.tr,
-        onPressed: () => Get.back(),
-      );
-    }
-  }
-
   String _parseReservationError(dynamic e) {
     final errorString = e.toString().toLowerCase();
 
@@ -238,18 +201,6 @@ class BookingController extends GetxController {
     }
 
     return 'reservation_reject'.tr;
-  }
-
-  void confirmReservation() {
-    AlertUtils.showComnfirmReservationAlert(
-      date: DateFormat('yyyy-MM-dd').format(todayDynamic.value),
-      hour: selectedHour.value,
-      fieldInformation: arenaInformation?.address ?? '',
-      price: '\$${selectedHourPrice.value}',
-      positiveAction: createReservation,
-      negativeAction: () => Get.back(),
-      barrierDismissible: false,
-    );
   }
 
   Future<void> chooseDate() async {
@@ -300,6 +251,55 @@ class BookingController extends GetxController {
   bool _isSameDay(DateTime d1, DateTime d2) =>
       d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
 
+  Future<void> createReservation() async {
+    Get.back();
+    var referenceGenerated = generarReferenciaUnica();
+    final newReservation = Reservation(
+      userId: _preferences.getUserId(),
+      fieldId: fieldInformation?.id ?? 0,
+      date: todayDynamic.value,
+      timeSlot: selectedHour.value,
+      updateAt: today.value,
+      paymentStatus: "PENDING",
+      totalPrice: selectedHourPrice.value,
+      reference: referenceGenerated,
+    );
+
+    try {
+      final data = await _fieldsProvider.createReservationByUserId(
+        data: newReservation,
+      );
+      if (data != null) {
+        crearTransaccionPSE(referenceGenerated);
+      } else {
+        AlertUtils.showMessageAlert(
+          title: 'reservation_reject'.tr,
+          buttonTitle: 'close'.tr,
+          onPressed: () => Get.back(),
+        );
+      }
+    } catch (e) {
+      final errorMessage = _parseReservationError(e);
+      AlertUtils.showMessageAlert(
+        title: errorMessage,
+        buttonTitle: 'close'.tr,
+        onPressed: () => Get.back(),
+      );
+    }
+  }
+
+  void confirmReservation() {
+    AlertUtils.showComnfirmReservationAlert(
+      date: DateFormat('yyyy-MM-dd').format(todayDynamic.value),
+      hour: selectedHour.value,
+      fieldInformation: arenaInformation?.address ?? '',
+      price: '\$${selectedHourPrice.value}',
+      positiveAction: createReservation,
+      negativeAction: () => Get.back(),
+      barrierDismissible: false,
+    );
+  }
+
   Future<void> crearTransaccionPSE(String referenciaUnica) async {
     final response = await http.post(
       Uri.parse('$supabaseUrl/functions/v1/start-pay-wompi/pse-transaction'),
@@ -316,11 +316,10 @@ class BookingController extends GetxController {
         "payment_description": "Pago a Tienda Wompi",
         "reference": referenciaUnica,
         "success_url": "https://tuapp.com/pago_exitoso",
-        "financial_institution_code":
-            "1", //tonto ingresa el codigo del banco correcto
+        "financial_institution_code": "1",
         "user_type": 0,
-        "phone_number": phoneNumberInputController.text, // Requerido por Wompi
-        "full_name": fullNameInputController.text, // Requerido por Wompi
+        "phone_number": phoneNumberInputController.text,
+        "full_name": fullNameInputController.text,
       }),
     );
 

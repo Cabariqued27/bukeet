@@ -33,17 +33,16 @@ class BookingController extends GetxController {
     this.arenaInformation,
   });
 
-  //late PayUCheckoutProFlutter checkoutPro;
-
   var reservations = <Reservation>[].obs;
   var listAvailableTimes = <int>[].obs;
   var listPriceAvailableTimes = <int>[].obs;
   var listInstitutions = <Institution>[].obs;
-  final List<String> genders = ['Persona Natural', 'Persona Jurídica'];
+  final List<String> peopleTypes = ['Persona Natural', 'Persona Jurídica'];
+  final List<String> documentsTypes = ['CC', 'NIT', 'CE'];
   var selectedHour = 100.obs;
-  var selectedGender = ''.obs;
+  var selectedPeopleType = ''.obs;
+  var selectedDocumentType = ''.obs;
 
-  var userLegalIdType = '0'.obs;
   var selectedHourPrice = 0.obs;
   var draggableSize = 0.7.obs;
   var isLoadData = false.obs;
@@ -104,7 +103,6 @@ class BookingController extends GetxController {
     customerEmailInputController.text = _preferences.getEmail();
     phoneNumberInputController.text = "${_preferences.getPhoneNumber()}";
     userLegalIdInputController.text = "${_preferences.getDocumentId()}";
-    userLegalIdType.value = 'CC';
     update();
   }
 
@@ -114,7 +112,9 @@ class BookingController extends GetxController {
         fullNameInputController.text.isNotEmpty &&
         phoneNumberInputController.text.isNum &&
         userLegalIdInputController.text.isNum &&
-        selectedInstitutionCode.value.isNotEmpty) {
+        selectedInstitutionCode.value.isNotEmpty &&
+        selectedPeopleType.value.isNotEmpty &&
+        selectedDocumentType.value.isNotEmpty) {
       updateActivateNext(true);
     } else {
       updateActivateNext(false);
@@ -253,7 +253,18 @@ class BookingController extends GetxController {
 
   Future<void> createReservation() async {
     Get.back();
-    var referenceGenerated = generarReferenciaUnica();
+    final referenceGenerated = generarReferenciaUnica();
+    final redirectUrl = await crearTransaccionPSE(referenceGenerated);
+
+    if (redirectUrl == null) {
+      AlertUtils.showMessageAlert(
+        title: 'Error al iniciar la transacción',
+        buttonTitle: 'Cerrar',
+        onPressed: () => Get.back(),
+      );
+      return;
+    }
+
     final newReservation = Reservation(
       userId: _preferences.getUserId(),
       fieldId: fieldInformation?.id ?? 0,
@@ -270,11 +281,11 @@ class BookingController extends GetxController {
         data: newReservation,
       );
       if (data != null) {
-        crearTransaccionPSE(referenceGenerated);
+        abrirEnNavegador(redirectUrl);
       } else {
         AlertUtils.showMessageAlert(
-          title: 'reservation_reject'.tr,
-          buttonTitle: 'close'.tr,
+          title: 'No se pudo crear la reserva',
+          buttonTitle: 'Cerrar',
           onPressed: () => Get.back(),
         );
       }
@@ -282,7 +293,7 @@ class BookingController extends GetxController {
       final errorMessage = _parseReservationError(e);
       AlertUtils.showMessageAlert(
         title: errorMessage,
-        buttonTitle: 'close'.tr,
+        buttonTitle: 'Cerrar',
         onPressed: () => Get.back(),
       );
     }
@@ -300,7 +311,7 @@ class BookingController extends GetxController {
     );
   }
 
-  Future<void> crearTransaccionPSE(String referenciaUnica) async {
+  Future<String?> crearTransaccionPSE(String referenciaUnica) async {
     final response = await http.post(
       Uri.parse('$supabaseUrl/functions/v1/start-pay-wompi/pse-transaction'),
       headers: {
@@ -308,11 +319,11 @@ class BookingController extends GetxController {
         'Authorization': 'Bearer $supabaseAnonKey',
       },
       body: jsonEncode({
-        "amount_in_cents": 150000,
+        "amount_in_cents": selectedHourPrice.value * 100,
         "currency": "COP",
         "customer_email": customerEmailInputController.text,
         "user_legal_id": userLegalIdInputController.text,
-        "user_legal_id_type": "CC",
+        "user_legal_id_type": selectedDocumentType.value,
         "payment_description": "Pago a Tienda Wompi",
         "reference": referenciaUnica,
         "success_url": "https://tuapp.com/pago_exitoso",
@@ -326,14 +337,10 @@ class BookingController extends GetxController {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final redirectUrl = data['async_payment_url'];
-
-      if (redirectUrl != null) {
-        abrirEnNavegador(redirectUrl);
-      } else {
-        Get.snackbar('Error', 'No se recibió la URL de redirección.');
-      }
+      return redirectUrl;
     } else {
       Get.snackbar('Error', 'Falló la transacción: ${response.body}');
+      return null;
     }
   }
 
@@ -383,8 +390,15 @@ class BookingController extends GetxController {
     return '$hour12:00 $period';
   }
 
-  void setSelectedGender(String gender) {
-    selectedGender.value = gender;
+  void setSelectedPeopleType(String value) {
+    selectedPeopleType.value = value;
+    update();
+    update(['dropdown_updated']);
+    onChangeForm();
+  }
+
+  void setSelectedDocumentType(String value) {
+    selectedDocumentType.value = value;
     update();
     update(['dropdown_updated']);
     onChangeForm();

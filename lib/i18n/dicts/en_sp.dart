@@ -78,8 +78,10 @@ const Map<String, String> enSp = {
   "update_schedule":"Actualizar horarios",
   "create_arena":"Ingresa la información de tu arena",
    "field_information":"Dirección y numero de cancha: ",
-   "people_kind":"Tipo de persona",
-  "select_people_kind":"Selecciona el tipon de persona",
+   "people_type":"Tipo de persona",
+  "select_people_type":"Selecciona el tipon de persona",
   "banks":"Bancos",
   "choose_your_bank":"Selecciona tu banco",
+  "document_type":"Tipo de documento",
+  "select_document_type":"Seleccion tu Tipo de documento",
 };

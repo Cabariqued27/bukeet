@@ -86,8 +86,8 @@ class BookingPage extends StatelessWidget {
                                 _informationWidget(),
                                 _dateInputWidget(),
                                 _availableTimesDropdownWidget(),
-                                _institutionsDropdownWidget(), 
-                                _peopleKindDropDownWidget(),
+                                _institutionsDropdownWidget(),
+                                _peopleTypeDropDownWidget(),
                                 _inputWidget(
                                   'put_name',
                                   controller.fullNameInputController,
@@ -100,13 +100,14 @@ class BookingPage extends StatelessWidget {
                                   'email_address',
                                   TextInputType.emailAddress,
                                 ),
+                                _documentTypeDropDownWidget(),
                                 _inputWidget(
                                   'ccnumero',
                                   controller.userLegalIdInputController,
                                   'ccnumero',
                                   TextInputType.number,
                                 ),
-                                SizedBox(height: AppSize.width()*0.05),
+                                SizedBox(height: AppSize.width() * 0.05),
                                 _sendReservationButton(),
                               ],
                             ),
@@ -328,20 +329,37 @@ class BookingPage extends StatelessWidget {
     );
   }
 
-  Widget _peopleKindDropDownWidget() {
+  Widget _peopleTypeDropDownWidget() {
     return _customDropdownWidget<String>(
-      titleKey: 'people_kind',
-      selectedValue: controller.selectedGender.value.isEmpty
+      titleKey: 'people_type',
+      selectedValue: controller.selectedPeopleType.value.isEmpty
           ? null
-          : controller.selectedGender.value,
-      items: controller.genders,
-      hintTextKey: 'select_people_kind',
-      onChanged: (String? newGender) {
-        if (newGender != null) {
-          controller.setSelectedGender(newGender);
+          : controller.selectedPeopleType.value,
+      items: controller.peopleTypes,
+      hintTextKey: 'select_people_type',
+      onChanged: (String? newPeopleType) {
+        if (newPeopleType != null) {
+          controller.setSelectedPeopleType(newPeopleType);
         }
       },
-      itemLabel: (gender) => gender,
+      itemLabel: (peopleType) => peopleType,
+    );
+  }
+
+  Widget _documentTypeDropDownWidget() {
+    return _customDropdownWidget<String>(
+      titleKey: 'document_type',
+      selectedValue: controller.selectedDocumentType.value.isEmpty
+          ? null
+          : controller.selectedDocumentType.value,
+      items: controller.documentsTypes,
+      hintTextKey: 'select_document_type',
+      onChanged: (String? newDocumentType) {
+        if (newDocumentType != null) {
+          controller.setSelectedDocumentType(newDocumentType);
+        }
+      },
+      itemLabel: (documentType) => documentType,
     );
   }
 

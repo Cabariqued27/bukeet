@@ -54,8 +54,7 @@ class BookingController extends GetxController {
   final customerEmailInputController = TextEditingController();
   final userLegalIdInputController = TextEditingController();
   final phoneNumberInputController = TextEditingController();
-  final DraggableScrollableController draggableController =
-      DraggableScrollableController();
+
   final RxBool hasReachedMax = false.obs;
 
   var selectedInstitution = Rxn<Institution>();
@@ -83,7 +82,7 @@ class BookingController extends GetxController {
     await initializeAvailabilityIfNeeded(fieldInformation?.id ?? 0);
     updateLoadData(true);
     getAvailableTimes();
-    draggableController.addListener(onDraggableScroll);
+    //draggableController.addListener(onDraggableScroll);
   }
 
   Future<void> getAvaliablesTimes() async {
@@ -166,14 +165,14 @@ class BookingController extends GetxController {
       }
     }
     update();
-    update(['dropdown_updated']);
+
     updateLoadDataReservations(true);
     return List<int>.from(listAvailableTimes);
   }
 
   void setSelectedHour(int value) {
     selectedHour.value = value;
-    update(['dropdown_updated']);
+
     onChangeForm();
   }
 
@@ -181,7 +180,7 @@ class BookingController extends GetxController {
     selectedInstitution.value = value;
     selectedInstitutionName.value = value.nombre;
     selectedInstitutionCode.value = value.codigo;
-    update(['dropdown_updated']);
+
     onChangeForm();
   }
 
@@ -393,18 +392,16 @@ class BookingController extends GetxController {
   void setSelectedPeopleType(String value) {
     selectedPeopleType.value = value;
     update();
-    update(['dropdown_updated']);
     onChangeForm();
   }
 
   void setSelectedDocumentType(String value) {
     selectedDocumentType.value = value;
     update();
-    update(['dropdown_updated']);
     onChangeForm();
   }
 
-  void onDraggableScroll() {
+  /*void onDraggableScroll() {
     draggableSize.value = draggableController.size;
 
     if (draggableController.size >= 0.85 && !hasReachedMax.value) {
@@ -412,5 +409,5 @@ class BookingController extends GetxController {
     } else if (draggableController.size < 0.85) {
       hasReachedMax.value = false;
     }
-  }
+  }*/
 }

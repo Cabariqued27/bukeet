@@ -49,72 +49,69 @@ class BookingPage extends StatelessWidget {
               child: Stack(
                 children: [
                   _imagesWidget(),
-                  DraggableScrollableSheet(
-                    controller: controller.draggableController,
-                    initialChildSize: controller.draggableSize.value,
-                    minChildSize: 0.7,
-                    maxChildSize: 0.85,
-                    builder: (context, scrollController) {
-                      return GetBuilder<BookingController>(
-                        id: 'dropdown_updated',
-                        init: controller,
-                        assignId: true,
-                        builder: (_) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              color: controller.theme.background.value,
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(24),
+                  SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        SizedBox(height: AppSize.height() * 0.2),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: controller.theme.background.value,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(30.0),
+                              topRight: Radius.circular(30.0),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                blurRadius: 6,
+                                offset: const Offset(0, 0),
+                                color: controller
+                                    .theme
+                                    .backgroundDeviceSetting
+                                    .value,
                               ),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 10,
-                                  offset: Offset(0, -4),
-                                ),
-                              ],
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: AppMargin.horizontal(),
-                            ),
-                            child: ListView(
-                              padding: EdgeInsets.symmetric(
-                                vertical: AppMargin.vertical(),
+                            ],
+                          ),
+                          padding: EdgeInsets.only(
+                            top: AppMargin.vertical() * 0.5,
+                            left: AppMargin.horizontal() * 0.5,
+                            right: AppMargin.horizontal() * 0.5,
+                            bottom: AppMargin.vertical() * 1.1,
+                          ),
+                          width: AppSize.width(),
+                          child: Column(
+                            children: [
+                              _informationWidget(),
+                              _dateInputWidget(),
+                              _availableTimesDropdownWidget(),
+                              _institutionsDropdownWidget(),
+                              _peopleTypeDropDownWidget(),
+                              _inputWidget(
+                                'put_name',
+                                controller.fullNameInputController,
+                                'full_name',
+                                TextInputType.text,
                               ),
-                              controller: scrollController,
-                              children: [
-                                _informationWidget(),
-                                _dateInputWidget(),
-                                _availableTimesDropdownWidget(),
-                                _institutionsDropdownWidget(),
-                                _peopleTypeDropDownWidget(),
-                                _inputWidget(
-                                  'put_name',
-                                  controller.fullNameInputController,
-                                  'full_name',
-                                  TextInputType.text,
-                                ),
-                                _inputWidget(
-                                  'put_email',
-                                  controller.customerEmailInputController,
-                                  'email_address',
-                                  TextInputType.emailAddress,
-                                ),
-                                _documentTypeDropDownWidget(),
-                                _inputWidget(
-                                  'ccnumero',
-                                  controller.userLegalIdInputController,
-                                  'ccnumero',
-                                  TextInputType.number,
-                                ),
-                                SizedBox(height: AppSize.width() * 0.05),
-                                _sendReservationButton(),
-                              ],
-                            ),
-                          );
-                        },
-                      );
-                    },
+                              _inputWidget(
+                                'put_email',
+                                controller.customerEmailInputController,
+                                'email_address',
+                                TextInputType.emailAddress,
+                              ),
+                              _documentTypeDropDownWidget(),
+                              _inputWidget(
+                                'ccnumero',
+                                controller.userLegalIdInputController,
+                                'ccnumero',
+                                TextInputType.number,
+                              ),
+                              SizedBox(height: AppSize.width() * 0.05),
+                              _sendReservationButton(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

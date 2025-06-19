@@ -98,13 +98,31 @@ class ReservationProvider {
     return [];
   }
 
-  Future<bool> updateReservationStatus({
+  /*Future<bool> updateReservationStatus({
     required app.UpdateReservation updateReservation,
   }) async {
     try {
       await _supabase
           .from(Tables.reservations)
           .update({'status': updateReservation.status})
+          .eq('id', updateReservation.id);
+      return true;
+    } catch (exception, stackTrace) {
+      LogError.capture(exception, stackTrace, 'updateUserDataByEmail');
+      return false;
+    }
+  }*/
+
+  Future<bool> updateReservationByReference({
+    required app.UpdateReservation updateReservation,
+  }) async {
+    try {
+      await _supabase
+          .from(Tables.reservations)
+          .update({
+            'paymentStatus': updateReservation..paymentStatus,
+            'reservationStatus': updateReservation..reservationStatus,
+          })
           .eq('id', updateReservation.id);
       return true;
     } catch (exception, stackTrace) {

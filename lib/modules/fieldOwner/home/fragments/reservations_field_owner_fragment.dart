@@ -51,7 +51,7 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: AppSize.width() * 0.15),
-                fieldTabsWidget(),
+                //fieldTabsWidget(),
                 (controller.isLoadData.value)
                     ? _fieldsListWidget()
                     : LoadingDataWidget(),

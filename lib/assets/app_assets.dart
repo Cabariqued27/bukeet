@@ -4,6 +4,7 @@ class AppLogos {
 }
 
 class AppIcons {
+  static const String add = 'assets/icons/add_icon.svg';
   static const String datePicker = 'assets/icons/date_picker_icon.svg';
   static const String infoCircle = 'assets/icons/info_circle_icon.svg';
   static const String leftArrow = 'assets/icons/left_arrow_icon.svg';

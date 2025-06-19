@@ -167,9 +167,7 @@ class BookingPage extends StatelessWidget {
         child: SvgIconButtonWidget(
           size: AppSize.width() * 0.05,
           icon: AppIcons.leftArrowSettings,
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: () => Get.back(),
           color: controller.theme.black.value,
         ),
       ),

@@ -150,7 +150,7 @@ class BookingController extends GetxController {
 
       final isReserved = reservations.any((res) {
         try {
-          return res.timeSlot == timeSlot;
+          return res.timeSlot == timeSlot && res.reservationStatus == 'enable';
         } catch (e, s) {
           LogError.capture(e, s, 'getReservedTimes');
           return false;
@@ -250,19 +250,22 @@ class BookingController extends GetxController {
   bool _isSameDay(DateTime d1, DateTime d2) =>
       d1.year == d2.year && d1.month == d2.month && d1.day == d2.day;
 
+  void confirmReservation() {
+    AlertUtils.showComnfirmReservationAlert(
+      date: DateFormat('yyyy-MM-dd').format(todayDynamic.value),
+      hour: formatHour(selectedHour.value),
+      fieldInformation: arenaInformation?.address ?? '',
+      price: '\$${selectedHourPrice.value}',
+      positiveAction: createReservation,
+      negativeAction: () => Get.back(),
+      barrierDismissible: false,
+    );
+  }
+
   Future<void> createReservation() async {
     Get.back();
-    final referenceGenerated = generarReferenciaUnica();
-    final redirectUrl = await crearTransaccionPSE(referenceGenerated);
 
-    if (redirectUrl == null) {
-      AlertUtils.showMessageAlert(
-        title: 'Error al iniciar la transacción',
-        buttonTitle: 'Cerrar',
-        onPressed: () => Get.back(),
-      );
-      return;
-    }
+    final referenceGenerated = generarReferenciaUnica();
 
     final newReservation = Reservation(
       userId: _preferences.getUserId(),
@@ -279,15 +282,37 @@ class BookingController extends GetxController {
       final data = await _fieldsProvider.createReservationByUserId(
         data: newReservation,
       );
-      if (data != null) {
-        abrirEnNavegador(redirectUrl);
-      } else {
+
+      if (data == null) {
         AlertUtils.showMessageAlert(
           title: 'No se pudo crear la reserva',
           buttonTitle: 'Cerrar',
           onPressed: () => Get.back(),
         );
+        return;
       }
+
+      final redirectUrl = await crearTransaccionPSE(referenceGenerated);
+
+      if (redirectUrl == null) {
+        var updateReservation = UpdateReservation(
+          id: data.id ?? 0,
+          paymentStatus: "FAILED",
+          reservationStatus: "disable",
+        );
+        await _fieldsProvider.updateReservationByReference(
+          updateReservation: updateReservation,
+        );
+
+        AlertUtils.showMessageAlert(
+          title: 'Error al iniciar la transacción',
+          buttonTitle: 'Cerrar',
+          onPressed: () => Get.back(),
+        );
+        return;
+      }
+
+      abrirEnNavegador(redirectUrl);
     } catch (e) {
       final errorMessage = _parseReservationError(e);
       AlertUtils.showMessageAlert(
@@ -298,18 +323,6 @@ class BookingController extends GetxController {
     }
   }
 
-  void confirmReservation() {
-    AlertUtils.showComnfirmReservationAlert(
-      date: DateFormat('yyyy-MM-dd').format(todayDynamic.value),
-      hour: selectedHour.value,
-      fieldInformation: arenaInformation?.address ?? '',
-      price: '\$${selectedHourPrice.value}',
-      positiveAction: createReservation,
-      negativeAction: () => Get.back(),
-      barrierDismissible: false,
-    );
-  }
-
   Future<String?> crearTransaccionPSE(String referenciaUnica) async {
     final response = await http.post(
       Uri.parse('$supabaseUrl/functions/v1/start-pay-wompi/pse-transaction'),
@@ -318,7 +331,7 @@ class BookingController extends GetxController {
         'Authorization': 'Bearer $supabaseAnonKey',
       },
       body: jsonEncode({
-        "amount_in_cents": selectedHourPrice.value * 100,
+        "amount_in_cents": selectedHourPrice.value * 10,
         "currency": "COP",
         "customer_email": customerEmailInputController.text,
         "user_legal_id": userLegalIdInputController.text,
@@ -400,14 +413,4 @@ class BookingController extends GetxController {
     update();
     onChangeForm();
   }
-
-  /*void onDraggableScroll() {
-    draggableSize.value = draggableController.size;
-
-    if (draggableController.size >= 0.85 && !hasReachedMax.value) {
-      hasReachedMax.value = true;
-    } else if (draggableController.size < 0.85) {
-      hasReachedMax.value = false;
-    }
-  }*/
 }

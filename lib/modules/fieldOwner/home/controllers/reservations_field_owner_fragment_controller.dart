@@ -27,7 +27,7 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
   void startController() async {
     updateLoadData(false);
     await getFieldByUserId();
-    await getReservations();
+    //await getReservations();
     updateLoadData(true);
   }
 

@@ -106,7 +106,7 @@ class ReservationsUserFragment extends StatelessWidget {
   Widget _fieldItemWidget(Reservation item) {
     return Container(
       decoration: BoxDecoration(
-        color: (item.paymentStatus == "PENDING")
+        color: (item.paymentStatus == "APPROVED")
             ? controller.theme.exploreRefresh.value
             : controller.theme.exploreFocus.value,
         borderRadius: const BorderRadius.all(Radius.circular(10)),

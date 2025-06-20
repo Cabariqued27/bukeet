@@ -37,9 +37,16 @@ class CreateArenaAdminPage extends StatelessWidget {
               vertical: AppMargin.vertical(),
               horizontal: AppMargin.horizontal(),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [_titleWidget(), _inputsArenaWidget(),_updateAvailabilityButton()],
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _titleWidget(),
+                  _inputsArenaWidget(),
+                  _imagePickerWidget(),
+                  _updateAvailabilityButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -59,17 +66,29 @@ class CreateArenaAdminPage extends StatelessWidget {
     return Column(
       children: [
         _arenaInputWidgetLogin(
-            'arena_name','arena_city', controller.arenaNameInputController),
+          'arena_name',
+          'place_holder_arena_name',
+          controller.arenaNameInputController,
+        ),
         _arenaInputWidgetLogin(
-            'arena_address','arena_city', controller.arenaAddressInputController),
+          'arena_address',
+          'place_holder_arena_address',
+          controller.arenaAddressInputController,
+        ),
         _arenaInputWidgetLogin(
-            'arena_city','arena_city', controller.arenaCityInputController),
+          'arena_city',
+          'place_holder_arena_city',
+          controller.arenaCityInputController,
+        ),
       ],
     );
   }
 
   Widget _arenaInputWidgetLogin(
-      String title,String hintText, TextEditingController controllerText) {
+    String title,
+    String hintText,
+    TextEditingController controllerText,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -85,9 +104,37 @@ class CreateArenaAdminPage extends StatelessWidget {
           isActive: true,
           mandatory: false,
           hintText: hintText.tr,
-          textInputType: TextInputType.emailAddress,
+          textInputType: TextInputType.text,
           controller: controllerText,
           onChanged: (value) => controller.onChangedLoginForm(),
+        ),
+      ],
+    );
+  }
+
+  Widget _imagePickerWidget() {
+    final file = controller.selectedImage.value;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextWidget(
+          'Imagen de la arena',
+          fontFamily: AppFontFamily.workSans,
+          dsize: RelSize(size: TextWidgetSizes.small),
+          color: controller.theme.black.value,
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(Icons.image, size: 30),
+              onPressed: controller.pickImage,
+            ),
+            (file != null)
+                ? Image.file(file, width: 100, height: 100, fit: BoxFit.cover)
+                : const Text('No se ha seleccionado imagen'),
+          ],
         ),
       ],
     );

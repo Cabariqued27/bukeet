@@ -84,4 +84,12 @@ const Map<String, String> enSp = {
   "choose_your_bank":"Selecciona tu banco",
   "document_type":"Tipo de documento",
   "select_document_type":"Seleccion tu Tipo de documento",
+  "arena_name":"Nombre de la arena",
+  "arena_address":"Direccion de la arena",
+  "arena_city":"Ciudad de la arena",
+  "place_holder_arena_name": "Ej. Coliseo El Campín",
+"place_holder_arena_address": "Ej. Calle 123 #45-67, Bogotá",
+"place_holder_arena_city": "Ej. Bogotá"
+
+
 };

@@ -83,4 +83,11 @@ const Map<String, String> enUs = {
   "choose_your_bank": "Choose your Banks",
   "document_type":"Document Type",
   "select_document_type":"Choose you Document Type",
+  "arena_name":"Name Arena",
+  "arena_address":"Address Arena",
+  "arena_city":"City Arena",
+  "place_holder_arena_name": "e.g. Madison Square Garden",
+"place_holder_arena_address": "e.g. 4 Pennsylvania Plaza, New York",
+"place_holder_arena_city": "e.g. New York"
+
 };

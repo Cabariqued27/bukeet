@@ -21,7 +21,8 @@ class EditFieldAdminController extends GetxController {
   });
 
   //final ImagePicker _picker = ImagePicker();
-  final priceInputController = TextEditingController();
+  // Por día → por hora → TextEditingController
+  final Map<String, Map<int, TextEditingController>> priceControllers = {};
 
   var fields = <Field>[].obs;
   var isLoadData = false.obs;
@@ -49,7 +50,23 @@ class EditFieldAdminController extends GetxController {
 
   void startController() async {
     await initializeAvailabilityIfNeeded(fieldInformation?.id ?? 0);
+    initializePriceControllers(); // NUEVA LÍNEA
     updateLoadData(true);
+  }
+
+  void initializePriceControllers() {
+    for (var day in daysOfWeek) {
+      final availability = hourAvailability[day];
+      if (availability == null) continue;
+
+      final prices = availability.arrayPrice ?? [];
+      priceControllers[day] = {};
+
+      for (int hour = 0; hour < prices.length; hour++) {
+        final controller = TextEditingController(text: prices[hour].toString());
+        priceControllers[day]![hour] = controller;
+      }
+    }
   }
 
   void updateLoadData(bool value) {
@@ -64,9 +81,8 @@ class EditFieldAdminController extends GetxController {
 
   Future<void> createField() async {
     _fieldsProvider.registerField(
-        field: Field(
-      players: capacitySelected.value,
-    ));
+      field: Field(players: capacitySelected.value),
+    );
   }
 
   /*Future<void> validatePhotosPermission() async {
@@ -123,15 +139,16 @@ class EditFieldAdminController extends GetxController {
   }*/
 
   Future<void> initializeAvailabilityIfNeeded(int fieldId) async {
-    final exists =
-        await _hourAvailabilityProvider.checkAvailabilityExists(fieldId);
+    final exists = await _hourAvailabilityProvider.checkAvailabilityExists(
+      fieldId,
+    );
 
     if (!exists) {
       await _hourAvailabilityProvider.initializeAvailability(fieldId);
     }
 
-    final fetchedAvailability =
-        await _hourAvailabilityProvider.fetchAvailability(fieldId);
+    final fetchedAvailability = await _hourAvailabilityProvider
+        .fetchAvailability(fieldId);
 
     final grouped = <String, HourAvailability>{};
     for (var item in fetchedAvailability) {
@@ -187,7 +204,7 @@ class EditFieldAdminController extends GetxController {
     selectedHour.value = hour;
   }
 
- List<HourData> getHourDataForDay(String day) {
+  List<HourData> getHourDataForDay(String day) {
     final availability = hourAvailability[day];
     if (availability == null) return [];
 
@@ -197,17 +214,12 @@ class EditFieldAdminController extends GetxController {
     List<HourData> data = [];
     for (int i = 0; i < states.length; i++) {
       data.add(
-        HourData(
-          hour: i,
-          isActive: states[i] == true,
-          price: prices[i],
-        ),
+        HourData(hour: i, isActive: states[i] == true, price: prices[i]),
       );
     }
 
     return data;
   }
-
 
   void updateHourDataForDay(String day, List<HourData> updatedData) {
     final updatedStates = updatedData.map((e) => e.isActive).toList();
@@ -221,14 +233,35 @@ class EditFieldAdminController extends GetxController {
     );
   }
 
+  void updateHourDataForDayFromControllers(String day) {
+    final availability = hourAvailability[day];
+    if (availability == null) return;
+
+    final controllers = priceControllers[day] ?? {};
+    final updatedStates = availability.arrayState ?? [];
+    final updatedPrices = List<double>.generate(24, (i) {
+      final controller = controllers[i];
+      if (controller != null) {
+        final text = controller.text;
+        return double.tryParse(text) ?? 0.0;
+      }
+      return 0.0;
+    });
+
+    hourAvailability[day] = HourAvailability(
+      fieldId: availability.fieldId,
+      day: day,
+      arrayState: updatedStates,
+      arrayPrice: updatedPrices,
+    );
+  }
+
   Future<void> updateSchedule() async {
     for (var day in hourAvailability.keys) {
-          final availability = hourAvailability[day];
-          if (availability != null) {
-            await updateHourAvailability(
-              availability,
-            );
-          }
-        }
+      final availability = hourAvailability[day];
+      if (availability != null) {
+        await updateHourAvailability(availability);
+      }
+    }
   }
 }

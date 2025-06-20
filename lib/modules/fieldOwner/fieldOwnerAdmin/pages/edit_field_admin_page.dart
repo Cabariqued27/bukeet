@@ -21,12 +21,8 @@ class EditFieldAdminPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      desktop: WebFrameWidget(
-        child: _mobileContent(),
-      ),
-      tablet: WebFrameWidget(
-        child: _mobileContent(),
-      ),
+      desktop: WebFrameWidget(child: _mobileContent()),
+      tablet: WebFrameWidget(child: _mobileContent()),
       mobile: _mobileContent(),
     );
   }
@@ -59,7 +55,8 @@ class EditFieldAdminPage extends StatelessWidget {
                 _titleWidget(),
                 _daySelectorWidget(),
                 _hourListForDay(
-                    controller.daysOfWeek[controller.daysOfWeekIndex.value]),
+                  controller.daysOfWeek[controller.daysOfWeekIndex.value],
+                ),
               ],
             ),
           ),
@@ -77,54 +74,59 @@ class EditFieldAdminPage extends StatelessWidget {
   }
 
   Widget _hourListForDay(String day) {
-  final hourList = controller.getHourDataForDay(day);
-  return Expanded(
-    child: ListView.builder(
-      itemCount: hourList.length,
-      itemBuilder: (context, index) {
-        final hourData = hourList[index];
-        return HourAvailabilityTile(
-          hour: hourData.hour,
-          isActive: hourData.isActive,
-          price: hourData.price,
-          theme: controller.theme,
-          onToggleActive: (newStatus) {
-            hourList[index] = HourData(
-              hour: hourData.hour,
-              isActive: newStatus,
-              price: hourData.price,
-            );
-            controller.updateHourDataForDay(day, List.from(hourList));
-          },
-          onPriceChanged: (value) {
-            final newPrice = value;
-            hourList[index] = HourData(
-              hour: hourData.hour,
-              isActive: hourData.isActive,
-              price: newPrice,
-            );
-            controller.updateHourDataForDay(day, List.from(hourList));
-          },
-        );
-      },
-    ),
-  );
-}
+    final hourList = controller.getHourDataForDay(day);
+    return Expanded(
+      child: ListView.builder(
+        itemCount: hourList.length,
+        itemBuilder: (context, index) {
+          final hourData = hourList[index];
+          final controllerForHour =
+              controller.priceControllers[day]![hourData.hour]!;
 
+          return HourAvailabilityTile(
+            hour: hourData.hour,
+            isActive: hourData.isActive,
+            priceController: controllerForHour,
+            theme: controller.theme,
+            onToggleActive: (newStatus) {
+              hourList[index] = HourData(
+                hour: hourData.hour,
+                isActive: newStatus,
+                price: hourData.price,
+              );
+              controller.updateHourDataForDay(day, List.from(hourList));
+            },
+            onPriceChanged: (newPriceValue) {
+              final newPrice = newPriceValue;
+              hourList[index] = HourData(
+                hour: hourData.hour,
+                isActive: hourData.isActive,
+                price: newPrice,
+              );
+              controller.updateHourDataForDay(day, List.from(hourList));
+            },
+          );
+        },
+      ),
+    );
+  }
 
   Widget _daySelectorWidget() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         SvgIconButtonWidget(
-            size: 10,
-            icon: AppIcons.leftArrowSettings,
-            color: controller.theme.black.value,
-            onPressed: () => controller.decreaseSelectedDay()),
-        TextWidget(controller.daysOfWeek[controller.daysOfWeekIndex.value].tr,
-            fontFamily: AppFontFamily.leagueSpartan,
-            fontWeight: TextWidgetWeight.bold,
-            color: controller.theme.greenMin.value),
+          size: 10,
+          icon: AppIcons.leftArrowSettings,
+          color: controller.theme.black.value,
+          onPressed: () => controller.decreaseSelectedDay(),
+        ),
+        TextWidget(
+          controller.daysOfWeek[controller.daysOfWeekIndex.value].tr,
+          fontFamily: AppFontFamily.leagueSpartan,
+          fontWeight: TextWidgetWeight.bold,
+          color: controller.theme.greenMin.value,
+        ),
         Transform.rotate(
           angle: math.pi,
           child: SvgIconButtonWidget(
@@ -133,7 +135,7 @@ class EditFieldAdminPage extends StatelessWidget {
             color: controller.theme.black.value,
             onPressed: () => controller.increaseSelectedDay(),
           ),
-        )
+        ),
       ],
     );
   }
@@ -141,9 +143,10 @@ class EditFieldAdminPage extends StatelessWidget {
   Widget _updateButtonWidget() {
     return Container(
       padding: EdgeInsets.only(
-          bottom: AppMargin.vertical(),
-          left: AppMargin.horizontal(),
-          right: AppMargin.horizontal()),
+        bottom: AppMargin.vertical(),
+        left: AppMargin.horizontal(),
+        right: AppMargin.horizontal(),
+      ),
       child: GradientButtonWidget(
         gradient: controller.theme.refreshBackgroundExplore.value,
         disableColor: controller.theme.disable.value,

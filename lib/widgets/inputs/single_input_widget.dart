@@ -4,6 +4,7 @@ import 'package:bukeet/utils/app/app_size.dart';
 import 'package:bukeet/widgets/svg/svg_asset_widget.dart';
 import 'package:bukeet/widgets/text/text_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class SingleInputWidget extends StatelessWidget {
@@ -12,6 +13,7 @@ class SingleInputWidget extends StatelessWidget {
   final Function(String) onChanged;
   final VoidCallback? onEditingComplete;
   final int? maxLength;
+  final List<TextInputFormatter>? inputFormatters;
   final TextInputType textInputType;
   final bool mandatory;
   final bool isActive;
@@ -22,9 +24,11 @@ class SingleInputWidget extends StatelessWidget {
     required this.controller,
     required this.onChanged,
     required this.mandatory,
+    required this.isActive,
     this.onEditingComplete,
     this.maxLength,
-     required this.isActive,
+    this.inputFormatters,
+    
     this.textInputType = TextInputType.text,
   });
 
@@ -45,6 +49,7 @@ class SingleInputWidget extends StatelessWidget {
         onChanged: onChanged,
         onEditingComplete:onEditingComplete,
         keyboardType: textInputType,
+        inputFormatters: inputFormatters,
         cursorColor: _theme.primary.value,
         style: onlyTextStyle(
           color: _theme.black.value,

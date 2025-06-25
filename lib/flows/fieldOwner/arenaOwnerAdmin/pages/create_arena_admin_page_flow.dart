@@ -1,5 +1,5 @@
 import 'package:bukeet/flows/fieldOwner/fieldOwnerAdmin/controllers/field_owner_admin_flow.dart';
-import 'package:bukeet/flows/fieldOwner/fieldOwnerAdmin/routes/field_admin_routes.dart';
+import 'package:bukeet/flows/fieldOwner/home/controllers/home_field_owner_flow.dart';
 import 'package:bukeet/modules/fieldOwner/arenaFieldOwner/controllers/create_arena_admin_controller.dart';
 import 'package:bukeet/modules/fieldOwner/arenaFieldOwner/pages/create_arena_admin_page.dart';
 import 'package:bukeet/theme/theme.dart';
@@ -10,12 +10,14 @@ class CreateArenaAdminPageFlow extends StatefulWidget {
   const CreateArenaAdminPageFlow({super.key});
 
   @override
-  State<CreateArenaAdminPageFlow> createState() => _CreateArenaAdminPageFlowState();
+  State<CreateArenaAdminPageFlow> createState() =>
+      _CreateArenaAdminPageFlowState();
 }
 
 class _CreateArenaAdminPageFlowState extends State<CreateArenaAdminPageFlow> {
   late CreateArenaAdminController _controller;
   final _fieldOwnerAdminFlow = Get.find<FieldOwnerAdminFlow>();
+  final _fieldOwnerHomeFlow = Get.find<HomeFieldOwnerFlow>();
   final _theme = Get.find<AppTheme>();
 
   @override
@@ -25,9 +27,8 @@ class _CreateArenaAdminPageFlowState extends State<CreateArenaAdminPageFlow> {
       theme: _theme,
       arenaInformation: _fieldOwnerAdminFlow.getArena(),
       onFinish: () async {
-      
         await Future.delayed(const Duration(milliseconds: 300));
-        Get.offNamed(FieldAdminRoutes().listFieldAdmin);
+        _fieldOwnerHomeFlow.startOffNamed();
       },
     );
 
@@ -36,8 +37,6 @@ class _CreateArenaAdminPageFlowState extends State<CreateArenaAdminPageFlow> {
 
   @override
   Widget build(BuildContext context) {
-    return CreateArenaAdminPage(
-      controller: _controller,
-    );
+    return CreateArenaAdminPage(controller: _controller);
   }
 }

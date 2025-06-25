@@ -89,7 +89,7 @@ const Map<String, String> enSp = {
   "arena_city":"Ciudad de la arena",
   "place_holder_arena_name": "Ej. Coliseo El Campín",
 "place_holder_arena_address": "Ej. Calle 123 #45-67, Bogotá",
-"place_holder_arena_city": "Ej. Bogotá"
-
-
+"place_holder_arena_city": "Ej. Bogotá",
+"player_capacity":"Capacidad de jugadores",
+  "selected_field_capacity":"Ej. 5 vs 5",
 };

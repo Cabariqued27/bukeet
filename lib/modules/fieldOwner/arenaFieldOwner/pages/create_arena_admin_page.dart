@@ -2,6 +2,7 @@ import 'package:bukeet/assets/app_assets.dart';
 import 'package:bukeet/modules/fieldOwner/arenaFieldOwner/controllers/create_arena_admin_controller.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/buttons/icons_solid_button_widget.dart';
 import 'package:bukeet/widgets/inputs/single_input_widget.dart';
 import 'package:bukeet/widgets/responsive/responsive_widget.dart';
@@ -37,16 +38,20 @@ class CreateArenaAdminPage extends StatelessWidget {
               vertical: AppMargin.vertical(),
               horizontal: AppMargin.horizontal(),
             ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _titleWidget(),
-                  _inputsArenaWidget(),
-                  _imagePickerWidget(),
-                  _updateAvailabilityButton(),
-                ],
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _titleWidget(),
+                const SizedBox(),
+                _inputsArenaWidget(),
+                const SizedBox(),
+                _imagePickerWidget(),
+                const SizedBox(),
+                _updateAvailabilityButton(),
+                const SizedBox(),
+                const SizedBox(),
+                const SizedBox(),
+              ],
             ),
           ),
         ),
@@ -114,29 +119,49 @@ class CreateArenaAdminPage extends StatelessWidget {
 
   Widget _imagePickerWidget() {
     final file = controller.selectedImage.value;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextWidget(
-          'Imagen de la arena',
-          fontFamily: AppFontFamily.workSans,
-          dsize: RelSize(size: TextWidgetSizes.small),
-          color: controller.theme.black.value,
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            IconButton(
-              icon: const Icon(Icons.image, size: 30),
-              onPressed: controller.pickImage,
-            ),
-            (file != null)
-                ? Image.file(file, width: 100, height: 100, fit: BoxFit.cover)
-                : const Text('No se ha seleccionado imagen'),
-          ],
+    final borderRadius = BorderRadius.circular(16);
+    final boxDecoration = BoxDecoration(
+      color: controller.theme.backgroundDeviceSetting.value,
+      borderRadius: borderRadius,
+      border: Border.all(color: controller.theme.backgroundDeviceSetting.value),
+      boxShadow: [
+        BoxShadow(
+          color: applyOpacity(controller.theme.black.value, 0.2),
+          blurRadius: 6,
+          offset: const Offset(0, 3),
         ),
       ],
+    );
+
+    return Container(
+      decoration: boxDecoration,
+      height: AppSize.width() * 0.3,
+      width: AppSize.width() * 0.3,
+      child: file != null
+          ? ClipRRect(
+              borderRadius: borderRadius,
+              child: Image.file(
+                file,
+                width: double.infinity,
+                height: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.image, size: 30),
+                  onPressed: controller.pickImage,
+                ),
+                TextWidget(
+                  'Seleccionar imagen',
+                  fontFamily: AppFontFamily.workSans,
+                  dsize: RelSize(size: TextWidgetSizes.msmall),
+                  color: controller.theme.black.value,
+                ),
+              ],
+            ),
     );
   }
 
@@ -154,7 +179,7 @@ class CreateArenaAdminPage extends StatelessWidget {
       width: AppSize.width() * 0.15,
       iconRigth: AppIcons.rightArrowPopUp,
       iconSize: 20,
-      iconColor: controller.theme.greenMin.value,
+      iconColor: controller.theme.white.value,
     );
   }
 }

@@ -51,6 +51,7 @@ class CreateArenaAdminController extends GetxController {
         final file = ImageUtils.xFileToFile(pickedFile);
         if (file != null) {
           selectedImage.value = file;
+          onChangedLoginForm();
         }
       }
     } catch (e, st) {
@@ -59,6 +60,7 @@ class CreateArenaAdminController extends GetxController {
   }
 
   Future<void> createField() async {
+    updateActivateNext(false);
     final arena = await _arenasProvider.registerArena(
       arena: Arena(
         ownerId: _preferences.getUserId(),
@@ -97,10 +99,18 @@ class CreateArenaAdminController extends GetxController {
   }
 
   void onChangedLoginForm() {
-    activateNext.value =
-        arenaNameInputController.text.isNotEmpty &&
-        arenaAddressInputController.text.isNotEmpty &&
-        arenaCityInputController.text.isNotEmpty;
+    updateActivateNext(
+      arenaNameInputController.text.isNotEmpty &&
+          arenaAddressInputController.text.isNotEmpty &&
+          arenaCityInputController.text.isNotEmpty &&
+          (selectedImage.value != null),
+    );
+
+    update();
+  }
+
+  void updateActivateNext(bool value) {
+    activateNext.value = value;
     update();
   }
 }

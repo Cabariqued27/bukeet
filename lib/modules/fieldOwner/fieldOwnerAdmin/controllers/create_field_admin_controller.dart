@@ -27,12 +27,14 @@ class CreateFieldAdminController extends GetxController {
   var fields = <Field>[].obs;
   var fieldInformation = <Field>[].obs;
   var isLoadData = false.obs;
+  var activateNext = false.obs;
 
   var capacitySelected = 0.obs;
 
   var maxOrder = 0.obs;
 
   var images = <String>[].obs;
+  var selectedFiles = <XFile>[].obs;
 
   final _fieldsProvider = FieldProvider();
   final _profileImageProvider = ImagesBucketProvider();
@@ -45,7 +47,8 @@ class CreateFieldAdminController extends GetxController {
 
   Future<void> getArenaInformation() async {
     var data = await _fieldsProvider.getFieldByArenaId(
-        arenaId: arenaInformation?.id ?? 0);
+      arenaId: arenaInformation?.id ?? 0,
+    );
     fields.value = data;
     calcularMaxorder();
   }
@@ -64,19 +67,37 @@ class CreateFieldAdminController extends GetxController {
     update();
   }
 
-  void setSelectedFieldCapacity(int value) {
-    capacitySelected.value = value;
+  void updateActivateNext(bool value) {
+    activateNext.value = value;
     update();
   }
 
+  void onChangeForm() {
+    if (capacitySelected.value != 0 && selectedFiles.isNotEmpty) {
+      updateActivateNext(true);
+    } else {
+      updateActivateNext(false);
+    }
+  }
+
+  void setSelectedFieldCapacity(int value) {
+    capacitySelected.value = value;
+    update();
+    onChangeForm();
+  }
+
   Future<void> createField() async {
+    updateActivateNext(false);
     var field = await _fieldsProvider.registerField(
-        field: Field(
-            players: capacitySelected.value,
-            order: maxOrder.value,
-            arenaId: arenaInformation?.id));
+      field: Field(
+        players: capacitySelected.value,
+        order: maxOrder.value,
+        arenaId: arenaInformation?.id,
+      ),
+    );
+
     if (field != null) {
-      await validatePhotosPermission(field.id ?? 0);
+      await uploadFieldImages(field.id!);
     }
   }
 
@@ -90,47 +111,56 @@ class CreateFieldAdminController extends GetxController {
     uploadFieldImages(id);
   }
 
-  Future<void> uploadFieldImages(int fieldId) async {
-    if (images.length >= 3) {
-      Get.snackbar('warning'.tr, 'Solo puedes subir hasta 3 imágenes');
+  Future<void> pickImages() async {
+    if (selectedFiles.length >= 3) {
+      Get.snackbar('warning'.tr, 'Solo puedes seleccionar hasta 3 imágenes');
       return;
     }
 
     try {
-      final pickedFiles = await _picker.pickMultiImage();
+      final picked = await _picker.pickMultiImage();
 
-      if (pickedFiles.isNotEmpty) {
-        final remainingSlots = 3 - images.length;
-        final filesToUpload = pickedFiles.take(remainingSlots).toList();
+      if (picked.isNotEmpty) {
+        final remaining = 3 - selectedFiles.length;
+        final toAdd = picked.take(remaining);
 
-        for (var fileData in filesToUpload) {
-          final file = ImageUtils.xFileToFile(fileData);
+        selectedFiles.addAll(toAdd);
+        onChangeForm();
+      }
+    } catch (e, st) {
+      LogError.capture(e, st, 'pickImages');
+    }
+  }
 
-          if (file != null) {
-            final publicUrl = await _profileImageProvider.setFieldsImage(file);
+  Future<void> uploadFieldImages(int fieldId) async {
+    if (selectedFiles.isEmpty) return;
 
-            if (publicUrl != null && publicUrl.isNotEmpty) {
-              images.add(publicUrl);
-            }
-          }
-        }
-
-        if (images.isNotEmpty) {
-          final success = await _fieldsProvider.uploadFieldsImagesList(
-            id: fieldId,
-            imageUrls: images,
-          );
-
-          if (success) {
-            Get.snackbar('warning'.tr, 'image_saved'.tr);
-            onFinish();
-          } else {
-            Get.snackbar('warning'.tr, 'could_not_save'.tr);
+    try {
+      for (var xfile in selectedFiles) {
+        final file = ImageUtils.xFileToFile(xfile);
+        if (file != null) {
+          final publicUrl = await _profileImageProvider.setFieldsImage(file);
+          if (publicUrl != null && publicUrl.isNotEmpty) {
+            images.add(publicUrl);
           }
         }
       }
-    } catch (exception, stackTrace) {
-      LogError.capture(exception, stackTrace, 'uploadFieldImages');
+
+      if (images.isNotEmpty) {
+        final success = await _fieldsProvider.uploadFieldsImagesList(
+          id: fieldId,
+          imageUrls: images,
+        );
+
+        if (success) {
+          Get.snackbar('Éxito', 'Imágenes subidas correctamente');
+          onFinish();
+        } else {
+          Get.snackbar('Error', 'No se pudieron subir las imágenes');
+        }
+      }
+    } catch (e, st) {
+      LogError.capture(e, st, 'uploadFieldImages');
     }
   }
 }

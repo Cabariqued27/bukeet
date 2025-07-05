@@ -165,6 +165,7 @@ class EditFieldAdminController extends GetxController {
     final success = await _hourAvailabilityProvider.updateAvailability(
       hourAvailability: availability,
     );
+    Get.snackbar('warning'.tr, 'actualizado');
 
     if (!success) {
       if (kDebugMode) {
@@ -257,11 +258,35 @@ class EditFieldAdminController extends GetxController {
   }
 
   Future<void> updateSchedule() async {
+    final hasInvalid = hourAvailability.values.any((availability) {
+      return _hasInvalidActiveHourPrice(availability);
+    });
+
+    if (hasInvalid) {
+      Get.snackbar('warning'.tr, 'la hora debe costar al menos 10.000 Cop');
+      return;
+    }
+
     for (var day in hourAvailability.keys) {
       final availability = hourAvailability[day];
       if (availability != null) {
         await updateHourAvailability(availability);
       }
     }
+  }
+
+  bool _hasInvalidActiveHourPrice(HourAvailability availability) {
+    final states = availability.arrayState ?? [];
+    final prices = availability.arrayPrice ?? [];
+
+    for (int i = 0; i < states.length && i < prices.length; i++) {
+      final isActive = states[i] == true || states[i] == 1;
+      final price = prices[i];
+
+      if (isActive && (price is num) && price < 10000) {
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -113,7 +113,8 @@ class BookingController extends GetxController {
         userLegalIdInputController.text.isNum &&
         selectedInstitutionCode.value.isNotEmpty &&
         selectedPeopleType.value.isNotEmpty &&
-        selectedDocumentType.value.isNotEmpty) {
+        selectedDocumentType.value.isNotEmpty &&
+        selectedHourPrice.value != 0) {
       updateActivateNext(true);
     } else {
       updateActivateNext(false);

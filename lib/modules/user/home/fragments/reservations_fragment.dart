@@ -104,6 +104,14 @@ class ReservationsUserFragment extends StatelessWidget {
   }
 
   Widget _fieldItemWidget(Reservation item) {
+    final field = controller.fields.firstWhereOrNull(
+      (f) => f.id == item.fieldId,
+    );
+    final arenaName =
+        field != null && controller.arenasById.containsKey(field.arenaId)
+        ? controller.arenasById[field.arenaId]!.name
+        : 'Desconocido';
+
     return Container(
       decoration: BoxDecoration(
         color: (item.paymentStatus == "APPROVED")
@@ -121,22 +129,18 @@ class ReservationsUserFragment extends StatelessWidget {
               SizedBox(
                 width: AppSize.width() * 0.9,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: AppSize.width() * 0.9,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          _infoText(
-                            'Día: ${DateFormat('dd MMM yyyy').format(item.date!)}',
-                          ),
-                          _infoText('Hora: ${item.timeSlot}'),
-                          _infoText('Cancha: ${item.fieldId}'),
-                          _infoText(
-                            'Estado: ${item.paymentStatus == "APPROVED" ? 'Confirmada' : 'Pendiente'}',
-                          ),
-                        ],
-                      ),
+                    _infoText('Lugar: $arenaName'),
+                    _infoText(
+                      'Día: ${DateFormat('dd MMM yyyy').format(item.date!)}',
+                    ),
+                    _infoText(
+                      'Hora: ${controller.formatHour(item.timeSlot ?? 0)}',
+                    ),
+                    _infoText('Cancha: ${item.fieldId}'),
+                    _infoText(
+                      'Estado: ${item.paymentStatus == "APPROVED" ? 'Confirmada' : 'Pendiente'}',
                     ),
                   ],
                 ),

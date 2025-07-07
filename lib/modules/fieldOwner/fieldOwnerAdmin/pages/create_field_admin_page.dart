@@ -48,7 +48,7 @@ class CreateFieldAdminPage extends StatelessWidget {
                 const SizedBox(),
                 _capacityDropDownWidget(),
                 const SizedBox(),
-                _updateAvailabilityButton(),
+                _createFieldButton(),
                 const SizedBox(),
                 const SizedBox(),
                 const SizedBox(),
@@ -209,7 +209,7 @@ class CreateFieldAdminPage extends StatelessWidget {
     );
   }
 
-  Widget _updateAvailabilityButton() {
+  Widget _createFieldButton() {
     return IconSolidButtonWidget(
       fontFamily: AppFontFamily.workSans,
       textSize: TextWidgetSizes.small,

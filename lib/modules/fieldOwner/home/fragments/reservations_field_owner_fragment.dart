@@ -138,7 +138,21 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
                           fontWeight: TextWidgetWeight.bold,
                         ),
                         TextWidget(
-                          item.timeSlot.toString(),
+                          controller.formatHour(item.timeSlot ?? 0),
+                          fontFamily: AppFontFamily.leagueSpartan,
+                          fontWeight: TextWidgetWeight.normal,
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        TextWidget(
+                          'Location: ',
+                          fontFamily: AppFontFamily.leagueSpartan,
+                          fontWeight: TextWidgetWeight.bold,
+                        ),
+                        TextWidget(
+                          controller.fieldIdToArenaName[item.fieldId] ?? '',
                           fontFamily: AppFontFamily.leagueSpartan,
                           fontWeight: TextWidgetWeight.normal,
                         ),
@@ -165,7 +179,7 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
                           fontWeight: TextWidgetWeight.bold,
                         ),
                         TextWidget(
-                          item.paymentStatus??'',
+                          item.paymentStatus ?? '',
                           fontFamily: AppFontFamily.leagueSpartan,
                         ),
                       ],

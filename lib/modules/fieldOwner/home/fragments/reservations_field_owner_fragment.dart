@@ -51,7 +51,7 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: AppSize.width() * 0.15),
-                //fieldTabsWidget(),
+                _titleWidget(),
                 (controller.isLoadData.value)
                     ? _fieldsListWidget()
                     : LoadingDataWidget(),
@@ -63,29 +63,44 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
     );
   }
 
+  Widget _titleWidget() {
+    return TextWidget(
+      'Reservas',
+      fontFamily: AppFontFamily.leagueSpartan,
+      fontWeight: TextWidgetWeight.bold,
+    );
+  }
+
   Widget _fieldsListWidget() {
-    return FadeIn(
-      duration: const Duration(milliseconds: 1000),
-      child: SizedBox(
-        height: AppSize.height() * 0.8,
-        child: ListView.builder(
-          scrollDirection: Axis.vertical,
-          itemCount: controller.reservations.length,
-          padding: EdgeInsets.only(bottom: AppMargin.vertical() * 3),
-          itemBuilder: (context, index) {
-            var item = controller.reservations[index];
-            return Column(
-              children: [
-                SizedBox(height: AppSize.width() * 0.05),
-                InkWell(
-                  onTap: () {
-                    controller.updateReservationStatus(item);
-                  },
-                  child: _fieldItemWidget(item),
-                ),
-              ],
-            );
-          },
+    return RefreshIndicator(
+      color: controller.theme.refreshColor.value,
+        backgroundColor: controller.theme.background.value,
+        onRefresh: () async {
+           controller.startController();
+        },
+      child: FadeIn(
+        duration: const Duration(milliseconds: 1000),
+        child: SizedBox(
+          height: AppSize.height() * 0.8,
+          child: ListView.builder(
+            scrollDirection: Axis.vertical,
+            itemCount: controller.reservations.length,
+            padding: EdgeInsets.only(bottom: AppMargin.vertical() * 3),
+            itemBuilder: (context, index) {
+              var item = controller.reservations[index];
+              return Column(
+                children: [
+                  SizedBox(height: AppSize.width() * 0.05),
+                  InkWell(
+                    onTap: () {
+                      controller.updateReservationStatus(item);
+                    },
+                    child: _fieldItemWidget(item),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

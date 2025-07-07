@@ -175,34 +175,41 @@ class BookingPage extends StatelessWidget {
   }
 
   Widget _informationWidget() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextWidget(
-          controller.arenaInformation?.city ?? '',
-          fontFamily: AppFontFamily.leagueSpartan,
-          fontWeight: FontWeight.w600,
-          dsize: RelSize(size: TextWidgetSizes.normal),
-          color: controller.theme.black.value,
-          textAlign: TextAlign.center,
-        ),
-        TextWidget(
-          controller.arenaInformation?.address ?? '',
-          fontFamily: AppFontFamily.leagueSpartan,
-          fontWeight: FontWeight.w600,
-          dsize: RelSize(size: TextWidgetSizes.normal),
-          color: controller.theme.black.value,
-          textAlign: TextAlign.center,
-        ),
-        TextWidget(
-          '${controller.fieldInformation?.players} vs ${controller.fieldInformation?.players}',
-          fontFamily: AppFontFamily.leagueSpartan,
-          fontWeight: FontWeight.w600,
-          textAlign: TextAlign.center,
-          dsize: RelSize(size: TextWidgetSizes.normal),
-          color: controller.theme.black.value,
-        ),
-      ],
+    return SizedBox(
+      width: AppSize.width() * 0.9,
+      child: Row(
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextWidget(
+                controller.arenaInformation?.city ?? '',
+                fontFamily: AppFontFamily.leagueSpartan,
+                fontWeight: FontWeight.w600,
+                dsize: RelSize(size: TextWidgetSizes.normal),
+                color: controller.theme.black.value,
+                textAlign: TextAlign.center,
+              ),
+              TextWidget(
+                controller.arenaInformation?.address ?? '',
+                fontFamily: AppFontFamily.leagueSpartan,
+                fontWeight: FontWeight.w600,
+                dsize: RelSize(size: TextWidgetSizes.normal),
+                color: controller.theme.black.value,
+                textAlign: TextAlign.center,
+              ),
+              TextWidget(
+                '${controller.fieldInformation?.players} vs ${controller.fieldInformation?.players}',
+                fontFamily: AppFontFamily.leagueSpartan,
+                fontWeight: FontWeight.w600,
+                textAlign: TextAlign.center,
+                dsize: RelSize(size: TextWidgetSizes.normal),
+                color: controller.theme.black.value,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

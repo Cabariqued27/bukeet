@@ -83,7 +83,7 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
     //  id: reservation.id ?? 0, status: !(reservation.status ?? false));
     //await _reservationsProvider.updateReservationStatus(
     //  updateReservation: updateReservation);
-    startController();
+    //startController();
   }
 
   String formatHour(int hour24) {

@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class BookingController extends GetxController {
   final VoidCallback onNext;
@@ -42,12 +43,15 @@ class BookingController extends GetxController {
   var selectedHour = 100.obs;
   var selectedPeopleType = ''.obs;
   var selectedDocumentType = ''.obs;
+  var dynamicUrl = ''.obs;
 
   var selectedHourPrice = 0.obs;
   var draggableSize = 0.7.obs;
   var isLoadData = false.obs;
   var activateNext = false.obs;
   var isLoadDataReservations = false.obs;
+  var showLocalPayment = false.obs;
+  var isPaymentCheckoutLoad = false.obs;
   var hourAvailability = <String, HourAvailability>{}.obs;
 
   final fullNameInputController = TextEditingController();
@@ -70,8 +74,9 @@ class BookingController extends GetxController {
   final _hourAvailabilityProvider = HourAvailabilityProvider();
   final _preferences = UserPreferences();
 
+  late final WebViewController webViewController;
+
   Future<void> startController() async {
-    //checkoutPro = PayUCheckoutProFlutter();
     loadDefaultUserInformation();
     await cargarInstituciones();
     final selectedDate = _getOnlyDate(today.value);
@@ -128,6 +133,16 @@ class BookingController extends GetxController {
 
   void updateLoadData(bool value) {
     isLoadData.value = value;
+    update();
+  }
+
+  updateShowlocalPayment(bool value) {
+    showLocalPayment.value = value;
+    update();
+  }
+
+  updateLoadLocalPayment(bool value) {
+    isPaymentCheckoutLoad.value = value;
     update();
   }
 
@@ -209,7 +224,7 @@ class BookingController extends GetxController {
       initialDate: todayDynamic.value,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 60)),
-      helpText: 'Select DOB',
+      helpText: 'Selecciona el día de la reserva',
       cancelText: 'Close',
       confirmText: 'Confirm',
       errorFormatText: 'Enter valid date',
@@ -313,7 +328,8 @@ class BookingController extends GetxController {
         return;
       }
 
-      abrirEnNavegador(redirectUrl);
+      paymentUrl(redirectUrl);
+      updateShowlocalPayment(true);
     } catch (e) {
       final errorMessage = _parseReservationError(e);
       AlertUtils.showMessageAlert(
@@ -413,5 +429,27 @@ class BookingController extends GetxController {
     selectedDocumentType.value = value;
     update();
     onChangeForm();
+  }
+
+  void paymentUrl(String url) {
+    delay();
+    webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(url))
+      ..enableZoom(false);
+    delay();
+  }
+
+  Future<void> delay() async {
+    await Future.delayed(const Duration(milliseconds: 2000));
+    updateLoadLocalPayment(true);
+  }
+
+  void backButtonLogic() {
+    if (showLocalPayment.value) {
+      updateShowlocalPayment(false);
+      return;
+    }
+    Get.back();
   }
 }

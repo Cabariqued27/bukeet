@@ -136,6 +136,7 @@ class HomeFieldOwnerFragment extends StatelessWidget {
                   '${item.address}',
                   fontFamily: AppFontFamily.leagueSpartan,
                   color: controller.theme.black.value,
+                  height: 0.5,
                 ),
               ],
             ),

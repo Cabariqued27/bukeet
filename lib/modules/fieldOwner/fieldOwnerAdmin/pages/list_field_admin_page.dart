@@ -16,20 +16,13 @@ import 'package:get/get.dart';
 class ListFieldAdminPage extends StatelessWidget {
   final ListFieldAdminController controller;
 
-  const ListFieldAdminPage({
-    super.key,
-    required this.controller,
-  });
+  const ListFieldAdminPage({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      desktop: WebFrameWidget(
-        child: _mobileContent(),
-      ),
-      tablet: WebFrameWidget(
-        child: _mobileContent(),
-      ),
+      desktop: WebFrameWidget(child: _mobileContent()),
+      tablet: WebFrameWidget(child: _mobileContent()),
       mobile: _mobileContent(),
     );
   }
@@ -63,13 +56,13 @@ class ListFieldAdminPage extends StatelessWidget {
                       children: [
                         _nameWidget(),
                         SizedBox(height: AppSize.width() * 0.03),
-                        _fieldsListWidget()
+                        _fieldsListWidget(),
                       ],
                     )
                   : LoadingDataWidget(),
             ),
           ),
-          _floatingButtonWidget()
+          _floatingButtonWidget(),
         ],
       ),
     );
@@ -134,6 +127,7 @@ class ListFieldAdminPage extends StatelessWidget {
                   '#${item.order}',
                   fontFamily: AppFontFamily.leagueSpartan,
                   color: controller.theme.black.value,
+                  height: 0.5,
                 ),
                 TextWidget(
                   '${item.players} vs ${item.players}',

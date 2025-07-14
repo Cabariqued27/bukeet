@@ -15,6 +15,7 @@ import 'package:bukeet/widgets/responsive/web_frame_widget.dart';
 import 'package:bukeet/widgets/text/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class BookingPage extends StatelessWidget {
   final BookingController controller;
@@ -49,74 +50,89 @@ class BookingPage extends StatelessWidget {
               child: Stack(
                 children: [
                   _imagesWidget(),
-                  SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        SizedBox(height: AppSize.height() * 0.2),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: controller.theme.background.value,
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(30.0),
-                              topRight: Radius.circular(30.0),
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                blurRadius: 6,
-                                offset: const Offset(0, 0),
-                                color: controller
-                                    .theme
-                                    .backgroundDeviceSetting
-                                    .value,
-                              ),
-                            ],
-                          ),
-                          padding: EdgeInsets.only(
-                            top: AppMargin.vertical() * 0.5,
-                            left: AppMargin.horizontal() * 0.5,
-                            right: AppMargin.horizontal() * 0.5,
-                            bottom: AppMargin.vertical() * 1.1,
-                          ),
-                          width: AppSize.width(),
+                  (!controller.showLocalPayment.value)
+                      ? SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
                           child: Column(
                             children: [
-                              _informationWidget(),
-                              _dateInputWidget(),
-                              _availableTimesDropdownWidget(),
-                              _institutionsDropdownWidget(),
-                              _peopleTypeDropDownWidget(),
-                              _inputWidget(
-                                'put_name',
-                                controller.fullNameInputController,
-                                'full_name',
-                                TextInputType.text,
+                              SizedBox(height: AppSize.height() * 0.2),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: controller.theme.background.value,
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(30.0),
+                                    topRight: Radius.circular(30.0),
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 0),
+                                      color: controller
+                                          .theme
+                                          .backgroundDeviceSetting
+                                          .value,
+                                    ),
+                                  ],
+                                ),
+                                padding: EdgeInsets.only(
+                                  top: AppMargin.vertical() * 1.1,
+                                  left: AppMargin.horizontal() * 0.5,
+                                  right: AppMargin.horizontal() * 0.5,
+                                  bottom: AppMargin.vertical() * 1.1,
+                                ),
+                                width: AppSize.width(),
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    _informationWidget(),
+                                    SizedBox(height: AppSize.height() * 0.02),
+                                    _dateInputWidget(),
+                                    _availableTimesDropdownWidget(),
+                                    _institutionsDropdownWidget(),
+                                    _peopleTypeDropDownWidget(),
+                                    _inputWidget(
+                                      'put_name',
+                                      controller.fullNameInputController,
+                                      'full_name',
+                                      TextInputType.text,
+                                    ),
+                                    _inputWidget(
+                                      'put_email',
+                                      controller.customerEmailInputController,
+                                      'email_address',
+                                      TextInputType.emailAddress,
+                                    ),
+                                    _documentTypeDropDownWidget(),
+                                    _inputWidget(
+                                      'ccnumero',
+                                      controller.userLegalIdInputController,
+                                      'ccnumero',
+                                      TextInputType.number,
+                                    ),
+                                    SizedBox(height: AppSize.width() * 0.05),
+                                    _sendReservationButton(),
+                                  ],
+                                ),
                               ),
-                              _inputWidget(
-                                'put_email',
-                                controller.customerEmailInputController,
-                                'email_address',
-                                TextInputType.emailAddress,
-                              ),
-                              _documentTypeDropDownWidget(),
-                              _inputWidget(
-                                'ccnumero',
-                                controller.userLegalIdInputController,
-                                'ccnumero',
-                                TextInputType.number,
-                              ),
-                              SizedBox(height: AppSize.width() * 0.05),
-                              _sendReservationButton(),
                             ],
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
+                        )
+                      : _webViewWidget(),
                   _appBarWidget(),
                 ],
               ),
             )
+          : LoadingDataWidget(),
+    );
+  }
+
+  Widget _webViewWidget() {
+    return SizedBox(
+      width: AppSize.width(),
+      height: AppSize.height() * 0.9,
+      child: (controller.isPaymentCheckoutLoad.value)
+          ? WebViewWidget(controller: controller.webViewController)
           : LoadingDataWidget(),
     );
   }
@@ -167,7 +183,7 @@ class BookingPage extends StatelessWidget {
         child: SvgIconButtonWidget(
           size: AppSize.width() * 0.05,
           icon: AppIcons.leftArrowSettings,
-          onPressed: () => Get.back(),
+          onPressed: () => controller.backButtonLogic(),
           color: controller.theme.black.value,
         ),
       ),
@@ -189,6 +205,7 @@ class BookingPage extends StatelessWidget {
                 dsize: RelSize(size: TextWidgetSizes.normal),
                 color: controller.theme.black.value,
                 textAlign: TextAlign.center,
+                height: 0.5,
               ),
               TextWidget(
                 controller.arenaInformation?.address ?? '',
@@ -205,6 +222,7 @@ class BookingPage extends StatelessWidget {
                 textAlign: TextAlign.center,
                 dsize: RelSize(size: TextWidgetSizes.normal),
                 color: controller.theme.black.value,
+                height: 0.5,
               ),
             ],
           ),

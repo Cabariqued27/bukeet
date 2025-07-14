@@ -120,13 +120,13 @@ class ReservationProvider {
       await _supabase
           .from(Tables.reservations)
           .update({
-            'paymentStatus': updateReservation..paymentStatus,
-            'reservationStatus': updateReservation..reservationStatus,
+            'paymentStatus': updateReservation.paymentStatus,
+            'reservationStatus': updateReservation.reservationStatus,
           })
           .eq('id', updateReservation.id);
       return true;
     } catch (exception, stackTrace) {
-      LogError.capture(exception, stackTrace, 'updateUserDataByEmail');
+      LogError.capture(exception, stackTrace, 'updateReservationByReference');
       return false;
     }
   }

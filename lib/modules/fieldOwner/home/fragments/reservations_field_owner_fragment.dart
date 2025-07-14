@@ -54,7 +54,10 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
                 _titleWidget(),
                 (controller.isLoadData.value)
                     ? _fieldsListWidget()
-                    : LoadingDataWidget(),
+                    : SizedBox(
+                        height: AppSize.height() * 0.8,
+                        child: LoadingDataWidget(),
+                      ),
               ],
             ),
           ),
@@ -74,10 +77,10 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
   Widget _fieldsListWidget() {
     return RefreshIndicator(
       color: controller.theme.refreshColor.value,
-        backgroundColor: controller.theme.background.value,
-        onRefresh: () async {
-           controller.startController();
-        },
+      backgroundColor: controller.theme.background.value,
+      onRefresh: () async {
+        controller.startController();
+      },
       child: FadeIn(
         duration: const Duration(milliseconds: 1000),
         child: SizedBox(

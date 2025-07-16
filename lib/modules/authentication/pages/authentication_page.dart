@@ -49,43 +49,46 @@ class AuthenticationPage extends StatelessWidget {
   }
 
   Widget _pageWidget() {
-    return SizedBox(
-      width: AppSize.width(),
-      height: AppSize.height(),
-      child: Stack(
-        children: [
-          AssetImageWidget(
-            pathImage: AppImages.started,
-            width: AppSize.width(),
-            height: AppSize.height(),
-          ),
-          _menuWidget(),
-          Container(
-            width: AppSize.width(),
-            height: AppSize.height(),
-            margin: EdgeInsets.symmetric(
-              vertical: AppMargin.vertical(),
-              horizontal: AppMargin.horizontal(),
+    return SingleChildScrollView(
+      physics: const ScrollPhysics(),
+      child: SizedBox(
+        width: AppSize.width(),
+        height: AppSize.height(),
+        child: Stack(
+          children: [
+            AssetImageWidget(
+              pathImage: AppImages.started,
+              width: AppSize.width(),
+              height: AppSize.height(),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(),
-                _logoWidget(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-                const SizedBox(),
-              ],
+            _menuWidget(),
+            Container(
+              width: AppSize.width(),
+              height: AppSize.height(),
+              margin: EdgeInsets.symmetric(
+                vertical: AppMargin.vertical(),
+                horizontal: AppMargin.horizontal(),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(),
+                  _logoWidget(),
+                  const SizedBox(),
+                  const SizedBox(),
+                  const SizedBox(),
+                  const SizedBox(),
+                  const SizedBox(),
+                  const SizedBox(),
+                  const SizedBox(),
+                  const SizedBox(),
+                  const SizedBox(),
+                  const SizedBox(),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

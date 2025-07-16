@@ -87,6 +87,7 @@ class BookingController extends GetxController {
     await initializeAvailabilityIfNeeded(fieldInformation?.id ?? 0);
     updateLoadData(true);
     getAvailableTimes();
+
     //draggableController.addListener(onDraggableScroll);
   }
 

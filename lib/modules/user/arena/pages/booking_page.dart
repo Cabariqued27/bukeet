@@ -47,11 +47,11 @@ class BookingPage extends StatelessWidget {
       child: (controller.isLoadData.value)
           ? FadeIn(
               duration: const Duration(milliseconds: 1000),
-              child: Stack(
-                children: [
-                  _imagesWidget(),
-                  (!controller.showLocalPayment.value)
-                      ? SingleChildScrollView(
+              child: (!controller.showLocalPayment.value)
+                  ? Stack(
+                      children: [
+                        _imagesWidget(),
+                        SingleChildScrollView(
                           physics: const BouncingScrollPhysics(),
                           child: Column(
                             children: [
@@ -117,23 +117,26 @@ class BookingPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                        )
-                      : _webViewWidget(),
-                  _appBarWidget(),
-                ],
-              ),
+                        ),
+
+                        _appBarWidget(),
+                      ],
+                    )
+                  : Stack(children: [_webViewWidget(), _appBarWidget()]),
             )
           : LoadingDataWidget(),
     );
   }
 
   Widget _webViewWidget() {
-    return SizedBox(
-      width: AppSize.width(),
-      height: AppSize.height() * 0.9,
-      child: (controller.isPaymentCheckoutLoad.value)
-          ? WebViewWidget(controller: controller.webViewController)
-          : LoadingDataWidget(),
+    return SafeArea(
+      child: SizedBox(
+        width: AppSize.width(),
+        height: AppSize.height(),
+        child: (controller.isPaymentCheckoutLoad.value)
+            ? WebViewWidget(controller: controller.webViewController)
+            : LoadingDataWidget(),
+      ),
     );
   }
 

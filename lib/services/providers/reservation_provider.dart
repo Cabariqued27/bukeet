@@ -98,6 +98,29 @@ class ReservationProvider {
     return [];
   }
 
+  Future<List<app.Reservation>> getReservationsByFieldsIdByDay({
+    required int fieldId,
+    required  DateTime actualDay,
+  }) async {
+    try {
+      var list = <app.Reservation>[];
+      final data = await _supabase
+          .from(Tables.reservations)
+          .select()
+          .eq("date", actualDay)
+          .eq('fieldId', fieldId);
+      for (Map<String, dynamic> item in data) {
+        var type = app.Reservation.fromJson(item);
+        list.add(type);
+      }
+
+      return list;
+    } catch (exception, stackTrace) {
+      LogError.capture(exception, stackTrace, 'getReservationsByFieldsId');
+    }
+    return [];
+  }
+
   /*Future<bool> updateReservationStatus({
     required app.UpdateReservation updateReservation,
   }) async {

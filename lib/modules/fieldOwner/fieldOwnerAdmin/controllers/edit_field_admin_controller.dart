@@ -20,8 +20,6 @@ class EditFieldAdminController extends GetxController {
     this.arenaInformation,
   });
 
-  //final ImagePicker _picker = ImagePicker();
-  // Por día → por hora → TextEditingController
   final Map<String, Map<int, TextEditingController>> priceControllers = {};
 
   var fields = <Field>[].obs;
@@ -50,7 +48,7 @@ class EditFieldAdminController extends GetxController {
 
   void startController() async {
     await initializeAvailabilityIfNeeded(fieldInformation?.id ?? 0);
-    initializePriceControllers(); // NUEVA LÍNEA
+    initializePriceControllers();
     updateLoadData(true);
   }
 

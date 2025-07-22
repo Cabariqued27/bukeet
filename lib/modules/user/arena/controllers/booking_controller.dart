@@ -349,7 +349,7 @@ class BookingController extends GetxController {
         'Authorization': 'Bearer $supabaseAnonKey',
       },
       body: jsonEncode({
-        "amount_in_cents": selectedHourPrice.value * 10,
+        "amount_in_cents": selectedHourPrice.value * 100,
         "currency": "COP",
         "customer_email": customerEmailInputController.text,
         "user_legal_id": userLegalIdInputController.text,

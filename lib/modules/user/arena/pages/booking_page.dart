@@ -118,7 +118,6 @@ class BookingPage extends StatelessWidget {
                             ],
                           ),
                         ),
-
                         _appBarWidget(),
                       ],
                     )

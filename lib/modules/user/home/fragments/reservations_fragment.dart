@@ -38,38 +38,36 @@ class ReservationsUserFragment extends StatelessWidget {
     return SizedBox(
       width: AppSize.width(),
       height: AppSize.height(),
-      child: Stack(
-        children: [
-          Container(
-            width: AppSize.width(),
-            height: AppSize.height(),
-            margin: EdgeInsets.symmetric(
-              vertical: AppMargin.vertical(),
-              horizontal: AppMargin.horizontal(),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SizedBox(height: AppSize.width() * 0.15),
-                _titleWidget(),
-                (controller.isLoadData.value)
-                    ? _fieldsListWidget()
-                    : LoadingDataWidget(),
-              ],
-            ),
+      child: SafeArea(
+        child: Container(
+          width: AppSize.width(),
+          height: AppSize.height(),
+          margin: EdgeInsets.symmetric(
+            vertical: AppMargin.vertical(),
+            horizontal: AppMargin.horizontal(),
           ),
-        ],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              
+              //_titleWidget(),
+              (controller.isLoadData.value)
+                  ? _fieldsListWidget()
+                  : SizedBox(height: AppSize.height() * 0.8,child: LoadingDataWidget()),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _titleWidget() {
+  /*Widget _titleWidget() {
     return TextWidget(
       'Tus Reservas',
       fontFamily: AppFontFamily.leagueSpartan,
       fontWeight: TextWidgetWeight.bold,
     );
-  }
+  }*/
 
   Widget _fieldsListWidget() {
     return Expanded(

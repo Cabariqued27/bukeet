@@ -43,25 +43,21 @@ class ProfileUserFragment extends StatelessWidget {
     return SizedBox(
       width: AppSize.width(),
       height: AppSize.height(),
-      child: Stack(
-        children: [
-          Container(
-            width: AppSize.width(),
-            height: AppSize.height(),
-            margin: EdgeInsets.symmetric(
-              vertical: AppMargin.vertical(),
-              horizontal: AppMargin.horizontal(),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: AppSize.width() * 0.15),
-                _userInformationWidget(),
-                _logOutButtonWidget(),
-              ],
-            ),
-          ),
-        ],
+      child: Container(
+        width: AppSize.width(),
+        height: AppSize.height(),
+        margin: EdgeInsets.symmetric(
+          vertical: AppMargin.vertical(),
+          horizontal: AppMargin.horizontal(),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: AppSize.width() * 0.15),
+            _userInformationWidget(),
+            _logOutButtonWidget(),
+          ],
+        ),
       ),
     );
   }

@@ -46,29 +46,25 @@ class HomeUserFragment extends StatelessWidget {
     return SizedBox(
       width: AppSize.width(),
       height: AppSize.height(),
-      child: Stack(
-        children: [
-          SafeArea(
-            child: Container(
-              width: AppSize.width(),
-              height: AppSize.height(),
-              margin: EdgeInsets.symmetric(
-                vertical: AppMargin.vertical(),
-                horizontal: AppMargin.horizontal(),
-              ),
-              child: (controller.isLoadData.value)
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _searchWidget(),
-                        SizedBox(height: AppSize.width() * 0.03),
-                        _fieldsListWidget()
-                      ],
-                    )
-                  : LoadingDataWidget(),
-            ),
+      child: SafeArea(
+        child: Container(
+          width: AppSize.width(),
+          height: AppSize.height(),
+          margin: EdgeInsets.symmetric(
+            vertical: AppMargin.vertical(),
+            horizontal: AppMargin.horizontal(),
           ),
-        ],
+          child: (controller.isLoadData.value)
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _searchWidget(),
+                    //SizedBox(height: AppSize.width() * 0.03),
+                    _fieldsListWidget()
+                  ],
+                )
+              : LoadingDataWidget(),
+        ),
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:bukeet/widgets/alert/confirmation_reservation_alert_widget.dart';
+import 'package:bukeet/widgets/alert/filter_alert_widget.dart';
 import 'package:bukeet/widgets/alert/message_alert_widget.dart';
 import 'package:bukeet/widgets/alert/single_alert_widget.dart';
 import 'package:flutter/material.dart';
@@ -113,6 +114,26 @@ class AlertUtils {
       ),
     );
   }
+
+  static void showNotificationsAlert() async {
+    await showDialog(
+      useSafeArea: false,
+      context: Get.context!,
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        content: Dismissible(
+          direction: DismissDirection.down,
+          key: const Key('show_notification_alert'),
+          onDismissed: (_) {
+            Get.back();
+          },
+          child: NotificationsPermissionAlertWidget(),
+        ),
+        contentPadding: const EdgeInsets.all(0.0),
+        insetPadding: const EdgeInsets.all(0.0),
+      ),
+    );
+  }
 }
-
-

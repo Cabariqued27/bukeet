@@ -1,9 +1,12 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:bukeet/assets/app_assets.dart';
 import 'package:bukeet/modules/fieldOwner/home/controllers/reservations_field_owner_fragment_controller.dart';
 import 'package:bukeet/services/models/field.dart';
 import 'package:bukeet/services/models/reservation.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
+import 'package:bukeet/widgets/buttons/border_button_widget.dart';
+import 'package:bukeet/widgets/buttons/svg_icon_button_widget.dart';
 import 'package:bukeet/widgets/loading/loading_data_widget.dart';
 import 'package:bukeet/widgets/responsive/responsive_widget.dart';
 import 'package:bukeet/widgets/responsive/web_frame_widget.dart';
@@ -39,25 +42,29 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
     return SizedBox(
       width: AppSize.width(),
       height: AppSize.height(),
-      child: Container(
-        width: AppSize.width(),
-        height: AppSize.height(),
-        margin: EdgeInsets.symmetric(
-          vertical: AppMargin.vertical(),
-          horizontal: AppMargin.horizontal(),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _titleWidget(),
-            _drop(),
-            (controller.isLoadData.value)
-                ? /*_fieldsListWidget()*/ _reservationByDayListWidget()
-                : SizedBox(
-                    height: AppSize.height() * 0.8,
-                    child: LoadingDataWidget(),
-                  ),
-          ],
+      child: SafeArea(
+        child: Container(
+          width: AppSize.width(),
+          height: AppSize.height(),
+          margin: EdgeInsets.symmetric(
+            vertical: AppMargin.vertical(),
+            horizontal: AppMargin.horizontal(),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [_titleWidget(), _filtersWidget()],
+              ),
+              (controller.isLoadData.value)
+                  ? /*_fieldsListWidget()*/ _reservationByDayListWidget()
+                  : SizedBox(
+                      height: AppSize.height() * 0.7,
+                      child: LoadingDataWidget(),
+                    ),
+            ],
+          ),
         ),
       ),
     );
@@ -71,14 +78,92 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
     );
   }
 
+  Widget _filtersWidget() {
+    return SvgIconButtonWidget(
+      icon: AppIcons.filter,
+      size: 30,
+      onPressed: () {
+        showModalBottomSheet(
+          context: Get.context!,
+          isScrollControlled: true,
+          backgroundColor: Colors.transparent,
+          builder: (_) {
+            return Obx(() {
+              return _filtersWidgetModal();
+            });
+          },
+        );
+      },
+    );
+  }
+
+  Widget _filtersWidgetModal() {
+    return Container(
+      height: AppSize.height() * 0.3,
+      padding: EdgeInsets.all(AppMargin.horizontal()),
+      decoration: BoxDecoration(
+        color: controller.theme.background.value,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+        children: [
+          Container(
+            width: 40,
+            height: 5,
+            margin: const EdgeInsets.only(bottom: 10),
+            decoration: BoxDecoration(
+              color: controller.theme.datePickerIconColor.value,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+
+          TextWidget(
+            'Filtrar por día y cancha',
+            fontFamily: AppFontFamily.leagueSpartan,
+            fontWeight: TextWidgetWeight.bold,
+          ),
+          const SizedBox(),
+          _daySelectorWidget(),
+          const SizedBox(),
+          const SizedBox(),
+          const SizedBox(),
+          BorderButtonWidget(
+            textSize: TextWidgetSizes.small,
+            fontFamily: AppFontFamily.workSans,
+            backgroundColor: controller.theme.white.value,
+            borderColor: controller.theme.itemBorder.value,
+            textColor: controller.theme.textStarted.value,
+            onPressed: () => controller.resetDay(),
+            title: 'close'.tr,
+            isActive: true,
+            height: 30.0,
+            width: AppSize.width() * 0.3,
+          ),
+          const SizedBox(),
+        ],
+      ),
+    );
+  }
+
   Widget _drop() {
     return DropdownButton<Field>(
       value: controller.selectedField.value,
-      hint: const Text("Selecciona un campo"),
+      elevation: 5,
+      style: const TextStyle(color: Colors.white),
+      iconEnabledColor: Colors.black,
+      focusColor: Colors.white,
+
       items: controller.fields.map((field) {
         return DropdownMenuItem<Field>(
           value: field,
-          child: Text("Cancha ${field.order}"),
+          child: TextWidget(
+            'Cancha ${field.order}',
+            fontFamily: AppFontFamily.leagueSpartan,
+            fontWeight: TextWidgetWeight.normal,
+            dsize: RelSize(size: TextWidgetSizes.small),
+          ),
         );
       }).toList(),
       onChanged: (value) {
@@ -86,6 +171,37 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
           controller.updateFieldSelected(value);
         }
       },
+    );
+  }
+
+  Widget _daySelectorWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        SvgIconButtonWidget(
+          icon: AppIcons.leftArrow,
+          size: 10,
+          onPressed: () => controller.decreaseDay(),
+        ),
+        Column(
+          children: [
+            _drop(),
+            TextWidget(
+              DateFormat('dd-MM-yyyy').format(controller.today.value),
+              fontFamily: AppFontFamily.leagueSpartan,
+              fontWeight: TextWidgetWeight.bold,
+            ),
+          ],
+        ),
+        Transform.flip(
+          flipX: true,
+          child: SvgIconButtonWidget(
+            icon: AppIcons.leftArrow,
+            size: 10,
+            onPressed: () => controller.increaseDay(),
+          ),
+        ),
+      ],
     );
   }
 
@@ -153,7 +269,7 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
                         ),
                         TextWidget(
                           DateFormat(
-                            'EEEE',
+                            'EEEE ',
                           ).format(item.date ?? controller.today.value),
                           fontFamily: AppFontFamily.leagueSpartan,
                           fontWeight: TextWidgetWeight.normal,

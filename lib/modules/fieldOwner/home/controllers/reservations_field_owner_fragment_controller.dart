@@ -24,6 +24,7 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
   //final fieldIdToArenaName = <int, String>{};
 
   var isLoadData = false.obs;
+
   var today = DateTime.now().obs;
   var dynamicDay = DateTime.now().obs;
 
@@ -79,15 +80,18 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
   void updateFieldSelected(Field value) {
     selectedField.value = value;
     update();
-    getReservationsByFieldSelected(selectedField.value);
+    getReservationsByFieldSelected(selectedField.value, today.value);
   }
 
-  Future<void> getReservationsByFieldSelected(Field field) async {
+  Future<void> getReservationsByFieldSelected(
+    Field field,
+    DateTime date,
+  ) async {
     updateLoadData(false);
     initializeReservationsSelected(field.order ?? 0);
     var data = await _reservationsProvider.getReservationsByFieldsIdByDay(
       fieldId: field.id ?? 0,
-      actualDay: today.value,
+      actualDay: date,
     );
 
     for (var real in data) {
@@ -168,5 +172,24 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
   void updateLoadData(bool value) {
     isLoadData.value = value;
     update();
+  }
+
+  void increaseDay() {
+    today.value = today.value.add(const Duration(days: 1));
+    getReservationsByFieldSelected(selectedField.value, today.value);
+    //update();
+  }
+
+  void decreaseDay() {
+    today.value = today.value.subtract(const Duration(days: 1));
+    getReservationsByFieldSelected(selectedField.value, today.value);
+    //update();
+  }
+
+  void resetDay() {
+    Get.back();
+    today.value = dynamicDay.value;
+    getReservationsByFieldSelected(selectedField.value, today.value);
+    //update();
   }
 }

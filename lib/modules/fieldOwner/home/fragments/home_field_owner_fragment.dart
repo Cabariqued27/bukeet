@@ -16,20 +16,13 @@ import 'package:get/get.dart';
 class HomeFieldOwnerFragment extends StatelessWidget {
   final HomeFieldOwnerFragmentController controller;
 
-  const HomeFieldOwnerFragment({
-    super.key,
-    required this.controller,
-  });
+  const HomeFieldOwnerFragment({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      desktop: WebFrameWidget(
-        child: _mobileContent(),
-      ),
-      tablet: WebFrameWidget(
-        child: _mobileContent(),
-      ),
+      desktop: WebFrameWidget(child: _mobileContent()),
+      tablet: WebFrameWidget(child: _mobileContent()),
       mobile: _mobileContent(),
     );
   }
@@ -59,16 +52,17 @@ class HomeFieldOwnerFragment extends StatelessWidget {
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _titleWidget(),
                   (controller.isLoadData.value)
                       ? _fieldsListWidget()
-                      : LoadingDataWidget()
+                      : LoadingDataWidget(),
                 ],
               ),
             ),
           ),
-          _floatingButtonWidget()
+          _floatingButtonWidget(),
         ],
       ),
     );
@@ -116,9 +110,7 @@ class HomeFieldOwnerFragment extends StatelessWidget {
             child: SizedBox(
               height: AppSize.height() * 0.3,
               width: double.infinity,
-              child: NetworkImageWidget(
-                imageUrl: item.imageUrl ?? '',
-              ),
+              child: NetworkImageWidget(imageUrl: item.imageUrl ?? ''),
             ),
           ),
           SizedBox(
@@ -180,6 +172,4 @@ class HomeFieldOwnerFragment extends StatelessWidget {
           )
         : const SizedBox();
   }
-
-  
 }

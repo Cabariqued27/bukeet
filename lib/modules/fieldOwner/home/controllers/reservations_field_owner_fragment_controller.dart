@@ -48,14 +48,14 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
   void initializeReservations() {
     reservations.clear();
     for (int i = 0; i < 24; i++) {
-      reservations.add(Reservation(timeSlot: i, fieldId: fields.first.order));
+      reservations.add(Reservation(timeSlot: i, fieldId: fields.first.order,reservationStatus: "disable"));
     }
   }
 
   void initializeReservationsSelected(int fildsOrder) {
     reservations.clear();
     for (int i = 0; i < 24; i++) {
-      reservations.add(Reservation(timeSlot: i, fieldId: fildsOrder));
+      reservations.add(Reservation(timeSlot: i, fieldId: fildsOrder,reservationStatus: "disable"));
     }
   }
 

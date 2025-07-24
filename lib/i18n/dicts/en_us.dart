@@ -39,6 +39,7 @@ const Map<String, String> enUs = {
   "menu_home": "Home",
   "menu_reservations": "Reservations",
   "menu_profile": "Profile",
+  "menu_arenas":"Arenas",
   "my_fields": "My Fields",
   "your_name": "Your Name",
   "hint_date": "Date of Birth",

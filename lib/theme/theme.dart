@@ -55,6 +55,10 @@ class AppTheme extends GetxController {
   var exploreEnergy = const Color(0xffCA7181).obs;
   var exploreFocus = const Color(0xffDC9B4C).obs;
 
+  var greenReserved = const Color(0xFF28C76F).obs; 
+var graySolid = const Color(0xFFD6D6D6).obs;  
+
+
   var exerciseDay = const Color(0xffFAF3E8).obs;
 
   var sessionWithOutDevice = const Color(0xff999999).obs;

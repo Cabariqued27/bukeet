@@ -54,7 +54,7 @@ class HomeFieldOwnerFragment extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _titleWidget(),
+                  //_titleWidget(),
                   (controller.isLoadData.value)
                       ? _fieldsListWidget()
                       : LoadingDataWidget(),
@@ -68,20 +68,20 @@ class HomeFieldOwnerFragment extends StatelessWidget {
     );
   }
 
-  Widget _titleWidget() {
+  /*Widget _titleWidget() {
     return TextWidget(
       'Mis Canchas'.tr,
       fontFamily: AppFontFamily.leagueSpartan,
       fontWeight: TextWidgetWeight.bold,
     );
-  }
+  }*/
 
   Widget _fieldsListWidget() {
     return Expanded(
       child: FadeIn(
         duration: const Duration(milliseconds: 1000),
         child: SizedBox(
-          height: AppSize.height() * 0.8,
+          height: AppSize.height() * 0.7,
           child: ListView.builder(
             padding: EdgeInsets.only(bottom: AppMargin.vertical() * 2),
             scrollDirection: Axis.vertical,

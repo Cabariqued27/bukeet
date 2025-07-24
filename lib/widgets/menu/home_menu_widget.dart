@@ -61,7 +61,7 @@ class HomeMenuWidget extends StatelessWidget {
               children: [
                 _iconButton(
                   iconPath: AppIcons.menuHome,
-                  title: 'menu_home'.tr,
+                  title: 'menu_arenas'.tr,
                   index: 0,
                   activate: AppIcons.menuHomeGradient,
                 ),

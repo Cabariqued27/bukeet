@@ -39,6 +39,7 @@ const Map<String, String> enSp = {
   "menu_home": "Inicio",
   "menu_reservations": "Reservaciones",
   "menu_profile": "Perfil",
+  "menu_arenas":"Arenas",
   "my_fields": "My Fields",
   "your_name": "Tu Nombre",
   "hint_date": "Fecha de Nacimiento",

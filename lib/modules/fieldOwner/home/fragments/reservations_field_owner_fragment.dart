@@ -5,6 +5,7 @@ import 'package:bukeet/services/models/field.dart';
 import 'package:bukeet/services/models/reservation.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
 import 'package:bukeet/widgets/buttons/svg_icon_button_widget.dart';
 import 'package:bukeet/widgets/loading/loading_data_widget.dart';
@@ -51,12 +52,9 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
             horizontal: AppMargin.horizontal(),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [_titleWidget(), _filtersWidget()],
-              ),
+              _headerWidget(),
               (controller.isLoadData.value)
                   ? /*_fieldsListWidget()*/ _reservationByDayListWidget()
                   : SizedBox(
@@ -70,34 +68,36 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
     );
   }
 
-  Widget _titleWidget() {
-    return TextWidget(
-      'Reservas',
-      fontFamily: AppFontFamily.leagueSpartan,
-      fontWeight: TextWidgetWeight.bold,
-    );
-  }
-
-  Widget _filtersWidget() {
-    return SvgIconButtonWidget(
-      icon: AppIcons.filter,
-      size: 30,
-      onPressed: () {
-        showModalBottomSheet(
-          context: Get.context!,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (_) {
-            return Obx(() {
-              return _filtersWidgetModal();
-            });
+  Widget _headerWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextWidget(
+          '${DateFormat('EEEE ').format(controller.today.value)} ${DateFormat('dd-MM-yyyy').format(controller.today.value)}',
+          fontFamily: AppFontFamily.leagueSpartan,
+          fontWeight: TextWidgetWeight.bold,
+        ),
+        SvgIconButtonWidget(
+          icon: AppIcons.filter,
+          size: 30,
+          onPressed: () {
+            showModalBottomSheet(
+              context: Get.context!,
+              isScrollControlled: true,
+              backgroundColor: Colors.transparent,
+              builder: (_) {
+                return Obx(() {
+                  return _headerWidgetModal();
+                });
+              },
+            );
           },
-        );
-      },
+        ),
+      ],
     );
   }
 
-  Widget _filtersWidgetModal() {
+  Widget _headerWidgetModal() {
     return Container(
       height: AppSize.height() * 0.3,
       padding: EdgeInsets.all(AppMargin.horizontal()),
@@ -210,7 +210,7 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
       color: controller.theme.refreshColor.value,
       backgroundColor: controller.theme.background.value,
       onRefresh: () async {
-        //controller.startController();
+        controller.updateFieldSelected(controller.selectedField.value);
       },
       child: FadeIn(
         duration: const Duration(milliseconds: 1000),
@@ -243,102 +243,85 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
   Widget _reservationItemWidget(Reservation item) {
     return Container(
       decoration: BoxDecoration(
-        color: (item.paymentStatus == "APPROVED")
-            ? controller.theme.exploreRefresh.value
-            : controller.theme.exploreFocus.value,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        color: controller.theme.backgroundDeviceSetting.value,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: applyOpacity(Colors.black, (0.08)),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: applyOpacity(Colors.black, (0.02)),
+            blurRadius: 2,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      width: AppSize.width() * 0.9,
-      padding: EdgeInsets.only(left: AppMargin.horizontal() * 0.5),
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(16),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
+          Row(
             children: [
-              SizedBox(
-                width: AppSize.width() * 0.9,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        TextWidget(
-                          'Día: ',
-                          fontFamily: AppFontFamily.leagueSpartan,
-                          fontWeight: TextWidgetWeight.bold,
-                        ),
-                        TextWidget(
-                          DateFormat(
-                            'EEEE ',
-                          ).format(item.date ?? controller.today.value),
-                          fontFamily: AppFontFamily.leagueSpartan,
-                          fontWeight: TextWidgetWeight.normal,
-                        ),
-                        TextWidget(
-                          DateFormat(
-                            'dd-MM-yyyy',
-                          ).format(item.date ?? controller.today.value),
-                          fontFamily: AppFontFamily.leagueSpartan,
-                          fontWeight: TextWidgetWeight.normal,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        TextWidget(
-                          'Hora: ',
-                          fontFamily: AppFontFamily.leagueSpartan,
-                          fontWeight: TextWidgetWeight.bold,
-                        ),
-                        TextWidget(
-                          controller.formatHour(item.timeSlot ?? 0),
-                          fontFamily: AppFontFamily.leagueSpartan,
-                          fontWeight: TextWidgetWeight.normal,
-                        ),
-                      ],
-                    ),
-                    /*Row(
-                      children: [
-                        TextWidget(
-                          'Location: ',
-                          fontFamily: AppFontFamily.leagueSpartan,
-                          fontWeight: TextWidgetWeight.bold,
-                        ),
-                        TextWidget(
-                          controller.fieldIdToArenaName[item.fieldId] ?? '',
-                          fontFamily: AppFontFamily.leagueSpartan,
-                          fontWeight: TextWidgetWeight.normal,
-                        ),
-                      ],
-                    ),*/
-                    Row(
-                      children: [
-                        TextWidget(
-                          'Cancha: ',
-                          fontFamily: AppFontFamily.leagueSpartan,
-                          fontWeight: TextWidgetWeight.bold,
-                        ),
-                        TextWidget(
-                          '${item.fieldId ?? 7}',
-                          fontFamily: AppFontFamily.leagueSpartan,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        TextWidget(
-                          'Estado: ',
-                          fontFamily: AppFontFamily.leagueSpartan,
-                          fontWeight: TextWidgetWeight.bold,
-                        ),
-                        TextWidget(
-                          item.paymentStatus ?? '',
-                          fontFamily: AppFontFamily.leagueSpartan,
-                        ),
-                      ],
-                    ),
-                  ],
+              TextWidget(
+                'Hora: ',
+                fontFamily: AppFontFamily.leagueSpartan,
+                fontWeight: TextWidgetWeight.bold,
+              ),
+              TextWidget(
+                controller.formatHour(item.timeSlot ?? 0),
+                fontFamily: AppFontFamily.leagueSpartan,
+                fontWeight: TextWidgetWeight.normal,
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              TextWidget(
+                'Cancha: ',
+                fontFamily: AppFontFamily.leagueSpartan,
+                fontWeight: TextWidgetWeight.bold,
+              ),
+              TextWidget(
+                '${item.fieldId ?? 7}',
+                fontFamily: AppFontFamily.leagueSpartan,
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Row(
+            children: [
+              TextWidget(
+                'Estado del pago: ',
+                fontFamily: AppFontFamily.leagueSpartan,
+                fontWeight: TextWidgetWeight.bold,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 8.0,
+                  vertical: 2.0,
                 ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: (item.reservationStatus == "enable")
+                      ? controller.theme.greenReserved.value
+                      : controller.theme.graySolid.value,
+                ),
+
+                child: (item.reservationStatus == "enable")
+                    ? TextWidget(
+                        'reserved'.tr,
+                        fontFamily: AppFontFamily.leagueSpartan,
+                        color: controller.theme.white.value,
+                      )
+                    : TextWidget(
+                        'avaliable'.tr,
+                        fontFamily: AppFontFamily.leagueSpartan,
+                        color: controller.theme.black.value,
+                      ),
               ),
             ],
           ),

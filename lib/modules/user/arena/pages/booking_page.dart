@@ -1,12 +1,10 @@
-import 'package:animate_do/animate_do.dart';
 import 'package:bukeet/assets/app_assets.dart';
 import 'package:bukeet/modules/user/arena/controllers/booking_controller.dart';
 import 'package:bukeet/services/models/institution.dart';
-import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
 import 'package:bukeet/widgets/buttons/svg_icon_button_widget.dart';
-import 'package:bukeet/widgets/images/network_image_widget.dart';
+import 'package:bukeet/widgets/images/full_slider_network_image_widget.dart';
 import 'package:bukeet/widgets/inputs/date_input_default_widget.dart';
 import 'package:bukeet/widgets/inputs/single_input_widget.dart';
 import 'package:bukeet/widgets/loading/loading_data_widget.dart';
@@ -35,7 +33,7 @@ class BookingPage extends StatelessWidget {
     return Obx(
       () => Scaffold(
         body: _pageWidget(),
-        backgroundColor: controller.theme.background.value,
+        backgroundColor: controller.theme.backgroundDeviceSetting.value,
       ),
     );
   }
@@ -45,84 +43,114 @@ class BookingPage extends StatelessWidget {
       width: AppSize.width(),
       height: AppSize.height(),
       child: (controller.isLoadData.value)
-          ? FadeIn(
-              duration: const Duration(milliseconds: 1000),
-              child: (!controller.showLocalPayment.value)
-                  ? Stack(
-                      children: [
-                        _imagesWidget(),
-                        SingleChildScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          child: Column(
-                            children: [
-                              SizedBox(height: AppSize.height() * 0.2),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: controller.theme.background.value,
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(30.0),
-                                    topRight: Radius.circular(30.0),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      blurRadius: 6,
-                                      offset: const Offset(0, 0),
-                                      color: controller
-                                          .theme
-                                          .backgroundDeviceSetting
-                                          .value,
-                                    ),
-                                  ],
-                                ),
-                                padding: EdgeInsets.only(
-                                  top: AppMargin.vertical() * 1.1,
-                                  left: AppMargin.horizontal() * 0.5,
-                                  right: AppMargin.horizontal() * 0.5,
-                                  bottom: AppMargin.vertical() * 1.1,
-                                ),
-                                width: AppSize.width(),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    _informationWidget(),
-                                    SizedBox(height: AppSize.height() * 0.02),
-                                    _dateInputWidget(),
-                                    _availableTimesDropdownWidget(),
-                                    _institutionsDropdownWidget(),
-                                    _peopleTypeDropDownWidget(),
-                                    _inputWidget(
-                                      'put_name',
-                                      controller.fullNameInputController,
-                                      'full_name',
-                                      TextInputType.text,
-                                    ),
-                                    _inputWidget(
-                                      'put_email',
-                                      controller.customerEmailInputController,
-                                      'email_address',
-                                      TextInputType.emailAddress,
-                                    ),
-                                    _documentTypeDropDownWidget(),
-                                    _inputWidget(
-                                      'ccnumero',
-                                      controller.userLegalIdInputController,
-                                      'ccnumero',
-                                      TextInputType.number,
-                                    ),
-                                    SizedBox(height: AppSize.width() * 0.05),
-                                    _sendReservationButton(),
-                                  ],
-                                ),
+          ? (!controller.showLocalPayment.value)
+                ? CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        pinned: true,
+                        expandedHeight: 275.0,
+                        elevation: 0.0,
+                        backgroundColor:
+                            Colors.transparent, 
+                        flexibleSpace: LayoutBuilder(
+                          builder: (BuildContext context, BoxConstraints constraints) {
+                            
+                            final isPinned =
+                                constraints.biggest.height <=
+                                kToolbarHeight +
+                                    MediaQuery.of(context).padding.top;
+
+                            return Container(
+                              color: isPinned
+                                  ? controller
+                                        .theme
+                                        .backgroundDeviceSetting
+                                        .value
+                                  : Colors
+                                        .transparent,
+                              child: FlexibleSpaceBar(
+                                background: _imagesWidget(),
+
+                                
                               ),
+                            );
+                          },
+                        ),
+                        bottom: PreferredSize(
+                          preferredSize: const Size.fromHeight(0.0),
+                          child: Container(
+                            height: 10.0,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: controller
+                                  .theme
+                                  .backgroundDeviceSetting
+                                  .value,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(32.0),
+                                topRight: Radius.circular(32.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        leadingWidth: 80.0,
+                        leading: Container(
+                          height: 30.0,
+                          width: 30.0,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color:
+                                controller.theme.backgroundDeviceSetting.value,
+                          ),
+                          child: SvgIconButtonWidget(
+                            icon: AppIcons.leftArrow,
+                            size: 15,
+                            onPressed: () => Get.back(),
+                          ),
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: Container(
+                          color: controller.theme.backgroundDeviceSetting.value,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(height: AppSize.height() * 0.02),
+                              _informationWidget(),
+                              SizedBox(height: AppSize.height() * 0.02),
+                              _dateInputWidget(),
+                              _availableTimesDropdownWidget(),
+                              _institutionsDropdownWidget(),
+                              _peopleTypeDropDownWidget(),
+                              _inputWidget(
+                                'put_name',
+                                controller.fullNameInputController,
+                                'full_name',
+                                TextInputType.text,
+                              ),
+                              _inputWidget(
+                                'put_email',
+                                controller.customerEmailInputController,
+                                'email_address',
+                                TextInputType.emailAddress,
+                              ),
+                              _documentTypeDropDownWidget(),
+                              _inputWidget(
+                                'ccnumero',
+                                controller.userLegalIdInputController,
+                                'ccnumero',
+                                TextInputType.number,
+                              ),
+                              SizedBox(height: AppSize.width() * 0.05),
+                              _sendReservationButton(),
                             ],
                           ),
                         ),
-                        _appBarWidget(),
-                      ],
-                    )
-                  : Stack(children: [_webViewWidget(), _appBarWidget()]),
-            )
+                      ),
+                    ],
+                  )
+                : Stack(children: [_webViewWidget(), _appBarWidget()])
           : LoadingDataWidget(),
     );
   }
@@ -154,19 +182,8 @@ class BookingPage extends StatelessWidget {
   }*/
 
   Widget _imagesWidget() {
-    return Stack(
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            NetworkImageWidget(
-              imageUrl: controller.fieldInformation?.images?[0] ?? '',
-              width: AppSize.width(),
-              height: AppSize.width() * 0.7,
-            ),
-          ],
-        ),
-      ],
+    return FullSliderNetworkImageWidget(
+      images: controller.fieldInformation?.images ?? [],
     );
   }
 

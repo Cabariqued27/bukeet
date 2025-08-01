@@ -10,8 +10,11 @@ import 'package:get/get.dart';
 class SliderNetworkImageWidget extends StatelessWidget {
   final List<dynamic> images;
   final bool showIndicator;
-  const SliderNetworkImageWidget(
-      {super.key, required this.images, required this.showIndicator});
+  const SliderNetworkImageWidget({
+    super.key,
+    required this.images,
+    required this.showIndicator,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +31,9 @@ class SliderNetworkImageWidget extends StatelessWidget {
 }
 
 Widget _widgetContent(
-    SliderNetworkImageController controller, bool showIndicator) {
+  SliderNetworkImageController controller,
+  bool showIndicator,
+) {
   return Column(
     children: [
       (controller.isLoadData.value)
@@ -68,8 +73,9 @@ Widget _imageWidget(int index, SliderNetworkImageController controller) {
   var image = controller.images[index];
 
   return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: _defaultTypeBannerWidget(image));
+    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+    child: _defaultTypeBannerWidget(image),
+  );
 }
 
 Widget _defaultTypeBannerWidget(String image) {
@@ -88,32 +94,27 @@ Widget _dotsWidget(SliderNetworkImageController controller) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.center,
     crossAxisAlignment: CrossAxisAlignment.center,
-    children: controller.images.asMap().entries.map(
-      (entry) {
-        return GestureDetector(
-          onTap: () => controller.animateToPage(entry.key),
-          child: Container(
-            width: 8.0,
-            height: 8.0,
-            margin: const EdgeInsets.symmetric(
-              vertical: 10.0,
-              horizontal: 4.0,
-            ),
-            decoration: (controller.current.value == entry.key)
-                ? BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: controller.theme.refreshBackground.value,
-                  )
-                : BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: controller.theme.background.value,
-                    border: Border.all(
-                      color: applyOpacity(controller.theme.gray.value, 0.5),
-                    ),
+    children: controller.images.asMap().entries.map((entry) {
+      return GestureDetector(
+        onTap: () => controller.animateToPage(entry.key),
+        child: Container(
+          width: 8.0,
+          height: 8.0,
+          margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 4.0),
+          decoration: (controller.current.value == entry.key)
+              ? BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: controller.theme.refreshBackground.value,
+                )
+              : BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: controller.theme.background.value,
+                  border: Border.all(
+                    color: applyOpacity(controller.theme.gray.value, 0.5),
                   ),
-          ),
-        );
-      },
-    ).toList(),
+                ),
+        ),
+      );
+    }).toList(),
   );
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bukeet/flows/user/home/controllers/home_admin_flow.dart';
 import 'package:bukeet/secrets.dart';
 import 'package:bukeet/services/models/institution.dart';
 import 'package:http/http.dart' as http;
@@ -73,6 +74,7 @@ class BookingController extends GetxController {
   final _fieldsProvider = ReservationProvider();
   final _hourAvailabilityProvider = HourAvailabilityProvider();
   final _preferences = UserPreferences();
+  final _homeUserFlow = Get.find<HomeUserFlow>();
 
   late final WebViewController webViewController;
 
@@ -356,7 +358,7 @@ class BookingController extends GetxController {
         "user_legal_id_type": selectedDocumentType.value,
         "payment_description": "Pago a Tienda Wompi",
         "reference": referenciaUnica,
-        "success_url": "https://tuapp.com/pago_exitoso",
+        "success_url": "https://bukeet.com/pago_exitoso",
         "financial_institution_code": "1",
         "user_type": 0,
         "phone_number": phoneNumberInputController.text,
@@ -434,10 +436,21 @@ class BookingController extends GetxController {
 
   void paymentUrl(String url) {
     delay();
+
     webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(url))
-      ..enableZoom(false);
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String newUrl) {
+            if (newUrl.contains('https://bukeet.com/pago_exitoso')) {
+              _homeUserFlow.start(initialPage: 1);
+            }
+          },
+        ),
+      )
+      ..enableZoom(false)
+      ..loadRequest(Uri.parse(url));
+
     delay();
   }
 

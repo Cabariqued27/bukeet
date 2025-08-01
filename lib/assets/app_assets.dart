@@ -5,7 +5,9 @@ class AppLogos {
 
 class AppIcons {
   static const String add = 'assets/icons/add_icon.svg';
+  static const String check = 'assets/icons/check_icon.svg';
   static const String datePicker = 'assets/icons/date_picker_icon.svg';
+  static const String field = 'assets/icons/field_icon.svg';
   static const String filter = 'assets/icons/filter_icon.svg';
   static const String infoCircle = 'assets/icons/info_circle_icon.svg';
   static const String leftArrow = 'assets/icons/left_arrow_icon.svg';
@@ -21,6 +23,7 @@ class AppIcons {
   static const String menuProfile = 'assets/icons/menu_profile_icon.svg';
   static const String menuProfileFill =
       'assets/icons/menu_profile_fill_icon.svg';
+  static const String pending = 'assets/icons/pending_icon.svg';
   static const String privacy = 'assets/icons/privacy_icon.svg';
   static const String profile = 'assets/icons/profile_icon.svg';
   static const String rightArrowPopUp =

@@ -169,7 +169,7 @@ class BookingController extends GetxController {
 
       final isReserved = reservations.any((res) {
         try {
-          return res.timeSlot == timeSlot && res.reservationStatus == 'enable';
+          return res.timeSlot == timeSlot && res.paymentStatus == "APPROVED";
         } catch (e, s) {
           LogError.capture(e, s, 'getReservedTimes');
           return false;
@@ -320,7 +320,7 @@ class BookingController extends GetxController {
         var updateReservation = UpdateReservation(
           id: data.id ?? 0,
           paymentStatus: "FAILED",
-          reservationStatus: "disable",
+          //reservationStatus: "disable",
         );
         await _fieldsProvider.updateReservationByReference(
           updateReservation: updateReservation,
@@ -359,13 +359,14 @@ class BookingController extends GetxController {
         "customer_email": customerEmailInputController.text,
         "user_legal_id": userLegalIdInputController.text,
         "user_legal_id_type": selectedDocumentType.value,
-        "payment_description": "Pago a Tienda Wompi",
+        "payment_description": "Pago a ${arenaInformation?.name??"Tienda Wompi"}",
         "reference": referenciaUnica,
         "success_url": "https://bukeet.com/pago_exitoso",
-        "financial_institution_code": "1",
+        "financial_institution_code": "1",//2 para rechazada
         "user_type": 0,
         "phone_number": phoneNumberInputController.text,
         "full_name": fullNameInputController.text,
+        "status": "FAILED",
       }),
     );
 

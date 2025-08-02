@@ -15,20 +15,13 @@ import 'package:get/get.dart';
 class HomeUserFragment extends StatelessWidget {
   final HomeUserFragmentController controller;
 
-  const HomeUserFragment({
-    super.key,
-    required this.controller,
-  });
+  const HomeUserFragment({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      desktop: WebFrameWidget(
-        child: _mobileContent(),
-      ),
-      tablet: WebFrameWidget(
-        child: _mobileContent(),
-      ),
+      desktop: WebFrameWidget(child: _mobileContent()),
+      tablet: WebFrameWidget(child: _mobileContent()),
       mobile: _mobileContent(),
     );
   }
@@ -59,8 +52,8 @@ class HomeUserFragment extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _searchWidget(),
-                    //SizedBox(height: AppSize.width() * 0.03),
-                    _fieldsListWidget()
+                    SizedBox(height: AppSize.width() * 0.03),
+                    _fieldsListWidget(),
                   ],
                 )
               : LoadingDataWidget(),
@@ -112,9 +105,7 @@ class HomeUserFragment extends StatelessWidget {
             child: SizedBox(
               height: AppSize.height() * 0.3,
               width: double.infinity,
-              child: NetworkImageWidget(
-                imageUrl: item.imageUrl ?? '',
-              ),
+              child: NetworkImageWidget(imageUrl: item.imageUrl ?? ''),
             ),
           ),
           SizedBox(

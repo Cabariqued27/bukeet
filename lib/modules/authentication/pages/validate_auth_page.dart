@@ -39,45 +39,47 @@ class ValidateAuthPage extends StatelessWidget {
   }
 
   Widget _pageWidget() {
-    return SingleChildScrollView(
-      physics: const ScrollPhysics(),
-      child: SizedBox(
-        width: AppSize.width(),
-        height: AppSize.height(),
-        child: Stack(
-          children: [
-            AssetImageWidget(
-              pathImage: AppImages.splash,
-              width: AppSize.width(),
-              height: AppSize.height(),
+    return SizedBox(
+      width: AppSize.width(),
+      height: AppSize.height(),
+      child: Stack(
+        children: [
+          AssetImageWidget(
+            pathImage: AppImages.started,
+            width: AppSize.width(),
+            height: AppSize.height(),
+          ),
+          AssetImageWidget(
+            pathImage: AppImages.splash,
+            width: AppSize.width(),
+            height: AppSize.height(),
+          ),
+          Container(
+            width: AppSize.width(),
+            height: AppSize.height(),
+            margin: EdgeInsets.symmetric(
+              vertical: AppMargin.vertical(),
+              horizontal: AppMargin.horizontal(),
             ),
-            Container(
-              width: AppSize.width(),
-              height: AppSize.height(),
-              margin: EdgeInsets.symmetric(
-                vertical: AppMargin.vertical(),
-                horizontal: AppMargin.horizontal(),
-              ),
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(),
-                  //_logoWidget(),
-                  SizedBox(),
-                  SizedBox(),
-                  SizedBox(),
-                  SizedBox(),
-                  SizedBox(),
-                  SizedBox(),
-                  SizedBox(),
-                  SizedBox(),
-                  SizedBox(),
-                  SizedBox(),
-                ],
-              ),
+            child:  const Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(),
+                //_logoWidget(),
+                SizedBox(),
+                SizedBox(),
+                SizedBox(),
+                SizedBox(),
+                SizedBox(),
+                SizedBox(),
+                SizedBox(),
+                SizedBox(),
+                SizedBox(),
+                SizedBox(),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

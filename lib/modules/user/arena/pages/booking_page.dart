@@ -47,33 +47,12 @@ class BookingPage extends StatelessWidget {
                 ? CustomScrollView(
                     slivers: [
                       SliverAppBar(
-                        pinned: true,
+                        pinned: false,
                         expandedHeight: 275.0,
                         elevation: 0.0,
                         backgroundColor: Colors.transparent,
-                        flexibleSpace: LayoutBuilder(
-                          builder:
-                              (
-                                BuildContext context,
-                                BoxConstraints constraints,
-                              ) {
-                                final isPinned =
-                                    constraints.biggest.height <=
-                                    kToolbarHeight +
-                                        MediaQuery.of(context).padding.top;
-
-                                return Container(
-                                  color: isPinned
-                                      ? controller
-                                            .theme
-                                            .backgroundDeviceSetting
-                                            .value
-                                      : Colors.transparent,
-                                  child: FlexibleSpaceBar(
-                                    background: _imagesWidget(),
-                                  ),
-                                );
-                              },
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: _imagesWidget(),
                         ),
                         bottom: PreferredSize(
                           preferredSize: const Size.fromHeight(0.0),
@@ -110,41 +89,38 @@ class BookingPage extends StatelessWidget {
                         ),
                       ),
                       SliverToBoxAdapter(
-                        child: Container(
-                          color: controller.theme.backgroundDeviceSetting.value,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(height: AppSize.height() * 0.02),
-                              _informationWidget(),
-                              SizedBox(height: AppSize.height() * 0.02),
-                              _dateInputWidget(),
-                              _availableTimesDropdownWidget(),
-                              _institutionsDropdownWidget(),
-                              _peopleTypeDropDownWidget(),
-                              _inputWidget(
-                                'put_name',
-                                controller.fullNameInputController,
-                                'full_name',
-                                TextInputType.text,
-                              ),
-                              _inputWidget(
-                                'put_email',
-                                controller.customerEmailInputController,
-                                'email_address',
-                                TextInputType.emailAddress,
-                              ),
-                              _documentTypeDropDownWidget(),
-                              _inputWidget(
-                                'ccnumero',
-                                controller.userLegalIdInputController,
-                                'ccnumero',
-                                TextInputType.number,
-                              ),
-                              SizedBox(height: AppSize.width() * 0.05),
-                              _sendReservationButton(),
-                            ],
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(height: AppSize.height() * 0.02),
+                            _informationWidget(),
+                            SizedBox(height: AppSize.height() * 0.02),
+                            _dateInputWidget(),
+                            _availableTimesDropdownWidget(),
+                            _institutionsDropdownWidget(),
+                            _peopleTypeDropDownWidget(),
+                            _inputWidget(
+                              'put_name',
+                              controller.fullNameInputController,
+                              'full_name',
+                              TextInputType.text,
+                            ),
+                            _inputWidget(
+                              'put_email',
+                              controller.customerEmailInputController,
+                              'email_address',
+                              TextInputType.emailAddress,
+                            ),
+                            _documentTypeDropDownWidget(),
+                            _inputWidget(
+                              'ccnumero',
+                              controller.userLegalIdInputController,
+                              'ccnumero',
+                              TextInputType.number,
+                            ),
+                            SizedBox(height: AppSize.width() * 0.05),
+                            _sendReservationButton(),
+                          ],
                         ),
                       ),
                     ],

@@ -306,12 +306,12 @@ class ReservationsFieldOwnerFragment extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
-                  color: (item.reservationStatus == "enable")
+                  color: (item.paymentStatus == "APPROVE")
                       ? controller.theme.greenReserved.value
                       : controller.theme.graySolid.value,
                 ),
 
-                child: (item.reservationStatus == "enable")
+                child: (item.paymentStatus == "APPROVED")
                     ? TextWidget(
                         'reserved'.tr,
                         fontFamily: AppFontFamily.leagueSpartan,

@@ -50,31 +50,30 @@ class BookingPage extends StatelessWidget {
                         pinned: true,
                         expandedHeight: 275.0,
                         elevation: 0.0,
-                        backgroundColor:
-                            Colors.transparent, 
+                        backgroundColor: Colors.transparent,
                         flexibleSpace: LayoutBuilder(
-                          builder: (BuildContext context, BoxConstraints constraints) {
-                            
-                            final isPinned =
-                                constraints.biggest.height <=
-                                kToolbarHeight +
-                                    MediaQuery.of(context).padding.top;
+                          builder:
+                              (
+                                BuildContext context,
+                                BoxConstraints constraints,
+                              ) {
+                                final isPinned =
+                                    constraints.biggest.height <=
+                                    kToolbarHeight +
+                                        MediaQuery.of(context).padding.top;
 
-                            return Container(
-                              color: isPinned
-                                  ? controller
-                                        .theme
-                                        .backgroundDeviceSetting
-                                        .value
-                                  : Colors
-                                        .transparent,
-                              child: FlexibleSpaceBar(
-                                background: _imagesWidget(),
-
-                                
-                              ),
-                            );
-                          },
+                                return Container(
+                                  color: isPinned
+                                      ? controller
+                                            .theme
+                                            .backgroundDeviceSetting
+                                            .value
+                                      : Colors.transparent,
+                                  child: FlexibleSpaceBar(
+                                    background: _imagesWidget(),
+                                  ),
+                                );
+                              },
                         ),
                         bottom: PreferredSize(
                           preferredSize: const Size.fromHeight(0.0),

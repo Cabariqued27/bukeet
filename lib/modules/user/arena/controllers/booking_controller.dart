@@ -281,6 +281,7 @@ class BookingController extends GetxController {
     );
   }
 
+  
   Future<void> createReservation() async {
     Get.back();
 
@@ -288,13 +289,15 @@ class BookingController extends GetxController {
 
     final newReservation = Reservation(
       userId: _preferences.getUserId(),
-      fieldId: fieldInformation?.id ?? 0,
+      fieldId: fieldInformation?.id ,
       date: todayDynamic.value,
       timeSlot: selectedHour.value,
       updateAt: today.value,
       paymentStatus: "PENDING",
       totalPrice: selectedHourPrice.value,
       reference: referenceGenerated,
+      arenaName: arenaInformation?.name ,
+      fieldOrder: fieldInformation?.order ,
     );
 
     try {

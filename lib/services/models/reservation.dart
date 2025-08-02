@@ -12,6 +12,8 @@ class Reservation {
   String? reference;
   String? paymentStatus;
   String? reservationStatus;
+  String? arenaName;
+  int? fieldOrder;
 
   Reservation({
     this.id,
@@ -25,6 +27,8 @@ class Reservation {
     this.reference,
     this.paymentStatus,
     this.reservationStatus,
+    this.arenaName,
+    this.fieldOrder,
   });
 
   factory Reservation.fromRawJson(String str) =>
@@ -46,6 +50,8 @@ class Reservation {
     reference: json["reference"],
     paymentStatus: json["paymentStatus"],
     reservationStatus: json["reservationStatus"],
+    arenaName: json["arenaName"],
+    fieldOrder: json["fieldOrder"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -60,6 +66,8 @@ class Reservation {
     "reference": reference,
     "paymentStatus": paymentStatus,
     "reservationStatus": reservationStatus,
+    "arenaName": arenaName,
+    "fieldOrder": fieldOrder,
   };
 }
 
@@ -67,7 +75,10 @@ class UpdateReservation {
   int id;
   String? paymentStatus;
   String? reservationStatus;
- 
 
-  UpdateReservation({required this.id, this.paymentStatus,this.reservationStatus});
+  UpdateReservation({
+    required this.id,
+    this.paymentStatus,
+    this.reservationStatus,
+  });
 }

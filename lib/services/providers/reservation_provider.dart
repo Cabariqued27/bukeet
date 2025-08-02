@@ -42,6 +42,8 @@ class ReservationProvider {
         'paymentStatus': data.paymentStatus,
         'totalPrice': data.totalPrice,
         'reference': data.reference,
+        'arenaName': data.arenaName,
+        'fieldOrder': data.fieldOrder,
       }).select();
 
       if (resp.isNotEmpty) {

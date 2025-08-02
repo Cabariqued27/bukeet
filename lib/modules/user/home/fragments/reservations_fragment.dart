@@ -107,14 +107,6 @@ class ReservationsUserFragment extends StatelessWidget {
   }
 
   Widget _fieldItemWidget(Reservation item) {
-    final field = controller.fields.firstWhereOrNull(
-      (f) => f.id == item.fieldId,
-    );
-    final arenaName =
-        field != null && controller.arenasById.containsKey(field.arenaId)
-        ? controller.arenasById[field.arenaId]!.name
-        : 'Desconocido';
-
     return Container(
       width: AppSize.width() * 0.85,
       padding: EdgeInsets.all(AppMargin.horizontal() * 0.5),
@@ -151,12 +143,12 @@ class ReservationsUserFragment extends StatelessWidget {
                           height: AppSize.width() * 0.05,
                           path: AppIcons.field,
                         ),
-                        _infoText('${item.fieldId}'),
+                        _infoText('${item.fieldOrder??0}'),
                       ],
                     ),
                     Column(
                       children: [
-                        _infoText('$arenaName'),
+                        _infoText('${item.arenaName??0}'),
                         _infoText(DateFormat('dd MMM yyyy').format(item.date!)),
                       ],
                     ),
@@ -197,7 +189,7 @@ class ReservationsUserFragment extends StatelessWidget {
           color: statusColor,
           path: icon,
         ),
-        SizedBox(width: AppSize.width()*0.02),
+        SizedBox(width: AppSize.width() * 0.02),
         TextWidget(
           statusText,
           fontFamily: AppFontFamily.leagueSpartan,

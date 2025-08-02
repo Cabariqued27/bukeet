@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class HomeAdminController extends GetxController {
   final AppTheme theme;
   final int? initialPage;
-  //final Function(String) onClick;
+  //final Function(String) onClick; 
 
   HomeAdminController({
     required this.theme,

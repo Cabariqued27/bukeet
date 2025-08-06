@@ -1,5 +1,4 @@
 import 'package:bukeet/utils/app/app_size.dart';
-import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/images/controllers/slider_network_image_controller.dart';
 import 'package:bukeet/widgets/images/network_image_widget.dart';
 import 'package:bukeet/widgets/loading/loading_data_widget.dart';
@@ -37,35 +36,47 @@ Widget _widgetContent(
   return Column(
     children: [
       (controller.isLoadData.value)
-          ? _sliderWidget(controller)
+          ? _sliderWidget(controller, showIndicator)
           : LoadingDataWidget(),
-      (showIndicator) ? _dotsWidget(controller) : const SizedBox(),
     ],
   );
 }
 
-Widget _sliderWidget(SliderNetworkImageController controller) {
+Widget _sliderWidget(
+  SliderNetworkImageController controller,
+  bool showIndicator,
+) {
   var items = List<Widget>.generate(controller.images.length, (index) {
     return _imageWidget(index, controller);
   });
 
-  return CarouselSlider(
-    items: items,
-    carouselController: controller.sliderController,
-    options: CarouselOptions(
-      autoPlay: false,
-      reverse: true,
-      enlargeCenterPage: false,
-      disableCenter: false,
-      viewportFraction: 1.0,
-      aspectRatio: 2.0,
-      initialPage: controller.current.value,
-      scrollDirection: Axis.horizontal,
-      enableInfiniteScroll: true,
-      onPageChanged: (index, reason) {
-        controller.animateToPage(index);
-      },
-    ),
+  return Stack(
+    children: [
+      CarouselSlider(
+        items: items,
+        carouselController: controller.sliderController,
+        options: CarouselOptions(
+          autoPlay: false,
+          reverse: true,
+          enlargeCenterPage: false,
+          disableCenter: false,
+          viewportFraction: 1.0,
+          aspectRatio: 2.0,
+          initialPage: controller.current.value,
+          scrollDirection: Axis.horizontal,
+          enableInfiniteScroll: true,
+          onPageChanged: (index, reason) {
+            controller.animateToPage(index);
+          },
+        ),
+      ),
+      (showIndicator)
+          ? Positioned.fill(
+              top: AppSize.height() * 0.17,
+              child: _dotsWidget(controller),
+            )
+          : const SizedBox(),
+    ],
   );
 }
 
@@ -104,14 +115,11 @@ Widget _dotsWidget(SliderNetworkImageController controller) {
           decoration: (controller.current.value == entry.key)
               ? BoxDecoration(
                   shape: BoxShape.circle,
-                  color: controller.theme.refreshBackground.value,
+                  color: controller.theme.background.value,
                 )
               : BoxDecoration(
                   shape: BoxShape.circle,
-                  color: controller.theme.background.value,
-                  border: Border.all(
-                    color: applyOpacity(controller.theme.gray.value, 0.5),
-                  ),
+                  color: controller.theme.refreshColor.value,
                 ),
         ),
       );

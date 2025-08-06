@@ -143,12 +143,13 @@ class ReservationsUserFragment extends StatelessWidget {
                           height: AppSize.width() * 0.05,
                           path: AppIcons.field,
                         ),
-                        _infoText('${item.fieldOrder??0}'),
+                        _infoBoldText('${item.fieldOrder ?? 0}'),
                       ],
                     ),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _infoText('${item.arenaName??0}'),
+                        _infoBoldText('${item.arenaName ?? 0}'),
                         _infoText(DateFormat('dd MMM yyyy').format(item.date!)),
                       ],
                     ),
@@ -170,7 +171,15 @@ class ReservationsUserFragment extends StatelessWidget {
     return TextWidget(
       text,
       fontFamily: AppFontFamily.leagueSpartan,
-      fontWeight: TextWidgetWeight.bold,
+      fontWeight: TextWidgetWeight.normal,
+    );
+  }
+
+  Widget _infoBoldText(String text) {
+    return TextWidget(
+      text,
+      fontFamily: AppFontFamily.leagueSpartan,
+      fontWeight: TextWidgetWeight.extraBold,
     );
   }
 
@@ -178,7 +187,7 @@ class ReservationsUserFragment extends StatelessWidget {
     var isApproved = item.paymentStatus == "APPROVED";
     var statusText = isApproved ? 'Confirmada' : 'Pendiente';
     var statusColor = isApproved
-        ? controller.theme.greenMin.value
+        ? controller.theme.greenSolid.value
         : controller.theme.exploreFocus.value;
     var icon = isApproved ? AppIcons.check : AppIcons.pending;
     return Row(

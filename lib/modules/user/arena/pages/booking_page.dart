@@ -57,7 +57,7 @@ class BookingPage extends StatelessWidget {
                         bottom: PreferredSize(
                           preferredSize: const Size.fromHeight(0.0),
                           child: Container(
-                            height: 10.0,
+                            height: 20.0,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: controller
@@ -65,8 +65,8 @@ class BookingPage extends StatelessWidget {
                                   .backgroundDeviceSetting
                                   .value,
                               borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(32.0),
-                                topRight: Radius.circular(32.0),
+                                topLeft: Radius.circular(30.0),
+                                topRight: Radius.circular(30.0),
                               ),
                             ),
                           ),
@@ -120,6 +120,7 @@ class BookingPage extends StatelessWidget {
                             ),
                             SizedBox(height: AppSize.width() * 0.05),
                             _sendReservationButton(),
+                            SizedBox(height: AppSize.width() * 0.05),
                           ],
                         ),
                       ),

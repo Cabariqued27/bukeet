@@ -9,19 +9,20 @@ import 'package:get/get.dart';
 class SliderNetworkImageWidget extends StatelessWidget {
   final List<dynamic> images;
   final bool showIndicator;
+  final String tag;
+
   const SliderNetworkImageWidget({
     super.key,
     required this.images,
     required this.showIndicator,
+    required this.tag,
   });
 
   @override
   Widget build(BuildContext context) {
-    String uniqueTag = UniqueKey().toString();
-
     return GetBuilder<SliderNetworkImageController>(
       init: SliderNetworkImageController(images),
-      tag: uniqueTag,
+      tag: tag,
       builder: (controller) {
         return _widgetContent(controller, showIndicator);
       },

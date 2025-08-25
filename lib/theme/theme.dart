@@ -46,8 +46,14 @@ class AppTheme extends GetxController {
   var blueMin = const Color(0xff679CD2).obs;
 
   var greenSolid = const Color(0xff6BD194).obs;
+  var greenSolidPayment = const Color(0xFF28A745).obs;
+
   var yellowSolid = const Color(0xffDB9D36).obs;
+  var yellowSolidPayment = const Color(0xFFFFC107).obs;
+
   var redSolid = const Color(0xffD86D81).obs;
+  var redSolidPayment = const Color(0xFFDC3545).obs;
+
   var purpleSolid = const Color(0xffA07ED9).obs;
   var blueSolid = const Color(0xff529CD9).obs;
 

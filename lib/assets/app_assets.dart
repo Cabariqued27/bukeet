@@ -7,7 +7,10 @@ class AppIcons {
   static const String add = 'assets/icons/add_icon.svg';
   static const String check = 'assets/icons/check_icon.svg';
   static const String datePicker = 'assets/icons/date_picker_icon.svg';
+  static const String failed = 'assets/icons/failed_icon.svg';
   static const String field = 'assets/icons/field_icon.svg';
+  static const String fieldFailed = 'assets/icons/field_failed_icon.svg';
+  static const String fieldPending = 'assets/icons/field_pending_icon.svg';
   static const String filter = 'assets/icons/filter_icon.svg';
   static const String infoCircle = 'assets/icons/info_circle_icon.svg';
   static const String leftArrow = 'assets/icons/left_arrow_icon.svg';

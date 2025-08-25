@@ -118,7 +118,9 @@ class FieldsUserPage extends StatelessWidget {
                 SliderNetworkImageWidget(
                   images: item.images!,
                   showIndicator: true,
+                  tag: 'slider_${item.id}',
                 ),
+
                 Container(
                   margin: const EdgeInsets.symmetric(
                     //horizontal: 8.0,

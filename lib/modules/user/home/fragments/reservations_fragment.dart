@@ -107,6 +107,11 @@ class ReservationsUserFragment extends StatelessWidget {
   }
 
   Widget _fieldItemWidget(Reservation item) {
+     var icon = item.paymentStatus == "APPROVED"
+        ? AppIcons.field
+        : item.paymentStatus == "DECLINED"
+        ? AppIcons.fieldFailed
+        : AppIcons.fieldPending;
     return Container(
       width: AppSize.width() * 0.85,
       padding: EdgeInsets.all(AppMargin.horizontal() * 0.5),
@@ -141,7 +146,7 @@ class ReservationsUserFragment extends StatelessWidget {
                         SvgAssetWidget(
                           width: AppSize.width() * 0.05,
                           height: AppSize.width() * 0.05,
-                          path: AppIcons.field,
+                          path: icon,
                         ),
                         _infoBoldText('${item.fieldOrder ?? 0}'),
                       ],
@@ -184,12 +189,21 @@ class ReservationsUserFragment extends StatelessWidget {
   }
 
   Widget _textWithIconWidget(Reservation item) {
-    var isApproved = item.paymentStatus == "APPROVED";
-    var statusText = isApproved ? 'Confirmada' : 'Pendiente';
-    var statusColor = isApproved
-        ? controller.theme.greenSolid.value
-        : controller.theme.exploreFocus.value;
-    var icon = isApproved ? AppIcons.check : AppIcons.pending;
+    var statusText = item.paymentStatus == "APPROVED"
+        ? 'Confirmada'
+        : item.paymentStatus == "DECLINED"
+        ? 'Fallida'
+        : 'Pendiente';
+    var statusColor = item.paymentStatus == "APPROVED"
+        ? controller.theme.greenSolidPayment.value
+        : item.paymentStatus == "DECLINED"
+        ? controller.theme.redSolidPayment.value
+        : controller.theme.yellowSolidPayment.value;
+    var icon = item.paymentStatus == "APPROVED"
+        ? AppIcons.check
+        : item.paymentStatus == "DECLINED"
+        ? AppIcons.failed
+        : AppIcons.pending;
     return Row(
       children: [
         SvgAssetWidget(

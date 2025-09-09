@@ -1,6 +1,7 @@
 import 'package:bukeet/assets/app_assets.dart';
 import 'package:bukeet/modules/user/arena/controllers/booking_controller.dart';
 import 'package:bukeet/services/models/institution.dart';
+import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
 import 'package:bukeet/widgets/buttons/svg_icon_button_widget.dart';
@@ -118,7 +119,8 @@ class BookingPage extends StatelessWidget {
                               'ccnumero',
                               TextInputType.number,
                             ),
-                            SizedBox(height: AppSize.width() * 0.05),
+
+                            _termsAndConditionsWompi(),
                             _sendReservationButton(),
                             SizedBox(height: AppSize.width() * 0.05),
                           ],
@@ -431,6 +433,39 @@ class BookingPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _termsAndConditionsWompi() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.all(AppMargin.vertical()*0.3), 
+     
+      itemCount: controller.items.length,
+      itemBuilder: (context, index) {
+        final item = controller.items[index];
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Checkbox(
+              visualDensity: const VisualDensity(vertical: 1),
+              value: item.activate,
+              onChanged: (_) => controller.toggleItem(index),
+            ),
+            Expanded(
+              child: TextWidget(
+                '${item.title}'.tr,
+                fontFamily: AppFontFamily.leagueSpartan,
+                fontWeight: FontWeight.w600,
+                dsize: RelSize(size: TextWidgetSizes.xsmall),
+                color: controller.theme.black.value,
+                maxLines: 2,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

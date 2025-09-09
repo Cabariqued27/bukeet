@@ -93,4 +93,6 @@ const Map<String, String> enSp = {
 "place_holder_arena_city": "Ej. Bogotá",
 "player_capacity":"Capacidad de jugadores",
   "selected_field_capacity":"Ej. 5 vs 5",
+  "payment_policy_placeholder":"Acepto haber leído los reglamentos y la política de privacidad para hacer este pago.",
+  "data_auth_place_holder":"Acepto la autorización para la administración de datos personales",
 };

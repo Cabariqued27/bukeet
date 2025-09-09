@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:bukeet/flows/user/home/controllers/home_admin_flow.dart';
 import 'package:bukeet/secrets.dart';
+import 'package:bukeet/services/models/acceptance_token.dart';
 import 'package:bukeet/services/models/institution.dart';
 import 'package:http/http.dart' as http;
 import 'package:bukeet/preferences/user_preferences.dart';
@@ -45,6 +46,7 @@ class BookingController extends GetxController {
   var selectedPeopleType = ''.obs;
   var selectedDocumentType = ''.obs;
   var dynamicUrl = ''.obs;
+  var items = <AcceptanceToken>[].obs;
 
   var selectedHourPrice = 0.obs;
   var draggableSize = 0.7.obs;
@@ -80,6 +82,7 @@ class BookingController extends GetxController {
 
   Future<void> startController() async {
     loadDefaultUserInformation();
+    await getAcceptanceTokens();
     await cargarInstituciones();
     final selectedDate = _getOnlyDate(today.value);
     reservations.value = await _fieldsProvider.getReservedTimes(
@@ -114,6 +117,8 @@ class BookingController extends GetxController {
   }
 
   void onChangeForm() {
+    bool allAccepted = items.every((e) => e.activate);
+
     if (selectedHour.value != 100 &&
         customerEmailInputController.text.isNotEmpty &&
         fullNameInputController.text.isNotEmpty &&
@@ -122,7 +127,8 @@ class BookingController extends GetxController {
         selectedInstitutionCode.value.isNotEmpty &&
         selectedPeopleType.value.isNotEmpty &&
         selectedDocumentType.value.isNotEmpty &&
-        selectedHourPrice.value != 0) {
+        selectedHourPrice.value != 0 &&
+        allAccepted) {
       updateActivateNext(true);
     } else {
       updateActivateNext(false);
@@ -281,7 +287,6 @@ class BookingController extends GetxController {
     );
   }
 
-  
   Future<void> createReservation() async {
     Get.back();
 
@@ -289,15 +294,15 @@ class BookingController extends GetxController {
 
     final newReservation = Reservation(
       userId: _preferences.getUserId(),
-      fieldId: fieldInformation?.id ,
+      fieldId: fieldInformation?.id,
       date: todayDynamic.value,
       timeSlot: selectedHour.value,
       updateAt: today.value,
       paymentStatus: "PENDING",
       totalPrice: selectedHourPrice.value,
       reference: referenceGenerated,
-      arenaName: arenaInformation?.name ,
-      fieldOrder: fieldInformation?.order ,
+      arenaName: arenaInformation?.name,
+      fieldOrder: fieldInformation?.order,
     );
 
     try {
@@ -359,10 +364,11 @@ class BookingController extends GetxController {
         "customer_email": customerEmailInputController.text,
         "user_legal_id": userLegalIdInputController.text,
         "user_legal_id_type": selectedDocumentType.value,
-        "payment_description": "Pago a ${arenaInformation?.name??"Tienda Wompi"}",
+        "payment_description":
+            "Pago a ${arenaInformation?.name ?? "Tienda Wompi"}",
         "reference": referenciaUnica,
         "success_url": "https://bukeet.com/pago_exitoso",
-        "financial_institution_code": "1",//2 para rechazada
+        "financial_institution_code": "1", //2 para rechazada
         "user_type": 0,
         "phone_number": phoneNumberInputController.text,
         "full_name": fullNameInputController.text,
@@ -469,5 +475,47 @@ class BookingController extends GetxController {
       return;
     }
     Get.back();
+  }
+
+  void toggleItem(int index) {
+    items[index].activate = !items[index].activate;
+    items.refresh();
+    onChangeForm();
+  }
+
+  Future<void> getAcceptanceTokens() async {
+    final response = await http.get(
+      Uri.parse('https://production.wompi.co/v1/merchants/$wompiKey'),
+      headers: {'Accept': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = jsonDecode(response.body);
+
+      // final acceptanceToken =
+      // jsonData['data']['presigned_acceptance']['acceptance_token'];
+      final acceptancePermalink =
+          jsonData['data']['presigned_acceptance']['permalink'];
+
+      //final personalDataToken =
+      //jsonData['data']['presigned_personal_data_auth']['acceptance_token'];
+      final personalDataPermalink =
+          jsonData['data']['presigned_personal_data_auth']['permalink'];
+
+      items.assignAll([
+        AcceptanceToken(
+          title: "payment_policy_placeholder",
+          link: acceptancePermalink,
+          activate: false,
+        ),
+        AcceptanceToken(
+          title: "data_auth_place_holder",
+          link: personalDataPermalink,
+          activate: false,
+        ),
+      ]);
+    } else {
+      throw Exception('Error al obtener tokens: ${response.body}');
+    }
   }
 }

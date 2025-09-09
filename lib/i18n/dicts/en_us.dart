@@ -92,4 +92,6 @@ const Map<String, String> enUs = {
   "place_holder_arena_city": "e.g. New York",
   "player_capacity": "Player Capacity",
   "select_field_capacity": "e.g. 5 vs 5",
+  "payment_policy_placeholder":"Acepto haber leído los reglamentos y la política de privacidad para hacer este pago.",
+  "data_auth_place_holder":"Acepto la autorización para la administración de datos personales",
 };

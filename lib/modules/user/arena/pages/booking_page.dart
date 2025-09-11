@@ -440,8 +440,8 @@ class BookingPage extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.all(AppMargin.vertical()*0.3), 
-     
+      padding: EdgeInsets.all(AppMargin.vertical() * 0.3),
+
       itemCount: controller.items.length,
       itemBuilder: (context, index) {
         final item = controller.items[index];
@@ -449,6 +449,7 @@ class BookingPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Checkbox(
+              activeColor: controller.theme.greenMin.value,
               visualDensity: const VisualDensity(vertical: 1),
               value: item.activate,
               onChanged: (_) => controller.toggleItem(index),

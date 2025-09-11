@@ -288,6 +288,7 @@ class BookingController extends GetxController {
   }
 
   Future<void> createReservation() async {
+    updateActivateNext(false);
     Get.back();
 
     final referenceGenerated = generarReferenciaUnica();
@@ -372,7 +373,7 @@ class BookingController extends GetxController {
         "user_type": 0,
         "phone_number": phoneNumberInputController.text,
         "full_name": fullNameInputController.text,
-        "status": "FAILED",
+        //"status": "FAILED",
       }),
     );
 

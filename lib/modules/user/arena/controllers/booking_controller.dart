@@ -21,6 +21,8 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+enum BookingState { termsConditions, pseGateway, formPayment }
+
 class BookingController extends GetxController {
   final VoidCallback onNext;
   final VoidCallback onBack;
@@ -51,6 +53,8 @@ class BookingController extends GetxController {
   var selectedHourPrice = 0.obs;
   var draggableSize = 0.7.obs;
   var isLoadData = false.obs;
+  var isLoadDataTerms = false.obs;
+  var bookingStateValue = BookingState.formPayment.obs;
   var activateNext = false.obs;
   var isLoadDataReservations = false.obs;
   var showLocalPayment = false.obs;
@@ -79,6 +83,7 @@ class BookingController extends GetxController {
   final _homeUserFlow = Get.find<HomeUserFlow>();
 
   late final WebViewController webViewController;
+  late final WebViewController webViewTermsConditionsController;
 
   Future<void> startController() async {
     loadDefaultUserInformation();
@@ -463,19 +468,12 @@ class BookingController extends GetxController {
       ..loadRequest(Uri.parse(url));
 
     delay();
+    updateBookingState(BookingState.pseGateway);
   }
 
   Future<void> delay() async {
     await Future.delayed(const Duration(milliseconds: 2000));
     updateLoadLocalPayment(true);
-  }
-
-  void backButtonLogic() {
-    if (showLocalPayment.value) {
-      updateShowlocalPayment(false);
-      return;
-    }
-    Get.back();
   }
 
   void toggleItem(int index) {
@@ -518,5 +516,31 @@ class BookingController extends GetxController {
     } else {
       throw Exception('Error al obtener tokens: ${response.body}');
     }
+  }
+
+  void startWebViewTermsController(String value) {
+    updateBookingState(BookingState.termsConditions);
+
+    webViewTermsConditionsController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.disabled)
+      ..loadRequest(Uri.parse(value))
+      ..enableZoom(false);
+    delayTerms();
+  }
+
+  Future<void> delayTerms() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    updateLoadDataTerms(true);
+  }
+
+  void updateLoadDataTerms(bool value) {
+    isLoadDataTerms.value = value;
+    update();
+  }
+
+  void updateBookingState(BookingState value) {
+    bookingStateValue.value == BookingState.pseGateway
+        ? _homeUserFlow.start(initialPage: 1)
+        : bookingStateValue.value = value;
   }
 }

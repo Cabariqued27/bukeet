@@ -44,91 +44,22 @@ class BookingPage extends StatelessWidget {
       width: AppSize.width(),
       height: AppSize.height(),
       child: (controller.isLoadData.value)
-          ? (!controller.showLocalPayment.value)
-                ? CustomScrollView(
-                    slivers: [
-                      SliverAppBar(
-                        pinned: false,
-                        expandedHeight: 275.0,
-                        elevation: 0.0,
-                        backgroundColor: Colors.transparent,
-                        flexibleSpace: FlexibleSpaceBar(
-                          background: _imagesWidget(),
-                        ),
-                        bottom: PreferredSize(
-                          preferredSize: const Size.fromHeight(0.0),
-                          child: Container(
-                            height: 20.0,
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: controller
-                                  .theme
-                                  .backgroundDeviceSetting
-                                  .value,
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(30.0),
-                                topRight: Radius.circular(30.0),
-                              ),
-                            ),
-                          ),
-                        ),
-                        leadingWidth: 80.0,
-                        leading: Container(
-                          height: 30.0,
-                          width: 30.0,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                controller.theme.backgroundDeviceSetting.value,
-                          ),
-                          child: SvgIconButtonWidget(
-                            icon: AppIcons.leftArrow,
-                            size: 15,
-                            onPressed: () => Get.back(),
-                          ),
-                        ),
-                      ),
-                      SliverToBoxAdapter(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(height: AppSize.height() * 0.02),
-                            _informationWidget(),
-                            SizedBox(height: AppSize.height() * 0.02),
-                            _dateInputWidget(),
-                            _availableTimesDropdownWidget(),
-                            _institutionsDropdownWidget(),
-                            _peopleTypeDropDownWidget(),
-                            _inputWidget(
-                              'put_name',
-                              controller.fullNameInputController,
-                              'full_name',
-                              TextInputType.text,
-                            ),
-                            _inputWidget(
-                              'put_email',
-                              controller.customerEmailInputController,
-                              'email_address',
-                              TextInputType.emailAddress,
-                            ),
-                            _documentTypeDropDownWidget(),
-                            _inputWidget(
-                              'ccnumero',
-                              controller.userLegalIdInputController,
-                              'ccnumero',
-                              TextInputType.number,
-                            ),
-
-                            _termsAndConditionsWompi(),
-                            _sendReservationButton(),
-                            SizedBox(height: AppSize.width() * 0.05),
-                          ],
-                        ),
-                      ),
+          ? (controller.bookingStateValue.value == BookingState.formPayment)
+                ? _formPaymentWidget()
+                : (controller.bookingStateValue.value ==
+                      BookingState.pseGateway)
+                ? Stack(
+                    children: [
+                      _webViewWidget(),
+                      _appBarWidget(BookingState.formPayment),
                     ],
                   )
-                : Stack(children: [_webViewWidget(), _appBarWidget()])
+                : Stack(
+                    children: [
+                      _webViewTermsConditonsWidget(),
+                      _appBarWidget(BookingState.formPayment),
+                    ],
+                  )
           : LoadingDataWidget(),
     );
   }
@@ -145,27 +76,95 @@ class BookingPage extends StatelessWidget {
     );
   }
 
-  /*Widget _nameWidget() {
-    return FadeIn(
-      duration: const Duration(milliseconds: 1000),
-      child: TextWidget(
-        controller.arenaInformation?.name ?? '',
-        fontFamily: AppFontFamily.leagueSpartan,
-        fontWeight: FontWeight.w600,
-        dsize: RelSize(size: TextWidgetSizes.normal),
-        color: controller.theme.black.value,
-        textAlign: TextAlign.center,
-      ),
-    );
-  }*/
-
   Widget _imagesWidget() {
     return FullSliderNetworkImageWidget(
       images: controller.fieldInformation?.images ?? [],
     );
   }
 
-  Widget _appBarWidget() {
+  Widget _formPaymentWidget() {
+    return (!controller.isPaymentCheckoutLoad.value)
+        ? CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                pinned: false,
+                expandedHeight: 275.0,
+                elevation: 0.0,
+                backgroundColor: Colors.transparent,
+                flexibleSpace: FlexibleSpaceBar(background: _imagesWidget()),
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(0.0),
+                  child: Container(
+                    height: 20.0,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: controller.theme.backgroundDeviceSetting.value,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0),
+                      ),
+                    ),
+                  ),
+                ),
+                leadingWidth: 80.0,
+                leading: Container(
+                  height: 30.0,
+                  width: 30.0,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: controller.theme.backgroundDeviceSetting.value,
+                  ),
+                  child: SvgIconButtonWidget(
+                    icon: AppIcons.leftArrow,
+                    size: 15,
+                    onPressed: () => Get.back(),
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(height: AppSize.height() * 0.02),
+                    _informationWidget(),
+                    SizedBox(height: AppSize.height() * 0.02),
+                    _dateInputWidget(),
+                    _availableTimesDropdownWidget(),
+                    _institutionsDropdownWidget(),
+                    _peopleTypeDropDownWidget(),
+                    _inputWidget(
+                      'put_name',
+                      controller.fullNameInputController,
+                      'full_name',
+                      TextInputType.text,
+                    ),
+                    _inputWidget(
+                      'put_email',
+                      controller.customerEmailInputController,
+                      'email_address',
+                      TextInputType.emailAddress,
+                    ),
+                    _documentTypeDropDownWidget(),
+                    _inputWidget(
+                      'ccnumero',
+                      controller.userLegalIdInputController,
+                      'ccnumero',
+                      TextInputType.number,
+                    ),
+
+                    _termsAndConditionsWompi(),
+                    _sendReservationButton(),
+                    SizedBox(height: AppSize.width() * 0.05),
+                  ],
+                ),
+              ),
+            ],
+          )
+        : LoadingDataWidget();
+  }
+
+  Widget _appBarWidget(BookingState value) {
     return Positioned(
       top: AppSize.height() * 0.05,
       left: AppSize.width() * 0.03,
@@ -180,7 +179,7 @@ class BookingPage extends StatelessWidget {
         child: SvgIconButtonWidget(
           size: AppSize.width() * 0.05,
           icon: AppIcons.leftArrowSettings,
-          onPressed: () => controller.backButtonLogic(),
+          onPressed: () => controller.updateBookingState(value),
           color: controller.theme.black.value,
         ),
       ),
@@ -293,18 +292,6 @@ class BookingPage extends StatelessWidget {
           onChanged: (value) => controller.onChangeForm(),
           isActive: true,
         ),
-        /*TextWidget(
-          'name_check'.tr,
-          fontFamily: AppFontFamily.workSans,
-          color: (controller.firstNameWarning.value)
-              ? controller.theme.primary.value
-              : Colors.transparent,
-          textAlign: TextAlign.start,
-          dsize: RelSize(
-            size: TextWidgetSizes.xsmall,
-          ),
-          textOverflow: TextOverflow.clip,
-        ),*/
       ],
     );
   }
@@ -455,18 +442,38 @@ class BookingPage extends StatelessWidget {
               onChanged: (_) => controller.toggleItem(index),
             ),
             Expanded(
-              child: TextWidget(
-                '${item.title}'.tr,
-                fontFamily: AppFontFamily.leagueSpartan,
-                fontWeight: FontWeight.w600,
-                dsize: RelSize(size: TextWidgetSizes.xsmall),
-                color: controller.theme.black.value,
-                maxLines: 2,
+              child: InkWell(
+                onTap: () =>
+                    controller.startWebViewTermsController(item.link ?? ''),
+                child: TextWidget(
+                  '${item.title}'.tr,
+                  fontFamily: AppFontFamily.leagueSpartan,
+                  fontWeight: FontWeight.w600,
+                  dsize: RelSize(size: TextWidgetSizes.xsmall),
+                  color: controller.theme.blueMin.value,
+                  decoration: TextDecoration.underline,
+
+                  maxLines: 2,
+                ),
               ),
             ),
           ],
         );
       },
+    );
+  }
+
+  Widget _webViewTermsConditonsWidget() {
+    return SafeArea(
+      child: SizedBox(
+        width: AppSize.width(),
+        height: AppSize.height(),
+        child: (controller.isLoadDataTerms.value)
+            ? WebViewWidget(
+                controller: controller.webViewTermsConditionsController,
+              )
+            : LoadingDataWidget(),
+      ),
     );
   }
 }

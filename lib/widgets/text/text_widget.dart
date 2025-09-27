@@ -130,17 +130,11 @@ class RelSize implements IDynamicSize {
   final double hRatio;
   final double size;
 
-  RelSize({
-    this.wRatio = 0,
-    this.hRatio = 1,
-    this.size = 0.025,
-  });
+  RelSize({this.wRatio = 0, this.hRatio = 1, this.size = 0.025});
 
   @override
   double getSize() {
-    double res = sqrt(
-      pow(Get.width * wRatio, 2) + pow(Get.height * hRatio, 2),
-    );
+    double res = sqrt(pow(Get.width * wRatio, 2) + pow(Get.height * hRatio, 2));
 
     return res * size;
   }

@@ -66,7 +66,8 @@ class ReservationProvider {
           .from(Tables.reservations)
           .select()
           .eq('userId', userId)
-          .order('date', ascending: false);
+          .order('date', ascending: false)
+          .order('timeSlot', ascending: false);
       for (Map<String, dynamic> item in data) {
         var type = app.Reservation.fromJson(item);
         list.add(type);
@@ -102,7 +103,7 @@ class ReservationProvider {
 
   Future<List<app.Reservation>> getReservationsByFieldsIdByDay({
     required int fieldId,
-    required  DateTime actualDay,
+    required DateTime actualDay,
   }) async {
     try {
       var list = <app.Reservation>[];

@@ -48,14 +48,26 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
   void initializeReservations() {
     reservations.clear();
     for (int i = 0; i < 24; i++) {
-      reservations.add(Reservation(timeSlot: i, fieldId: fields.first.order,reservationStatus: "disable"));
+      reservations.add(
+        Reservation(
+          timeSlot: i,
+          fieldId: fields.first.order,
+          reservationStatus: "disable",
+        ),
+      );
     }
   }
 
   void initializeReservationsSelected(int fildsOrder) {
     reservations.clear();
     for (int i = 0; i < 24; i++) {
-      reservations.add(Reservation(timeSlot: i, fieldId: fildsOrder,reservationStatus: "disable"));
+      reservations.add(
+        Reservation(
+          timeSlot: i,
+          fieldId: fildsOrder,
+          reservationStatus: "disable",
+        ),
+      );
     }
   }
 
@@ -121,39 +133,6 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
       }
     }
   }
-
-  /*Future<void> getFieldByUserId() async {
-    fields.clear();
-    fieldIdToArenaName.clear();
-
-    final futures = arenas.map((arena) async {
-      var data = await _fieldsProvider.getFieldByArenaId(
-        arenaId: arena.id ?? 0,
-      );
-      for (var field in data) {
-        if (field.id != null) {
-          fieldIdToArenaName[field.id!] = arena.name ?? 'Sin nombre';
-        }
-      }
-      return data;
-    }).toList();
-
-    final results = await Future.wait(futures);
-    fields.addAll(results.expand((e) => e));
-  }*/
-
-  /*Future<void> getReservations() async {
-    reservations.clear();
-
-    final futures = fields.map((field) async {
-      return await _reservationsProvider.getReservationsByFieldsId(
-        fieldId: field.id ?? 0,
-      );
-    }).toList();
-
-    final results = await Future.wait(futures);
-    reservations.addAll(results.expand((e) => e));
-  }*/
 
   Future<void> updateReservationStatus(Reservation reservation) async {
     //var updateReservation = UpdateReservation(

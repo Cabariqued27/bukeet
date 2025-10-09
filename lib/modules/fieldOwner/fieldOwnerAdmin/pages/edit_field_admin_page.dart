@@ -38,27 +38,25 @@ class EditFieldAdminPage extends StatelessWidget {
   }
 
   Widget _pageWidget() {
-    return Obx(
-      () => Scaffold(
-        backgroundColor: controller.theme.background.value,
-        body: SafeArea(
-          child: Container(
-            width: AppSize.width(),
-            height: AppSize.height(),
-            margin: EdgeInsets.symmetric(
-              vertical: AppMargin.vertical(),
-              horizontal: AppMargin.horizontal(),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _titleWidget(),
-                _daySelectorWidget(),
-                _hourListForDay(
-                  controller.daysOfWeek[controller.daysOfWeekIndex.value],
-                ),
-              ],
-            ),
+    return Scaffold(
+      backgroundColor: controller.theme.background.value,
+      body: SafeArea(
+        child: Container(
+          width: AppSize.width(),
+          height: AppSize.height(),
+          margin: EdgeInsets.symmetric(
+            vertical: AppMargin.vertical(),
+            horizontal: AppMargin.horizontal(),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _titleWidget(),
+              _daySelectorWidget(),
+              _hourListForDay(
+                controller.daysOfWeek[controller.daysOfWeekIndex.value],
+              ),
+            ],
           ),
         ),
       ),

@@ -6,18 +6,14 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class FieldProvider {
   final _supabase = Supabase.instance.client;
 
-  Future<app.Field?> registerField({
-    required app.Field field,
-  }) async {
+  Future<app.Field?> registerField({required app.Field field}) async {
     try {
-      final resp = await _supabase.from(Tables.fields).insert(
-        {
-          'players': field.players,
-          'order': field.order,
-          'isVerified': false,
-          'arenaId': field.arenaId,
-        },
-      ).select();
+      final resp = await _supabase.from(Tables.fields).insert({
+        'players': field.players,
+        'order': field.order,
+        'isVerified': false,
+        'arenaId': field.arenaId,
+      }).select();
 
       if (resp.isNotEmpty) {
         var data = app.Field.fromJson(resp.first);
@@ -33,8 +29,10 @@ class FieldProvider {
   Future<List<app.Field>> getFields() async {
     try {
       var list = <app.Field>[];
-      final data =
-          await _supabase.from(Tables.fields).select().eq('isVerified', true);
+      final data = await _supabase
+          .from(Tables.fields)
+          .select()
+          .eq('isVerified', true);
 
       for (Map<String, dynamic> item in data) {
         var type = app.Field.fromJson(item);
@@ -53,8 +51,10 @@ class FieldProvider {
   Future<List<app.Field>> getFieldsWithOutVerification() async {
     try {
       var list = <app.Field>[];
-      final data =
-          await _supabase.from(Tables.fields).select().eq('isVerified', false);
+      final data = await _supabase
+          .from(Tables.fields)
+          .select()
+          .eq('isVerified', false);
 
       for (Map<String, dynamic> item in data) {
         var type = app.Field.fromJson(item);
@@ -92,8 +92,11 @@ class FieldProvider {
   Future<List<app.Field>> getFieldByArenaId({required int arenaId}) async {
     try {
       var list = <app.Field>[];
-      final data =
-          await _supabase.from(Tables.fields).select().eq('arenaId', arenaId);
+      final data = await _supabase
+          .from(Tables.fields)
+          .select()
+          .eq('arenaId', arenaId)
+          .order('order', ascending: true);
 
       for (Map<String, dynamic> item in data) {
         var type = app.Field.fromJson(item);
@@ -114,11 +117,10 @@ class FieldProvider {
     required List<String> imageUrls,
   }) async {
     try {
-      await _supabase.from(Tables.fields).update(
-        {
-          'images': imageUrls,
-        },
-      ).eq('id', id);
+      await _supabase
+          .from(Tables.fields)
+          .update({'images': imageUrls})
+          .eq('id', id);
       return true;
     } catch (exception, stackTrace) {
       LogError.capture(exception, stackTrace, 'updateUserImagesList');

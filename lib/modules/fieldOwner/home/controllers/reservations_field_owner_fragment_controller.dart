@@ -10,141 +10,120 @@ import 'package:get/get.dart';
 
 class ReservationsFieldOwnerFragmentController extends GetxController {
   final AppTheme theme;
-  //final Function(String) onClick;
 
-  ReservationsFieldOwnerFragmentController({
-    required this.theme,
-    //required this.onClick,
-  });
+  ReservationsFieldOwnerFragmentController({required this.theme});
 
-  var arenas = <Arena>[].obs;
-  var fields = <Field>[].obs;
-  var selectedField = Field().obs;
-  var reservations = <Reservation>[].obs;
-  //final fieldIdToArenaName = <int, String>{};
+  final arenas = <Arena>[].obs;
+  final fields = <Field>[].obs;
+  final selectedArena = Arena().obs;
+  final selectedField = Field().obs;
+  final reservations = <Reservation>[].obs;
 
-  var isLoadData = false.obs;
+  final isLoadData = false.obs;
+  final today = DateTime.now().obs;
+  final dynamicDay = DateTime.now().obs;
 
-  var today = DateTime.now().obs;
-  var dynamicDay = DateTime.now().obs;
-
-  final _reservationsProvider = ReservationProvider();
-  final _fieldsProvider = FieldProvider();
   final _arenasProvider = ArenaProvider();
-
+  final _fieldsProvider = FieldProvider();
+  final _reservationsProvider = ReservationProvider();
   final _preferences = UserPreferences();
 
-  void startController() async {
+  Future<void> startController() async {
     updateLoadData(false);
     await getArenaByUserId();
     await getFieldByArena();
-    initializeReservations();
-    await getReservationByDayByField();
-    //await getFieldByUserId();
-    //await getReservations();
+    _initializeReservations();
+    await _loadReservationsForField(selectedField.value, today.value);
     updateLoadData(true);
-  }
-
-  void initializeReservations() {
-    reservations.clear();
-    for (int i = 0; i < 24; i++) {
-      reservations.add(
-        Reservation(
-          timeSlot: i,
-          fieldId: fields.first.order,
-          reservationStatus: "disable",
-        ),
-      );
-    }
-  }
-
-  void initializeReservationsSelected(int fildsOrder) {
-    reservations.clear();
-    for (int i = 0; i < 24; i++) {
-      reservations.add(
-        Reservation(
-          timeSlot: i,
-          fieldId: fildsOrder,
-          reservationStatus: "disable",
-        ),
-      );
-    }
   }
 
   Future<void> getArenaByUserId() async {
     arenas.clear();
-    arenas.value = await _arenasProvider.getArenaByUserId(
+    final data = await _arenasProvider.getArenaByUserId(
       ownerId: _preferences.getUserId(),
     );
+    arenas.addAll(data);
+    if (arenas.isNotEmpty) {
+      selectedArena.value = arenas.first;
+    }
   }
 
-  Future<void> getFieldByArena() async {
+  Future<void> getFieldByArena({int? arenaId}) async {
     fields.clear();
-    var data = await _fieldsProvider.getFieldByArenaId(
-      arenaId: arenas.first.id ?? 0,
-    );
+
+    final idToUse = arenaId ?? arenas.firstOrNull?.id;
+    if (idToUse == null) return;
+
+    final data = await _fieldsProvider.getFieldByArenaId(arenaId: idToUse);
     fields.addAll(data);
+
     if (fields.isNotEmpty) {
       selectedField.value = fields.first;
     }
   }
 
-  void updateFieldSelected(Field value) {
-    selectedField.value = value;
+  Future<void> updateArenaSelected(Arena arena) async {
+    selectedArena.value = arena;
     update();
-    getReservationsByFieldSelected(selectedField.value, today.value);
+    await getFieldByArena(arenaId: arena.id);
+    await _loadReservationsForField(selectedField.value, today.value);
   }
 
-  Future<void> getReservationsByFieldSelected(
-    Field field,
-    DateTime date,
-  ) async {
+  void updateFieldSelected(Field field) {
+    selectedField.value = field;
+    update();
+    _loadReservationsForField(field, today.value);
+  }
+
+  void _initializeReservations({int? fieldOrder}) {
+    reservations.assignAll(
+      List.generate(
+        24,
+        (i) => Reservation(
+          timeSlot: i,
+          fieldId: fieldOrder ?? fields.firstOrNull?.order,
+          reservationStatus: "disable",
+        ),
+      ),
+    );
+  }
+
+  Future<void> _loadReservationsForField(Field field, DateTime date) async {
     updateLoadData(false);
-    initializeReservationsSelected(field.order ?? 0);
-    var data = await _reservationsProvider.getReservationsByFieldsIdByDay(
+    _initializeReservations(fieldOrder: field.order ?? 0);
+
+    final data = await _reservationsProvider.getReservationsByFieldsIdByDay(
       fieldId: field.id ?? 0,
       actualDay: date,
     );
 
-    for (var real in data) {
+    for (final real in data) {
       final index = reservations.indexWhere((r) => r.timeSlot == real.timeSlot);
-      if (index != -1) {
-        reservations[index] = real;
-      }
+      if (index != -1) reservations[index] = real;
     }
+
     updateLoadData(true);
   }
 
-  Future<void> getReservationByDayByField() async {
-    /*reservations.clear();
-    for (int i = 0; i < 24; i++) {
-      reservations.add(Reservation(timeSlot: i, reservationStatus: "disable"));
-    }*/
-
-    var data = await _reservationsProvider.getReservationsByFieldsIdByDay(
-      fieldId: fields.first.id ?? 0,
-      actualDay: today.value,
-    );
-
-    for (var real in data) {
-      final index = reservations.indexWhere((r) => r.timeSlot == real.timeSlot);
-      if (index != -1) {
-        reservations[index] = real;
-      }
-    }
+  void increaseDay() {
+    today.value = today.value.add(const Duration(days: 1));
+    _loadReservationsForField(selectedField.value, today.value);
   }
 
-  Future<void> updateReservationStatus(Reservation reservation) async {
-    //var updateReservation = UpdateReservation(
-    //  id: reservation.id ?? 0, status: !(reservation.status ?? false));
-    //await _reservationsProvider.updateReservationStatus(
-    //  updateReservation: updateReservation);
-    //startController();
+  void decreaseDay() {
+    today.value = today.value.subtract(const Duration(days: 1));
+    _loadReservationsForField(selectedField.value, today.value);
+  }
+
+  void resetDay() {
+    Get.back();
+    today.value = dynamicDay.value;
+    _loadReservationsForField(selectedField.value, today.value);
   }
 
   String formatHour(int hour24) {
-    final int hour12 = hour24 % 12 == 0 ? 12 : hour24 % 12;
-    final String period = hour24 < 12 ? 'AM' : 'PM';
+    final hour12 = hour24 % 12 == 0 ? 12 : hour24 % 12;
+    final period = hour24 < 12 ? 'AM' : 'PM';
     return '$hour12:00 $period';
   }
 
@@ -153,22 +132,5 @@ class ReservationsFieldOwnerFragmentController extends GetxController {
     update();
   }
 
-  void increaseDay() {
-    today.value = today.value.add(const Duration(days: 1));
-    getReservationsByFieldSelected(selectedField.value, today.value);
-    //update();
-  }
-
-  void decreaseDay() {
-    today.value = today.value.subtract(const Duration(days: 1));
-    getReservationsByFieldSelected(selectedField.value, today.value);
-    //update();
-  }
-
-  void resetDay() {
-    Get.back();
-    today.value = dynamicDay.value;
-    getReservationsByFieldSelected(selectedField.value, today.value);
-    //update();
-  }
+  Future<void> updateReservationStatus(Reservation reservation) async {}
 }

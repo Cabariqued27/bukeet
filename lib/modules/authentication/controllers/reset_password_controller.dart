@@ -9,20 +9,13 @@ import 'package:bukeet/utils/regex/validations_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-enum ResetPasswordState {
-  login,
-  createPassword,
-  validateOtp,
-}
+enum ResetPasswordState { login, createPassword, validateOtp }
 
 class ResetPasswordController extends GetxController {
   final VoidCallback onHome;
   final AppTheme theme;
 
-  ResetPasswordController({
-    required this.onHome,
-    required this.theme,
-  });
+  ResetPasswordController({required this.onHome, required this.theme});
 
   var activeNextfull = false.obs;
   var activeNextPassword = false.obs;
@@ -65,10 +58,12 @@ class ResetPasswordController extends GetxController {
   }
 
   void onChangeOtpPassword() {
-    var validPassword =
-        ValidationUtils.validatePassword(passwordOtpController.text);
-    var validConfirmPassword =
-        ValidationUtils.validatePassword(confirmPasswordOtpController.text);
+    var validPassword = ValidationUtils.validatePassword(
+      passwordOtpController.text,
+    );
+    var validConfirmPassword = ValidationUtils.validatePassword(
+      confirmPasswordOtpController.text,
+    );
     var paswordMatch =
         passwordOtpController.text == confirmPasswordOtpController.text;
 
@@ -152,7 +147,7 @@ class ResetPasswordController extends GetxController {
     update();
   }
 
-  Future<bool> isEmailTaken(email) async {
+  Future<bool> isEmailTaken(String email) async {
     var isEmailTaken = await _usuarioProvider.getUserByEmail(email: email);
     if (isEmailTaken != null) {
       return true;
@@ -163,9 +158,7 @@ class ResetPasswordController extends GetxController {
   Future<void> onChangePassword() async {
     updateActiveNextPassword(false);
 
-    await _authProvider.updatePassword(
-      password: passwordOtpController.text,
-    );
+    await _authProvider.updatePassword(password: passwordOtpController.text);
 
     var check = await _authProvider.signIn(
       email: emailOtpController.text,
@@ -173,9 +166,7 @@ class ResetPasswordController extends GetxController {
     );
 
     if (check != null) {
-      await _authProvider.updatePassword(
-        password: passwordOtpController.text,
-      );
+      await _authProvider.updatePassword(password: passwordOtpController.text);
       _preferences.deleteAllData();
       await _authProvider.signOut();
       _authFlow.start();
@@ -258,9 +249,7 @@ class ResetPasswordController extends GetxController {
 
     if (canSignUp) {
       updateActiveNextOtp(true);
-      _authProvider.requestOtpForResetPassword(
-        email: emailOtpController.text,
-      );
+      _authProvider.requestOtpForResetPassword(email: emailOtpController.text);
       updateState(ResetPasswordState.validateOtp);
       updateReSendOtpTime(getOtpTime());
       updateActiveNextOtp(true);

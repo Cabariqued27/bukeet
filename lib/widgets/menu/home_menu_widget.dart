@@ -15,15 +15,14 @@ class HomeMenuWidget extends StatelessWidget {
   final RxInt currentPage;
   final Function(int) onChangePage;
   final bool isOpenMenu;
-  
 
   const HomeMenuWidget({
-    Key? key,
+    super.key,
     required this.onChangePage,
     required this.currentPage,
     required this.theme,
     required this.isOpenMenu,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

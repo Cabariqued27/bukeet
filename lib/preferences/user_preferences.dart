@@ -12,7 +12,7 @@ class UserPreferences {
 
   late SharedPreferences _prefs;
 
-  initPrefs() async {
+  Future<void> initPrefs() async {
     _prefs = await SharedPreferences.getInstance();
   }
 
@@ -39,7 +39,7 @@ class UserPreferences {
   set setPhoneNumber(int value) =>
       _prefs.setInt(PreferencesEnum.phoneNumber, value);
 
-      //DOCUMENT NUMBER
+  //DOCUMENT NUMBER
 
   int getDocumentId() => _prefs.getInt(PreferencesEnum.documentId) ?? 0;
   set setDocumentId(int value) =>

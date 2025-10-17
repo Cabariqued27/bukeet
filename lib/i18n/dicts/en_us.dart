@@ -39,7 +39,7 @@ const Map<String, String> enUs = {
   "menu_home": "Home",
   "menu_reservations": "Reservations",
   "menu_profile": "Profile",
-  "menu_arenas":"Arenas",
+  "menu_arenas": "Arenas",
   "my_fields": "My Fields",
   "your_name": "Your Name",
   "hint_date": "Date of Birth",
@@ -92,6 +92,8 @@ const Map<String, String> enUs = {
   "place_holder_arena_city": "e.g. New York",
   "player_capacity": "Player Capacity",
   "select_field_capacity": "e.g. 5 vs 5",
-  "payment_policy_placeholder":"Acepto haber leído los reglamentos y la política de privacidad para hacer este pago.",
-  "data_auth_place_holder":"Acepto la autorización para la administración de datos personales",
+  "payment_policy_placeholder":
+      "Acepto haber leído los reglamentos y la política de privacidad para hacer este pago.",
+  "data_auth_place_holder":
+      "Acepto la autorización para la administración de datos personales",
 };

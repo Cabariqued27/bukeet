@@ -12,13 +12,13 @@ class OtpInputWidget extends StatelessWidget {
   final bool hasInvalidCode;
 
   const OtpInputWidget({
-    Key? key,
+    super.key,
     required this.onCompleteCode,
     required this.codeController,
     required this.onChanged,
     required this.theme,
     required this.hasInvalidCode,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,7 @@ class OtpInputWidget extends StatelessWidget {
       textStyle: onlyTextStyle(
         color: (hasInvalidCode) ? errorColor : theme.black.value,
         fontFamily: AppFontFamily.workSans,
-        dsize: RelSize(
-          size: TextWidgetSizes.buttonsTitle,
-        ),
+        dsize: RelSize(size: TextWidgetSizes.buttonsTitle),
       ),
       decoration: BoxDecoration(
         border: Border.all(
@@ -54,9 +52,7 @@ class OtpInputWidget extends StatelessWidget {
       textStyle: onlyTextStyle(
         color: (hasInvalidCode) ? errorColor : theme.black.value,
         fontFamily: AppFontFamily.workSans,
-        dsize: RelSize(
-          size: TextWidgetSizes.buttonsTitle,
-        ),
+        dsize: RelSize(size: TextWidgetSizes.buttonsTitle),
       ),
       decoration: BoxDecoration(
         border: Border.all(
@@ -78,9 +74,7 @@ class OtpInputWidget extends StatelessWidget {
         onCompleted: (pin) => onCompleteCode(),
         keyboardType: TextInputType.number,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       ),
     );
   }

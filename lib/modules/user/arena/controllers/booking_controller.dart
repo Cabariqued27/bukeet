@@ -150,12 +150,12 @@ class BookingController extends GetxController {
     update();
   }
 
-  updateShowlocalPayment(bool value) {
+  void updateShowlocalPayment(bool value) {
     showLocalPayment.value = value;
     update();
   }
 
-  updateLoadLocalPayment(bool value) {
+  void updateLoadLocalPayment(bool value) {
     isPaymentCheckoutLoad.value = value;
     update();
   }

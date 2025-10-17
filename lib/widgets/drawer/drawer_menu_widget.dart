@@ -14,11 +14,7 @@ class DrawerMenuWidget extends StatelessWidget {
   final VoidCallback onClose;
   final VoidCallback? onCallBack;
 
-  DrawerMenuWidget({
-    Key? key,
-    required this.onClose,
-    this.onCallBack,
-  }) : super(key: key);
+  DrawerMenuWidget({super.key, required this.onClose, this.onCallBack});
 
   final _preferences = UserPreferences();
   final DrawerMenuController controller = Get.put(DrawerMenuController());
@@ -26,16 +22,12 @@ class DrawerMenuWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: Theme.of(context).copyWith(
-        canvasColor: Colors.transparent,
-      ),
+      data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
       child: Drawer(
         backgroundColor: const Color(0xffF4F4F4),
         elevation: 0.0,
         width: AppSize.width(),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0.0),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
         child: _widgetContent(),
       ),
     );
@@ -80,7 +72,7 @@ class DrawerMenuWidget extends StatelessWidget {
     );
   }
 
-  Widget _textWidget(controller, String text) {
+  Widget _textWidget(DrawerMenuController controller, String text) {
     return TextWidget(
       text.tr,
       fontFamily: AppFontFamily.leagueSpartan,
@@ -108,7 +100,7 @@ class DrawerMenuWidget extends StatelessWidget {
           dsize: RelSize(size: TextWidgetSizes.semiLarge),
           color: controller.theme.black.value,
         ),
-        SizedBox(width: AppSize.width() * 0.07)
+        SizedBox(width: AppSize.width() * 0.07),
       ],
     );
   }
@@ -130,9 +122,7 @@ class DrawerMenuWidget extends StatelessWidget {
               _buttonWidget(
                 title: 'personal_information'.tr,
                 icon: AppIcons.profile,
-                onPressed: () => controller.onEditProfile(
-                  onCallBack,
-                ),
+                onPressed: () => controller.onEditProfile(onCallBack),
                 controller: controller,
               ),
               Divider(
@@ -242,9 +232,7 @@ class DrawerMenuWidget extends StatelessWidget {
           fontFamily: AppFontFamily.workSans,
           textAlign: TextAlign.center,
           fontWeight: TextWidgetWeight.normal,
-          dsize: RelSize(
-            size: TextWidgetSizes.xsmall,
-          ),
+          dsize: RelSize(size: TextWidgetSizes.xsmall),
           color: controller.theme.mustHaveColorText.value,
         ),
         TextWidget(
@@ -252,9 +240,7 @@ class DrawerMenuWidget extends StatelessWidget {
           fontFamily: AppFontFamily.workSans,
           textAlign: TextAlign.center,
           fontWeight: TextWidgetWeight.normal,
-          dsize: RelSize(
-            size: TextWidgetSizes.xsmall,
-          ),
+          dsize: RelSize(size: TextWidgetSizes.xsmall),
           color: controller.theme.mustHaveColorText.value,
         ),
         SizedBox(height: AppSize.width() * 0.05),
@@ -263,9 +249,7 @@ class DrawerMenuWidget extends StatelessWidget {
           fontFamily: AppFontFamily.workSans,
           textAlign: TextAlign.center,
           fontWeight: TextWidgetWeight.normal,
-          dsize: RelSize(
-            size: TextWidgetSizes.xsmall,
-          ),
+          dsize: RelSize(size: TextWidgetSizes.xsmall),
           color: controller.theme.mustHaveColorText.value,
         ),
       ],

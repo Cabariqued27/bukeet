@@ -226,7 +226,7 @@ class AuthenticationController extends GetxController {
     update();
   }
 
-  Future<bool> isEmailTaken(email) async {
+  Future<bool> isEmailTaken(String email) async {
     var isEmailTaken = await _usuarioProvider.getUserByEmail(email: email);
     if (isEmailTaken != null) {
       return true;

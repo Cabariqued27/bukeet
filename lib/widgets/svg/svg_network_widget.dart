@@ -12,7 +12,7 @@ class SvgIconNetworkWidget extends StatelessWidget {
   final BoxFit fit;
 
   const SvgIconNetworkWidget({
-    Key? key,
+    super.key,
     this.width = 0.0,
     this.height = 0.0,
     this.margin = 0.0,
@@ -21,15 +21,12 @@ class SvgIconNetworkWidget extends StatelessWidget {
     this.calculateColor = false,
     this.alignment = Alignment.center,
     this.fit = BoxFit.contain,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     if (path == 'NULL' || path == '') {
-      return SizedBox(
-        width: width,
-        height: height,
-      );
+      return SizedBox(width: width, height: height);
     } else {
       return Container(
         margin: EdgeInsets.all(margin),

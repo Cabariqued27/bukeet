@@ -35,8 +35,8 @@ class TextWidget extends StatelessWidget {
     this.maxLines,
     this.textDirection,
     this.letterSpacing,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

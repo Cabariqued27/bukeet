@@ -3,6 +3,7 @@ import 'package:bukeet/modules/user/arena/controllers/booking_controller.dart';
 import 'package:bukeet/services/models/institution.dart';
 import 'package:bukeet/utils/app/app_margin.dart';
 import 'package:bukeet/utils/app/app_size.dart';
+import 'package:bukeet/utils/global/apply_opacity_util.dart';
 import 'package:bukeet/widgets/buttons/border_button_widget.dart';
 import 'package:bukeet/widgets/buttons/svg_icon_button_widget.dart';
 import 'package:bukeet/widgets/images/full_slider_network_image_widget.dart';
@@ -379,45 +380,71 @@ class BookingPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _titleWidget(titleKey, controller.theme.black.value),
-        Container(
-          width: AppSize.width() * 0.9,
-          height: AppSize.height() * 0.06,
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-          decoration: BoxDecoration(
-            color: controller.theme.white.value,
-            borderRadius: BorderRadius.circular(10.0),
-            border: Border.all(
-              color: controller.theme.grayAccent.value,
-              width: 1.0,
-            ),
-          ),
-          child: DropdownButton<T>(
-            isExpanded: true,
-            underline: const SizedBox(),
-            focusColor: controller.theme.backgroundDeviceSetting.value,
-            hint: TextWidget(
-              fontStyle: FontStyle.italic,
-              hintTextKey.tr,
-              fontFamily: AppFontFamily.workSans,
-              textAlign: TextAlign.center,
-              dsize: RelSize(size: TextWidgetSizes.small),
-              color: controller.theme.onText.value,
-            ),
-            value: selectedValue,
-            items: items.map((T item) {
-              return DropdownMenuItem<T>(
-                value: item,
-                child: TextWidget(
-                  itemLabel(item),
-                  fontFamily: AppFontFamily.workSans,
-                  textAlign: TextAlign.center,
-                  dsize: RelSize(size: TextWidgetSizes.small),
-                  color: controller.theme.gray.value,
+        const SizedBox(height: 6),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final double dropdownWidth = constraints.maxWidth;
+
+            return Container(
+              width: AppSize.width() * 0.9,
+              decoration: BoxDecoration(
+                color: controller.theme.white.value,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: applyOpacity(
+                      controller.theme.grayAccent.value,
+                      0.25,
+                    ),
+                    blurRadius: 6,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+                border: Border.all(
+                  color: controller.theme.grayAccent.value,
+                  width: 1,
                 ),
-              );
-            }).toList(),
-            onChanged: onChanged,
-          ),
+              ),
+              child: ButtonTheme(
+                alignedDropdown: true,
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<T>(
+                    isExpanded: true,
+                    borderRadius: BorderRadius.circular(12),
+                    dropdownColor: controller.theme.white.value,
+                    icon: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: controller.theme.gray.value,
+                    ),
+                    hint: TextWidget(
+                      hintTextKey.tr,
+                      fontFamily: AppFontFamily.workSans,
+                      textAlign: TextAlign.start,
+                      dsize: RelSize(size: TextWidgetSizes.buttonsTitle),
+                      color: controller.theme.gray.value,
+                    ),
+                    value: selectedValue,
+                    items: items.map((T item) {
+                      return DropdownMenuItem<T>(
+                        value: item,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: dropdownWidth),
+                          child: TextWidget(
+                            itemLabel(item),
+                            fontFamily: AppFontFamily.workSans,
+                            textAlign: TextAlign.start,
+                            dsize: RelSize(size: TextWidgetSizes.buttonsTitle),
+                            color: controller.theme.black.value,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: onChanged,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ],
     );

@@ -7,12 +7,12 @@ class AssetImageWidget extends StatelessWidget {
   final BoxFit fit;
 
   const AssetImageWidget({
-    Key? key,
+    super.key,
     this.width = 0.0,
     this.height = 0.0,
     this.fit = BoxFit.cover,
     required this.pathImage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

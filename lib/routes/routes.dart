@@ -21,7 +21,7 @@ class Routes {
     ];
   }
 
-  getNotFoundPage() {
+  GetPage getNotFoundPage() {
     String noFound = '/noFound';
     return GetPage(name: noFound, page: () => const NoFoundPageFlow());
   }

@@ -5,7 +5,7 @@ import 'package:bukeet/widgets/svg/svg_asset_widget.dart';
 import 'package:bukeet/widgets/text/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';  
+import 'package:intl/intl.dart';
 
 class DateInputDefaultWidget extends StatelessWidget {
   final String hintText;
@@ -29,7 +29,6 @@ class DateInputDefaultWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   
     controller.text = DateFormat('dd/MM/yyyy').format(defaultDate);
 
     return _widgetContent();
@@ -48,9 +47,7 @@ class DateInputDefaultWidget extends StatelessWidget {
         style: onlyTextStyle(
           color: _theme.black.value,
           fontFamily: AppFontFamily.workSans,
-          dsize: RelSize(
-            size: TextWidgetSizes.buttonsTitle,
-          ),
+          dsize: RelSize(size: TextWidgetSizes.buttonsTitle),
         ),
         decoration: InputDecoration(
           suffixIcon: Padding(
@@ -68,9 +65,7 @@ class DateInputDefaultWidget extends StatelessWidget {
           errorStyle: onlyTextStyle(
             fontFamily: AppFontFamily.workSans,
             height: 0.0,
-            dsize: RelSize(
-              size: TextWidgetSizes.xxxxsmall,
-            ),
+            dsize: RelSize(size: TextWidgetSizes.xxxxsmall),
           ),
           filled: true,
           fillColor: const Color.fromARGB(255, 255, 255, 255),
@@ -80,17 +75,11 @@ class DateInputDefaultWidget extends StatelessWidget {
           ),
           hintText: hintText,
           hintStyle: onlyTextStyle(
-                color: _theme.onText.value,
-                fontFamily: AppFontFamily.workSans,
-                dsize: RelSize(
-                  size: TextWidgetSizes.buttonsTitle,
-                ),
-              ).copyWith(
-                fontStyle: FontStyle.italic,
-              ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
+            color: _theme.onText.value,
+            fontFamily: AppFontFamily.workSans,
+            dsize: RelSize(size: TextWidgetSizes.buttonsTitle),
+          ).copyWith(fontStyle: FontStyle.italic),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15.0),
             borderSide: const BorderSide(
@@ -100,17 +89,11 @@ class DateInputDefaultWidget extends StatelessWidget {
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
-            borderSide:  BorderSide(
-              color: _theme.grayAccent.value,
-              width: 1.0,
-            ),
+            borderSide: BorderSide(color: _theme.grayAccent.value, width: 1.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10.0),
-            borderSide:  BorderSide(
-              color: _theme.grayAccent.value,
-              width: 1.0,
-            ),
+            borderSide: BorderSide(color: _theme.grayAccent.value, width: 1.0),
           ),
         ),
         autovalidateMode: AutovalidateMode.onUserInteraction,

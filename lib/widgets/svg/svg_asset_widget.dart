@@ -12,7 +12,7 @@ class SvgAssetWidget extends StatelessWidget {
   final BoxFit fit;
 
   const SvgAssetWidget({
-    Key? key,
+    super.key,
     this.width = 0.0,
     this.height = 0.0,
     this.margin = 0.0,
@@ -21,7 +21,7 @@ class SvgAssetWidget extends StatelessWidget {
     this.alignment = Alignment.center,
     this.fit = BoxFit.contain,
     required this.path,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

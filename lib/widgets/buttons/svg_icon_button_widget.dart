@@ -9,13 +9,13 @@ class SvgIconButtonWidget extends StatelessWidget {
   final AlignmentGeometry alignment;
 
   const SvgIconButtonWidget({
-    Key? key,
+    super.key,
     required this.icon,
     required this.size,
     required this.onPressed,
     this.color,
     this.alignment = Alignment.center,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

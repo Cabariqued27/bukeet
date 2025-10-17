@@ -13,13 +13,13 @@ class NetworkImageWidget extends StatelessWidget {
   final bool? isUser;
 
   const NetworkImageWidget({
-    Key? key,
+    super.key,
     required this.imageUrl,
     this.width = double.infinity,
     this.height = double.infinity,
     this.fit = BoxFit.cover,
     this.isUser = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +61,9 @@ class NetworkImageWidget extends StatelessWidget {
       height: height,
       child: AssetImageWidget(
         fit: fit,
-        pathImage:
-            (isUser == true) ? AppImages.noUserImage : AppImages.noFoundImage,
+        pathImage: (isUser == true)
+            ? AppImages.noUserImage
+            : AppImages.noFoundImage,
       ),
     );
   }

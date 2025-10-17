@@ -6,11 +6,7 @@ class GradientWidget extends StatelessWidget {
   final Widget child;
   final LinearGradient? gradient;
 
-  GradientWidget({
-    Key? key,
-    required this.child,
-    this.gradient,
-  }) : super(key: key);
+  GradientWidget({super.key, required this.child, this.gradient});
 
   final _theme = Get.find<AppTheme>();
 
